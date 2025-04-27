@@ -1,0 +1,6 @@
+[submodule "Common"]
+	path = Common
+	url = https://github.com/MatchedFilter/Common.git
+[submodule "Components"]
+	path = Components
+	url = https://github.com/MatchedFilter/Components.git
