@@ -1,25 +1,17 @@
-#include "Incubator/InternalFlashModel.h"
+#include "Incubator/Model/InternalFlashModel.h"
 #include "Incubator/IncubatorData/IncubatorDataConstants.h"
 #include "MF/MFBuffer.h"
-
+#include "Incubator/Model/FlashBuffer.h"
+#include "Incubator/IncubatorDependencies.h"
 
 namespace Incubator
 {
-    bool WriteToFlash(const uint32_t address, const FlashBuffer &buffer );
-    bool ReadFromFlash(const uint32_t address, FlashBuffer &buffer, const uint32_t size);
+
 
     static constexpr uint32_t SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET = static_cast<uint32_t>(0x0UL);
     static constexpr uint32_t TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET = SettingsData::DATA_SIZE +
         (((SettingsData::DATA_SIZE % static_cast<uint32_t>(sizeof(uint32_t))) != static_cast<uint32_t>(0UL)) * static_cast<uint32_t>(4UL));
 
-    void FlashBuffer::Reset()
-    {
-        for (uint32_t i = static_cast<uint32_t>(0UL); i < MAX_WORD_SIZE; i++)
-        {
-            m_Words[i] = static_cast<uint32_t>(0UL);
-        }
-        m_Size = static_cast<uint32_t>(0UL);
-    }
 
 
     InternalFlashModel::InternalFlashModel(const uint32_t flashBaseAddress) : 

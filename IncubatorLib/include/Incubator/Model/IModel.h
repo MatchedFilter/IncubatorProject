@@ -1,8 +1,8 @@
 #ifndef INCUBATOR_IMODEL_H
 #define INCUBATOR_IMODEL_H
 #include <cinttypes>
-#include "IncubatorData/SettingsData.h"
-#include "IncubatorData/TimeInformationData.h"
+#include "Incubator/IncubatorData/SettingsData.h"
+#include "Incubator/IncubatorData/TimeInformationData.h"
 namespace Incubator
 {
     class IModel

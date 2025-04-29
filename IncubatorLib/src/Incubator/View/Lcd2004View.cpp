@@ -1,4 +1,4 @@
-#include "Incubator/Lcd2004View.h"
+#include "Incubator/View/Lcd2004View.h"
 
 namespace Incubator
 {

@@ -1,4 +1,4 @@
-#include "Incubator/EepromModel.h"
+#include "Incubator/Model/EepromModel.h"
 
 namespace Incubator
 {
