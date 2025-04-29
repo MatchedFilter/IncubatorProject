@@ -4,7 +4,7 @@
 #include <thread>
 #include <map>
 #include "Eeprom24C/EepromI2CBuffer.h"
-#include "Incubator/InternalFlashModel.h"
+#include "Incubator/Model/FlashBuffer.h"
 #include "SHT3X/ShtBuffer.h"
 #include <fstream>
 
