@@ -481,6 +481,28 @@ namespace Incubator
         }
         return bResult;
     }
+
+    void TurnOnHeater()
+    {
+        IncubatorSim::g_IncubatorTestSimulator.UpdateHeaterStatus(true);
+    }
+
+    void TurnOffHeater()
+    {
+        IncubatorSim::g_IncubatorTestSimulator.UpdateHeaterStatus(false);
+    }
+
+    void TurnOnHumidityGenerator()
+    {
+        IncubatorSim::g_IncubatorTestSimulator.UpdateHumidityGeneratorStatus(true);
+    }
+
+    void TurnOffHumidityGenerator()
+    {
+        IncubatorSim::g_IncubatorTestSimulator.UpdateHumidityGeneratorStatus(false);
+    }
+
+
 } // namespace Incubator
 
 namespace SHT3X

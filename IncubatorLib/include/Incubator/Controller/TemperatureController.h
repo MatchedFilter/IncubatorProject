@@ -8,7 +8,7 @@ namespace Incubator
     public:
         TemperatureController();
         ~TemperatureController();
-        void SetDesiredTemperature(const double desiredTemperatureInCelcius);
+        void SetDesiredTemperature(const double &desiredTemperatureInCelcius);
         double Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond);
         void OnTemperatureFailure();
 

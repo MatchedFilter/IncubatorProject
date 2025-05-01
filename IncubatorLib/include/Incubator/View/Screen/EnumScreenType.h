@@ -1,0 +1,16 @@
+#ifndef INCUBATOR_ENUMSCREENTYPE_H
+#define INCUBATOR_SCREENFACADE_H
+namespace Incubator
+{
+    enum EnumScreenType
+    {
+        SCREEN_TYPE_MENU,
+        SCREEN_TYPE_SETTINGS,
+        SCREEN_TYPE_INCUBATOR_SETTINGS,
+        SCREEN_TYPE_TIME_SETTINGS,
+        SCREEN_TYPE_ADMINISTRATOR_SETTINGS,
+        SCREEN_TYPE_SIZE
+    };
+} // namespace Incubator
+
+#endif // INCUBATOR_SCREENFACADE_H

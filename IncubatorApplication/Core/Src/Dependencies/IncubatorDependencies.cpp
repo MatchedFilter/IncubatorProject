@@ -54,6 +54,27 @@ namespace Incubator
     	return s_ApplicationRunningTimeInMillisecond;
     }
 
+    void TurnOnHeater()
+    {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
+    }
+
+    void TurnOffHeater()
+    {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+    }
+
+    void TurnOnHumidityGenerator()
+    {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_SET);
+    }
+
+    void TurnOffHumidityGenerator()
+    {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
+    }
+
+
 } // namespace Incubator
 
 void SysTick_Handler(void)

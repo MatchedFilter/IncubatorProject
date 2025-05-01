@@ -9,6 +9,10 @@ namespace Incubator
     bool WriteToFlash(const uint32_t address, const FlashBuffer &buffer );
     bool ReadFromFlash(const uint32_t address, FlashBuffer &buffer, const uint32_t size);
     uint64_t GetTimestampInMillisecond();
+    void TurnOnHeater();
+    void TurnOffHeater();
+    void TurnOnHumidityGenerator();
+    void TurnOffHumidityGenerator();
 } // namespace Incubator
 
 #endif // INCUBATOR_INCUBATORDEPENDENCIES_H

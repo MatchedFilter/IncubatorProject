@@ -11,8 +11,10 @@ namespace Incubator
         EepromModel();
         ~EepromModel();
         void Initialize();
+        virtual bool Update(const PidData &data) override;
         virtual bool Update(const SettingsData &data) override;
         virtual bool Update(const TimeInformationData &data) override;
+        virtual bool Get(PidData &data) override;
         virtual bool Get(SettingsData &data) override;
         virtual bool Get(TimeInformationData &data) override;
 

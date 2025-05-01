@@ -1,5 +1,6 @@
 #include "Incubator/Controller/TemperatureController.h"
 
+
 namespace Incubator
 {
     TemperatureController::TemperatureController() : 
@@ -14,6 +15,11 @@ namespace Incubator
 
     TemperatureController::~TemperatureController()
     {
+    }
+
+    void TemperatureController::SetDesiredTemperature(const double &desiredTemperatureInCelcius)
+    {
+        m_DesiredTemperatureInCelcius = desiredTemperatureInCelcius;
     }
 
     double TemperatureController::Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond)

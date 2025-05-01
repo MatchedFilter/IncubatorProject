@@ -4,6 +4,7 @@
 #include "SHT31Component/SHT31Component.h"
 #include "NTCComponent/NTCComponent.h"
 #include "JoystickButton/JoystickButton.h"
+#include "Output/OutputComponent.h"
 
 namespace IncubatorSim
 {
@@ -20,6 +21,8 @@ namespace IncubatorSim
         bool GetFromSHT32(double &humidityPercentage, double &temperatureInCelcius);
         bool GetTemperatureInCelcius(double &temperatureInCelcius);
         void GetJoystickData(bool &upKeyPressed, bool &downKeyPressed, bool &rightKeyPressed, bool &leftKeyPressed, bool &bSwitchPressed);
+        void UpdateHeaterStatus(bool bIsOn);
+        void UpdateHumidityGeneratorStatus(bool bIsOn);
 
         void Initialize();
         void HandleEvents(SDL_Event &event);
@@ -33,6 +36,8 @@ namespace IncubatorSim
         SHT31Component m_SHT31Component;
         NTCComponent m_NTCComponent;
         JoystickButton m_JoystickButton;
+        OutputComponent m_HumidityGeneratorComponent;
+        OutputComponent m_HeaterCompoenent;
         int64_t m_SimulatorStartTimestampInMillisecond;
 
     private:

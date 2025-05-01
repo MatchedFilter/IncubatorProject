@@ -63,6 +63,30 @@ namespace IncubatorSim
         m_JoystickButton.GetJoystickData(upKeyPressed, downKeyPressed, rightKeyPressed, leftKeyPressed, bSwitchPressed);
     }
 
+    void IncubatorTestSimulator::UpdateHeaterStatus(bool bIsOn)
+    {
+        if (bIsOn)
+        {
+            m_HeaterCompoenent.TurnOn();
+        }
+        else
+        {
+            m_HeaterCompoenent.TurnOff();
+        }
+    }
+
+    void IncubatorTestSimulator::UpdateHumidityGeneratorStatus(bool bIsOn)
+    {
+        if (bIsOn)
+        {
+            m_HumidityGeneratorComponent.TurnOn();
+        }
+        else
+        {
+            m_HumidityGeneratorComponent.TurnOff();
+        }
+    }
+
     void IncubatorTestSimulator::Initialize()
     {
         InitializeTime();
@@ -125,16 +149,16 @@ namespace IncubatorSim
             exit(127);
         }
 
-        // if (!m_HumidityGeneratorTestComponent.Initialize(m_Renderer, 430, 300, 86, 128, "resources/images/Humidity_Generator.png"))
-        // {
-        //     std::cerr << "Unable to initialize HumidityGeneratorTestComponent" << std::endl;
-        //     exit(127);
-        // }
-        // if (!m_CarbonFiberHeaterTestComponent.Initialize(m_Renderer, 630, 300, 128, 64, "resources/images/Carbonfiber_Heater.png"))
-        // {
-        //     std::cerr << "Unable to initialize CarbonFiberHeaterTestComponent" << std::endl;
-        //     exit(127);
-        // }
+        if (!m_HumidityGeneratorComponent.Initialize(m_Renderer, 400, 550, 128, 128, "resources/images/Humidity_Generator.png"))
+        {
+            std::cerr << "Unable to initialize HumidityGeneratorTestComponent" << std::endl;
+            exit(127);
+        }
+        if (!m_HeaterCompoenent.Initialize(m_Renderer, 700, 550, 128, 64, "resources/images/Carbonfiber_Heater.png"))
+        {
+            std::cerr << "Unable to initialize CarbonFiberHeaterTestComponent" << std::endl;
+            exit(127);
+        }
         IncubatorTestSimulatorUtils::Initialize();
 
     }
@@ -155,8 +179,8 @@ namespace IncubatorSim
         m_DHT11Component.Run();
         m_SHT31Component.Run();
         m_NTCComponent.Run();
-        // m_HumidityGeneratorTestComponent.Run();
-        // m_CarbonFiberHeaterTestComponent.Run();
+        m_HumidityGeneratorComponent.Run();
+        m_HeaterCompoenent.Run();
         SDL_SetRenderDrawColor(m_Renderer, 0x20, 0x20, 0x20, SDL_ALPHA_OPAQUE);
         SDL_RenderPresent(m_Renderer);
     }
