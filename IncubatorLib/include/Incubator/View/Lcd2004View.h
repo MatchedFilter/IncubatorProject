@@ -15,9 +15,7 @@ namespace Incubator
     public:
         Lcd2004View();
         ~Lcd2004View();
-        virtual bool Initialize(IPidDataChangedEventHandler *pidDataChangedEventHandler,
-            ISettingsDataChangedEventHandler *settingsDataChangedEventHandler,
-            ITimeInformationDataChangedEventHandler *timeInformationDataChangedEventHandler) override;
+        virtual bool Initialize(const DataChangedEventHandlers *eventHandlers) override;
         virtual void UpdateTemperature(const double temperatureInCelcius) override;
         virtual void OnTemperatureFailure() override;
         

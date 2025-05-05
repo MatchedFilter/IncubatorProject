@@ -2,9 +2,8 @@
 #define INCUBATOR_SCREENFACADE_H
 #include "TC2004/Lcd.h"
 #include "MenuScreen.h"
-#include "Incubator/View/IPidDataChangedEventHandler.h"
-#include "Incubator/View/ISettingsDataChangedEventHandler.h"
-#include "Incubator/View/ITimeInformationDataChangedEventHandler.h"
+#include "SettingsScreen.h"
+#include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 
 namespace Incubator
 {
@@ -13,9 +12,7 @@ namespace Incubator
     public:
         ScreenFacade();
         ~ScreenFacade();
-        void Initialize(TC2004::Lcd * tc2004Lcd, IPidDataChangedEventHandler *pidDataChangedEventHandler,
-            ISettingsDataChangedEventHandler *settingsDataChangedEventHandler,
-            ITimeInformationDataChangedEventHandler *timeInformationDataChangedEventHandler);
+        void Initialize(TC2004::Lcd * tc2004Lcd, const DataChangedEventHandlers *eventHandlers);
 
         void UpdatePidData(const PidData &data);
         void UpdateSettingsData(const SettingsData &data);
@@ -34,6 +31,8 @@ namespace Incubator
         TC2004::Lcd *m_Lcd;
         AScreen *m_CurrentScreen;
         MenuScreen m_MenuScreen;
+        SettingsScreen m_SettingsScreen;
+        DataChangedEventHandlers m_DataChangedEventHandlers;
         IPidDataChangedEventHandler *m_PidDataChangedEventHandler;
         ISettingsDataChangedEventHandler *m_SettingsDataChangedEventHandler;
         ITimeInformationDataChangedEventHandler *m_TimeInformationDataChangedEventHandler;

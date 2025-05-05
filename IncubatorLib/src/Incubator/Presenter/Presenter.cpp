@@ -141,7 +141,6 @@ namespace Incubator
         {
             bResult = false;
         }
-
         if (bResult)
         {
             (void) UpdateModel(m_Model, pid);
@@ -173,10 +172,16 @@ namespace Incubator
         m_SpareModel = spareModel;
 
         m_PidDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
-        m_SettingsDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
+        m_SettingsDataCache.Initialize(m_Model, m_SpareModel);
         m_TimeInformationDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
+
+        DataChangedEventHandlers eventHandlers;
+        eventHandlers.Reset();
+        eventHandlers.m_PidDataChangedEventHandler = &m_PidDataChangedEventHandler;
+        eventHandlers.m_SettingsDataChangedEventHandler = &m_SettingsDataCache;
+        eventHandlers.m_TimeInformationDataChangedEventHandler = &m_TimeInformationDataChangedEventHandler;
         
-        if (m_View->Initialize(&m_PidDataChangedEventHandler, &m_SettingsDataChangedEventHandler, &m_TimeInformationDataChangedEventHandler))
+        if (m_View->Initialize(&eventHandlers))
         {
             PidData pid;
             SettingsData settings;
@@ -184,12 +189,13 @@ namespace Incubator
             pid.Reset();
             settings.Reset();
             timeInformation.Reset();
-            (void) UpdateModel(m_Model, pid);
-            (void) UpdateModel(m_Model, settings);
-            (void) UpdateModel(m_Model, timeInformation);
-            (void) UpdateModel(m_SpareModel, pid);
-            (void) UpdateModel(m_SpareModel, settings);
-            (void) UpdateModel(m_SpareModel, timeInformation);
+            // (void) UpdateModel(m_Model, pid);
+            // (void) UpdateModel(m_Model, settings);
+            // (void) UpdateModel(m_Model, timeInformation);
+            // (void) UpdateModel(m_SpareModel, pid);
+            // (void) UpdateModel(m_SpareModel, settings);
+            // (void) UpdateModel(m_SpareModel, timeInformation);
+            
             if (SyncModels(pid, settings, timeInformation))
             {
                 m_bIsInitialized = true;

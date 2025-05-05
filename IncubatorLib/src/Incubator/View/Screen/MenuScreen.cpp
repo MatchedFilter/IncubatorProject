@@ -1,4 +1,5 @@
 #include "Incubator/View/Screen/MenuScreen.h"
+#include "Incubator/IncubatorDependencies.h"
 
 namespace Incubator
 {
@@ -39,13 +40,10 @@ namespace Incubator
     {
         if (m_bIsTemperatureSet)
         {
-            if (m_TemperatureInCelcius < 0.0)
+            m_Lcd->MoveCursor(0U, 4U);
+            if (false == (m_TemperatureInCelcius < 0.0))
             {
-                m_Lcd->MoveCursor(0U, 4U);
-            }
-            else
-            {
-                m_Lcd->MoveCursor(0U, 5U);
+                m_Lcd->Print(TC2004::String80(" "));
             }
             m_Lcd->Print(GetTemperature());
         }
@@ -56,6 +54,12 @@ namespace Incubator
             m_Lcd->Print(TC2004::TC2004_CHAR_DEGREE_SYMBOL);
             m_Lcd->Print(TC2004::String80("C  "));
         }
+    }
+
+    void MenuScreen::StartToDisplayTemperatureInformation()
+    {
+        m_Lcd->MoveCursor(0U, 0U);
+        m_Lcd->Print(TC2004::String80("Sck: ---- / ----    "));
     }
 
     void MenuScreen::DisplayHumidityInformation()
@@ -80,6 +84,38 @@ namespace Incubator
         }
     }
 
+    void MenuScreen::StartToDisplayHumidityInformation()
+    {
+        m_Lcd->MoveCursor(1U, 0U);
+        m_Lcd->Print(TC2004::String80("Nem: -- / --        "));
+    }
+
+    void MenuScreen::DisplayTimeInformation()
+    {
+        if (m_bTimeInformationProvided)
+        {
+            m_Lcd->MoveCursor(2U, 5U);
+            TC2004::String80 dayString;
+            dayString.Clear();
+            const uint8_t currentDay = static_cast<uint8_t>(((m_TimeInformationData.m_CurrentTimestampInSecond / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(24UL));
+            if (currentDay < 10U)
+            {
+                dayString += " ";
+            }
+            dayString += static_cast<int32_t>(currentDay);
+            m_Lcd->Print(dayString);
+
+            dayString.Clear();
+            m_Lcd->MoveCursor(2U, 10U);
+            if (m_SettingsData.m_TotalIncubationDayCount < 10U)
+            {
+                dayString += " ";
+            }
+            dayString += static_cast<int32_t>(m_SettingsData.m_TotalIncubationDayCount);
+            m_Lcd->Print(dayString);
+        }
+    }
+
     MenuScreen::MenuScreen() : 
         AScreen { SCREEN_TYPE_MENU },
         m_Lcd { nullptr },
@@ -89,7 +125,10 @@ namespace Incubator
         m_HumidityInPercent { 0U },
         m_bIsIncubatorDataProvided { false },
         m_bIsSettingsProvided { false },
-        m_TimeInformationProvided { false }
+        m_bTimeInformationProvided { false },
+        m_bModelValid { true },
+        m_TemperatureUpdateStatus { UPDATE_STATUS_VALID },
+        m_HumidityUpdateStatus { UPDATE_STATUS_VALID }
     {
     }
 
@@ -100,6 +139,13 @@ namespace Incubator
     void MenuScreen::Initialize(TC2004::Lcd *tc2004Lcd)
     {
         m_Lcd = tc2004Lcd;
+        OnInitial();
+        m_ScreenInformationUpdateTimerTask.SetDurationInMillisecond(static_cast<uint32_t>(500UL));
+        m_ScreenInformationUpdateTimerTask.Start();
+    }
+
+    void MenuScreen::OnInitial()
+    {
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
         m_Lcd->Print(TC2004::String80("Sck: ---- / ----"));
@@ -109,17 +155,15 @@ namespace Incubator
         m_Lcd->Print(TC2004::String80("G"));
         m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_U);
         m_Lcd->Print(TC2004::String80("n: -- / --"));
-        
-        m_ScreenInformationUpdateTimerTask.SetDurationInMillisecond(static_cast<uint32_t>(500UL));
-        m_ScreenInformationUpdateTimerTask.Start();
     }
+
 
 
     void MenuScreen::UpdateSettingsData(const SettingsData &data)
     {
         m_SettingsData.Copy(data);
         m_bIsSettingsProvided = true;
-        if (m_TimeInformationProvided)
+        if (m_bTimeInformationProvided)
         {
             m_bIsIncubatorDataProvided = true;
         }
@@ -128,7 +172,7 @@ namespace Incubator
     void MenuScreen::UpdateTimeInformationData(const TimeInformationData &data)
     {
         m_TimeInformationData.Copy(data);
-        m_TimeInformationProvided = true;
+        m_bTimeInformationProvided = true;
         if (m_bIsSettingsProvided)
         {
             m_bIsIncubatorDataProvided = true;
@@ -137,50 +181,107 @@ namespace Incubator
 
     void MenuScreen::UpdateTemperature(const double &temperatureInCelcius)
     {
+        if (UPDATE_STATUS_INVALID == m_TemperatureUpdateStatus)
+        {
+            m_TemperatureUpdateStatus = UPDATE_STATUS_VALID;
+        }
         m_bIsTemperatureSet = true;
         m_TemperatureInCelcius = temperatureInCelcius;
     }
 
     void MenuScreen::UpdateHumidity(const uint8_t &humidityInPercent)
     {
+        if (UPDATE_STATUS_INVALID == m_HumidityUpdateStatus)
+        {
+            m_HumidityUpdateStatus = UPDATE_STATUS_VALID;
+        }
         m_bIsHumiditySet = true;
         m_HumidityInPercent = humidityInPercent;
     }
 
     void MenuScreen::OnTemperatureFailure()
     {
-        m_Lcd->MoveCursor(0U, 0U);
-        m_Lcd->Print(TC2004::String80("Sck Hatas"));
-        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
-        m_Lcd->Print(TC2004::String80("          "));
+        if (m_bModelValid)
+        {
+            if (UPDATE_STATUS_INVALID != m_TemperatureUpdateStatus)
+            {
+                m_TemperatureUpdateStatus = UPDATE_STATUS_INVALID;
+                m_Lcd->MoveCursor(0U, 0U);
+                m_Lcd->Print(TC2004::String80("Sck Hatas"));
+                m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+                m_Lcd->Print(TC2004::String80("          "));
+                m_Lcd->MoveCursor(3U, 0U);
+            }
+        }
     }
 
     void MenuScreen::OnHumidityFailure()
     {
-        m_Lcd->MoveCursor(1U, 0U);
-        m_Lcd->Print(TC2004::String80("Nem Hatas"));
-        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
-        m_Lcd->Print(TC2004::String80("          "));
+        if (m_bModelValid)
+        {
+            if (UPDATE_STATUS_INVALID != m_HumidityUpdateStatus)
+            {
+                m_HumidityUpdateStatus = UPDATE_STATUS_INVALID;
+                m_Lcd->MoveCursor(1U, 0U);
+                m_Lcd->Print(TC2004::String80("Nem Hatas"));
+                m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+                m_Lcd->Print(TC2004::String80("          "));
+            }
+        }
     }
 
     void MenuScreen::OnModelFailure()
     {
-        m_Lcd->Clear();
-        m_Lcd->Print(TC2004::String80("HATA: NVM1"));
+        if (m_bModelValid)
+        {
+            m_bModelValid = false;
+            m_Lcd->Clear();
+            m_Lcd->Print(TC2004::String80("HATA: NVM1"));
+        }
     }
 
 
     void MenuScreen::Run()
     {
-        if (m_ScreenInformationUpdateTimerTask.IsFinished())
+        if (m_bModelValid)
         {
-            m_ScreenInformationUpdateTimerTask.Start();
-            DisplayHumidityInformation();
-            DisplayTemperatureInformation();
+            if (m_ScreenInformationUpdateTimerTask.IsFinished())
+            {
+                m_ScreenInformationUpdateTimerTask.Start();
+                if (UPDATE_STATUS_SCREEN_UPDATED == m_HumidityUpdateStatus)
+                {
+                    DisplayHumidityInformation();
+                }
+                else if (UPDATE_STATUS_VALID == m_HumidityUpdateStatus)
+                {
+                    m_HumidityUpdateStatus = UPDATE_STATUS_SCREEN_UPDATED;
+                    StartToDisplayHumidityInformation();
+                }
+                else
+                {
+                    // intentionally left blank
+                }
+
+                if (UPDATE_STATUS_SCREEN_UPDATED == m_TemperatureUpdateStatus)
+                {
+                    DisplayTemperatureInformation();
+                }
+                else if (UPDATE_STATUS_VALID == m_TemperatureUpdateStatus)
+                {
+                    m_TemperatureUpdateStatus = UPDATE_STATUS_SCREEN_UPDATED;
+                    StartToDisplayTemperatureInformation();
+                }
+                else
+                {
+                    // intentionally left blank
+                }
+
+                DisplayTimeInformation();
+            }
         }
     }
 
-    void MenuScreen::OnUserAction(const JoystickEvent)
+    void MenuScreen::OnUserAction(const JoystickEvent &)
     {
         // intentionally left blank
     }

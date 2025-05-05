@@ -4,17 +4,13 @@
 #include "Incubator/IncubatorData/PidData.h"
 #include "Incubator/IncubatorData/SettingsData.h"
 #include "Incubator/IncubatorData/TimeInformationData.h"
-#include "IPidDataChangedEventHandler.h"
-#include "ISettingsDataChangedEventHandler.h"
-#include "ITimeInformationDataChangedEventHandler.h"
+#include "DataChangedEventHandler/DataChangedEventHandlers.h"
 namespace Incubator
 {
     class IView
     {
     public:
-        virtual bool Initialize(IPidDataChangedEventHandler *pidDataChangedEventHandler,
-            ISettingsDataChangedEventHandler *settingsDataChangedEventHandler,
-            ITimeInformationDataChangedEventHandler *timeInformationDataChangedEventHandler) = 0;
+        virtual bool Initialize(const DataChangedEventHandlers *eventHandlers) = 0;
         virtual void UpdateTemperature(const double temperatureInCelcius) = 0;
         virtual void OnTemperatureFailure() = 0;
         virtual void UpdateHumidity(const uint8_t humidityInPercent) = 0;

@@ -6,12 +6,9 @@
 
 namespace Incubator
 {
-
     static constexpr uint32_t SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET = static_cast<uint32_t>(0x0UL);
-    static constexpr uint32_t TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET = SettingsData::DATA_SIZE +
-        (((SettingsData::DATA_SIZE % static_cast<uint32_t>(sizeof(uint32_t))) != static_cast<uint32_t>(0UL)) * static_cast<uint32_t>(4UL));
-
-    static constexpr uint32_t PID_DATA_START_MEMORY_ADDRESS_OFFSET = static_cast<uint32_t>(32UL);
+    static constexpr uint32_t TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET = SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET + static_cast<uint32_t>(32UL);
+    static constexpr uint32_t PID_DATA_START_MEMORY_ADDRESS_OFFSET = TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET + static_cast<uint32_t>(32UL);;
 
 
     InternalFlashModel::InternalFlashModel(const uint32_t flashBaseAddress) : 
@@ -39,15 +36,15 @@ namespace Incubator
         MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> writer(buffer);
         if (data.Serialize(writer))
         {
-
             FlashBuffer flashBuffer;
             flashBuffer.Reset();
             flashBuffer.m_Size = WORD_SIZE;
             for (uint32_t i = static_cast<uint32_t>(0UL); i < WORD_SIZE; i++)
             {
-                flashBuffer.m_Words[i] = reinterpret_cast<uint32_t&>(buffer.m_Buffer[i * static_cast<uint32_t>(sizeof(uint32_t))]);
+                const uint32_t &word = reinterpret_cast<const uint32_t&>(buffer.m_Buffer[i * static_cast<uint32_t>(sizeof(uint32_t))]);
+                flashBuffer.m_Words[i] = word;
             }
-            if (WriteToFlash(m_FlashBaseAddress + PID_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer))
+            if (WriteToFlash(m_FlashBaseAddress, PID_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer))
             {
                 bResult = true;
             }
@@ -71,15 +68,15 @@ namespace Incubator
         MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> writer(buffer);
         if (data.Serialize(writer))
         {
-
             FlashBuffer flashBuffer;
             flashBuffer.Reset();
             flashBuffer.m_Size = WORD_SIZE;
             for (uint32_t i = static_cast<uint32_t>(0UL); i < WORD_SIZE; i++)
             {
-                flashBuffer.m_Words[i] = reinterpret_cast<uint32_t&>(buffer.m_Buffer[i * static_cast<uint32_t>(sizeof(uint32_t))]);
+                const uint32_t &word = reinterpret_cast<const uint32_t&>(buffer.m_Buffer[i * static_cast<uint32_t>(sizeof(uint32_t))]);
+                flashBuffer.m_Words[i] = word;
             }
-            if (WriteToFlash(m_FlashBaseAddress + SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer))
+            if (WriteToFlash(m_FlashBaseAddress, SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer))
             {
                 bResult = true;
             }
@@ -109,9 +106,10 @@ namespace Incubator
             flashBuffer.m_Size = WORD_SIZE;
             for (uint32_t i = static_cast<uint32_t>(0UL); i < WORD_SIZE; i++)
             {
-                flashBuffer.m_Words[i] = reinterpret_cast<uint32_t&>(buffer.m_Buffer[i * static_cast<uint32_t>(sizeof(uint32_t))]);
+                const uint32_t &word = reinterpret_cast<const uint32_t&>(buffer.m_Buffer[i * static_cast<uint32_t>(sizeof(uint32_t))]);
+                flashBuffer.m_Words[i] = word;
             }
-            if (WriteToFlash(m_FlashBaseAddress + TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer))
+            if (WriteToFlash(m_FlashBaseAddress, TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer))
             {
                 bResult = true;
             }
@@ -126,7 +124,7 @@ namespace Incubator
         flashBuffer.Reset();
         static constexpr uint32_t WORD_SIZE = (PidData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
             + ((PidData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
-        if (ReadFromFlash(m_FlashBaseAddress + PID_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
+        if (ReadFromFlash(m_FlashBaseAddress, PID_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
         {
             static constexpr uint32_t BUFFER_TOTAL_SIZE = WORD_SIZE * static_cast<uint32_t>(sizeof(uint32_t));
 
@@ -156,7 +154,7 @@ namespace Incubator
         flashBuffer.Reset();
         static constexpr uint32_t WORD_SIZE = (SettingsData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
             + ((SettingsData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
-        if (ReadFromFlash(m_FlashBaseAddress + SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
+        if (ReadFromFlash(m_FlashBaseAddress, SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
         {
             static constexpr uint32_t BUFFER_TOTAL_SIZE = WORD_SIZE * static_cast<uint32_t>(sizeof(uint32_t));
 
@@ -186,7 +184,7 @@ namespace Incubator
         flashBuffer.Reset();
         static constexpr uint32_t WORD_SIZE = (TimeInformationData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
             + ((TimeInformationData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
-        if (ReadFromFlash(m_FlashBaseAddress + SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
+        if (ReadFromFlash(m_FlashBaseAddress, SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
         {
             static constexpr uint32_t BUFFER_TOTAL_SIZE = WORD_SIZE * static_cast<uint32_t>(sizeof(uint32_t));
             

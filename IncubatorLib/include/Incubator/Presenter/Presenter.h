@@ -3,7 +3,7 @@
 #include "Incubator/View/IView.h"
 #include "Incubator/Model/IModel.h"
 #include "Incubator/Presenter/DataChangedEventHandlers/PidDataChangedEventHandler.h"
-#include "Incubator/Presenter/DataChangedEventHandlers/SettingsDataChangedEventHandler.h"
+#include "Incubator/Presenter/DataChangedEventHandlers/SettingsDataCache.h"
 #include "Incubator/Presenter/DataChangedEventHandlers/TimeInformationDataChangedEventHandler.h"
 
 namespace Incubator
@@ -29,7 +29,7 @@ namespace Incubator
         IModel *m_SpareModel;
         bool m_bIsInitialized;
         PidDataChangedEventHandler m_PidDataChangedEventHandler;
-        SettingsDataChangedEventHandler m_SettingsDataChangedEventHandler;
+        SettingsDataCache m_SettingsDataCache;
         TimeInformationDataChangedEventHandler m_TimeInformationDataChangedEventHandler;
 
         SettingsData m_SettingsData;

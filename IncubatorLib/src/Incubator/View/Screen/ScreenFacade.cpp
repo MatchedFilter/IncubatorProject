@@ -16,16 +16,14 @@ namespace Incubator
     {
     }
 
-    void ScreenFacade::Initialize(TC2004::Lcd * tc2004Lcd, IPidDataChangedEventHandler *pidDataChangedEventHandler,
-        ISettingsDataChangedEventHandler *settingsDataChangedEventHandler,
-        ITimeInformationDataChangedEventHandler *timeInformationDataChangedEventHandler)
+    void ScreenFacade::Initialize(TC2004::Lcd * tc2004Lcd, const DataChangedEventHandlers *eventHandlers)
     {
         m_Lcd = tc2004Lcd;
         m_MenuScreen.Initialize(tc2004Lcd);
+        m_SettingsScreen.Initialize(tc2004Lcd);
         m_CurrentScreen = &m_MenuScreen;
-        m_PidDataChangedEventHandler = pidDataChangedEventHandler;
-        m_SettingsDataChangedEventHandler = settingsDataChangedEventHandler;
-        m_TimeInformationDataChangedEventHandler = timeInformationDataChangedEventHandler;
+        m_DataChangedEventHandlers.Reset();
+        m_DataChangedEventHandlers.Copy(*eventHandlers);
     }
 
     void ScreenFacade::UpdatePidData(const PidData &data)
@@ -60,7 +58,7 @@ namespace Incubator
 
     void ScreenFacade::OnHumidityFailure()
     {
-        m_MenuScreen.OnModelFailure();
+        m_MenuScreen.OnHumidityFailure();
     }
 
     void ScreenFacade::OnModelFailure()
@@ -71,6 +69,34 @@ namespace Incubator
 
     void ScreenFacade::OnUserAction(const JoystickEvent &event)
     {
+        if (SCREEN_TYPE_MENU == m_CurrentScreen->GetScreenType())
+        {
+            if (event.bIsButtonPressed)
+            {
+                m_CurrentScreen = &m_SettingsScreen;
+                m_SettingsScreen.OnInitial();
+            }
+        }
+        else
+        {
+            if (event.bIsLeftPressed)
+            {
+                switch (m_CurrentScreen->GetScreenType())
+                {   
+                case SCREEN_TYPE_SETTINGS:
+                    m_MenuScreen.OnInitial();
+                    m_CurrentScreen = &m_MenuScreen;
+                    break;
+                
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                m_CurrentScreen->OnUserAction(event);
+            }
+        }
     }
 
     void ScreenFacade::Run()

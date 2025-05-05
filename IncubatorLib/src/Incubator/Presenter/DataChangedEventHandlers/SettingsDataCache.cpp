@@ -1,18 +1,18 @@
-#include "Incubator/Presenter/DataChangedEventHandlers/SettingsDataChangedEventHandler.h"
+#include "Incubator/Presenter/DataChangedEventHandlers/SettingsDataCache.h"
 
 namespace Incubator
 {
-    SettingsDataChangedEventHandler::SettingsDataChangedEventHandler() : 
+    SettingsDataCache::SettingsDataCache() : 
         m_Model { nullptr },
         m_SpareModel { nullptr }
     {
     }
 
-    SettingsDataChangedEventHandler::~SettingsDataChangedEventHandler()
+    SettingsDataCache::~SettingsDataCache()
     {
     }
 
-    void SettingsDataChangedEventHandler::OnUpdate(const SettingsData &data)
+    void SettingsDataCache::OnUpdate(const SettingsData &data)
     {
         if (m_Model != nullptr)
         {

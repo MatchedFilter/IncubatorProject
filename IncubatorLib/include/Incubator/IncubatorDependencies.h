@@ -6,8 +6,8 @@
 namespace Incubator
 {
     void DelayInMillisecond(uint32_t durationInMillisecond);
-    bool WriteToFlash(const uint32_t address, const FlashBuffer &buffer );
-    bool ReadFromFlash(const uint32_t address, FlashBuffer &buffer, const uint32_t size);
+    bool WriteToFlash(const uint32_t flashBaseAddress, const uint32_t offset, const FlashBuffer &buffer);
+    bool ReadFromFlash(const uint32_t baseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size);
     uint64_t GetTimestampInMillisecond();
     void TurnOnHeater();
     void TurnOffHeater();

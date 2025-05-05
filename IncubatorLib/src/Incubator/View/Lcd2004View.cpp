@@ -165,9 +165,7 @@ namespace Incubator
     {
     }
 
-    bool Lcd2004View::Initialize(IPidDataChangedEventHandler *pidDataChangedEventHandler,
-        ISettingsDataChangedEventHandler *settingsDataChangedEventHandler,
-        ITimeInformationDataChangedEventHandler *timeInformationDataChangedEventHandler)
+    bool Lcd2004View::Initialize(const DataChangedEventHandlers *eventHandlers)
     {
         bool bResult = false;
         m_JoystickSensorTimerTask.SetDurationInMillisecond(static_cast<uint32_t>(20UL));
@@ -182,7 +180,8 @@ namespace Incubator
                 DelayInMillisecond(static_cast<uint32_t>(5UL));
                 m_TC2004Lcd.Clear();
                 m_TC2004Lcd.MoveCursor(0U, 0U);
-                m_ScreenFacade.Initialize(&m_TC2004Lcd, pidDataChangedEventHandler, settingsDataChangedEventHandler, timeInformationDataChangedEventHandler);
+                m_ScreenFacade.Initialize(&m_TC2004Lcd, eventHandlers);
+                m_JoystickSensorTimerTask.Start();
                 break;
             }
         }

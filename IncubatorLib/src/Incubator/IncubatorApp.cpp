@@ -7,50 +7,62 @@ namespace Incubator
 
     bool IncubatorApp::ReadSht31(double &temperatureInCelcius, double &humidityInPercent)
     {
-        bool bResult = true;
-        if (false == m_SHT31Sensor.Read(temperatureInCelcius, humidityInPercent))
+        bool bResult = false;
+        if (m_Sht31FailureReadTimerTask.IsFinished())
         {
-            constexpr uint8_t ALLOWED_SHT31_FAIL_COUNT = 5U;
-            m_Sht31FailCount++;
-            if (m_Sht31FailCount > ALLOWED_SHT31_FAIL_COUNT)
+            bResult = true;
+            if (false == m_SHT31Sensor.Read(temperatureInCelcius, humidityInPercent))
             {
-                bResult = false;
+                constexpr uint8_t ALLOWED_SHT31_FAIL_COUNT = 5U;
+                if (m_Sht31FailCount > ALLOWED_SHT31_FAIL_COUNT)
+                {
+                    bResult = false;
+                    m_Sht31FailureReadTimerTask.Start();
+                }
+                else
+                {
+                    m_Sht31FailCount++;
+                    temperatureInCelcius = m_PrevSht31Temp;
+                    humidityInPercent = m_PrevSht31Humidity;
+                }
             }
             else
             {
-                temperatureInCelcius = m_PrevSht31Temp;
-                humidityInPercent = m_PrevSht31Humidity;
+                m_Sht31FailCount = 0U;
+                m_PrevSht31Temp = temperatureInCelcius;
+                m_PrevSht31Humidity = humidityInPercent;
             }
-        }
-        else
-        {
-            m_PrevSht31Temp = temperatureInCelcius;
-            m_PrevSht31Humidity = humidityInPercent;
         }
         return bResult;
     }
 
     bool IncubatorApp::ReadDht11(double &temperatureInCelcius, double &humidityInPercent)
     {
-        bool bResult = true;
-        if (false == m_DHT11Sensor.Read(temperatureInCelcius, humidityInPercent))
+        bool bResult = false;
+        if (m_Dht11FailureReadTimerTask.IsFinished())
         {
-            constexpr uint8_t ALLOWED_DHT11_FAIL_COUNT = 7U;
-            m_Dht11FailCount++;
-            if (m_Dht11FailCount > ALLOWED_DHT11_FAIL_COUNT)
+            bResult = true;
+            if (false == m_DHT11Sensor.Read(temperatureInCelcius, humidityInPercent))
             {
-                bResult = false;
+                constexpr uint8_t ALLOWED_DHT11_FAIL_COUNT = 7U;
+                if (m_Dht11FailCount > ALLOWED_DHT11_FAIL_COUNT)
+                {
+                    bResult = false;
+                    m_Dht11FailureReadTimerTask.Start();
+                }
+                else
+                {
+                    m_Dht11FailCount++;
+                    temperatureInCelcius = m_PrevDht11Temp;
+                    humidityInPercent = m_PrevDht11Humidity;
+                }
             }
             else
             {
-                temperatureInCelcius = m_PrevDht11Temp;
-                humidityInPercent = m_PrevDht11Humidity;
+                m_Dht11FailCount = 0U;
+                m_PrevDht11Temp = temperatureInCelcius;
+                m_PrevDht11Humidity = humidityInPercent;
             }
-        }
-        else
-        {
-            m_PrevDht11Temp = temperatureInCelcius;
-            m_PrevDht11Humidity = humidityInPercent;
         }
         return bResult;
     }
@@ -71,7 +83,7 @@ namespace Incubator
             }
             else
             {
-                // intentionally left blank
+                bResult = true;
             }
         }
         if (bResult)
@@ -196,7 +208,7 @@ namespace Incubator
 
 
     IncubatorApp::IncubatorApp() :
-        m_InternalFlashModel { static_cast<uint32_t>(0x0800C000UL) },
+        m_InternalFlashModel { static_cast<uint32_t>(0x0800F000UL) },
         m_DHT11Sensor { 0x00U },
         m_TemperatureSensor { 0x00U },
         m_SHT31Sensor { 0x00U },
@@ -227,6 +239,11 @@ namespace Incubator
 
         m_SensorReadTimerTask.SetDurationInMillisecond(SENSOR_READ_TIMEOUT_IN_MILLISECOND);
         m_SensorReadTimerTask.Start();
+
+        m_Sht31FailureReadTimerTask.SetDurationInMillisecond(SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND);
+        m_Sht31FailureReadTimerTask.Start();
+        m_Dht11FailureReadTimerTask.SetDurationInMillisecond(SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND);
+        m_Dht11FailureReadTimerTask.Start();
     }
 
     void IncubatorApp::Run(void)

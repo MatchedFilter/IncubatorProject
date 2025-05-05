@@ -10,7 +10,7 @@ namespace Joystick
         if (0x00U == id)
         {
             ADC_ChannelConfTypeDef sConfig = {0};
-            sConfig.Channel = ADC_CHANNEL_2;
+            sConfig.Channel = ADC_CHANNEL_3;
             sConfig.Rank = ADC_REGULAR_RANK_1;
             sConfig.SamplingTime = ADC_SAMPLETIME_13CYCLES_5;
             HAL_ADC_ConfigChannel(&hadc2, &sConfig);
@@ -23,7 +23,7 @@ namespace Joystick
         if (0x00U == id)
         {
             ADC_ChannelConfTypeDef sConfig = {0};
-            sConfig.Channel = ADC_CHANNEL_3;
+            sConfig.Channel = ADC_CHANNEL_2;
             sConfig.Rank = ADC_REGULAR_RANK_1;
             sConfig.SamplingTime = ADC_SAMPLETIME_13CYCLES_5;
             HAL_ADC_ConfigChannel(&hadc2, &sConfig);

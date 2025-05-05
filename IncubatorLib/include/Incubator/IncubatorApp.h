@@ -16,7 +16,7 @@
 
 namespace Incubator
 {
-    class IncubatorApp
+    class IncubatorApp 
     {
     public:
         IncubatorApp();
@@ -33,6 +33,8 @@ namespace Incubator
         NTC::TemperatureSensor m_TemperatureSensor;
         SHT3X::SHT31Sensor m_SHT31Sensor;
         Time::TimerTask m_SensorReadTimerTask;
+        Time::TimerTask m_Sht31FailureReadTimerTask;
+        Time::TimerTask m_Dht11FailureReadTimerTask;
         uint8_t m_Dht11FailCount;
         uint8_t m_Sht31FailCount;
         uint8_t m_NtcFailCount;
@@ -42,6 +44,7 @@ namespace Incubator
         double m_PrevSht31Humidity;
         double m_PrevNtc;
         static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
+        static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(250UL);
         bool m_SettingsValid;
         SettingsData m_SettingsData;
         TemperatureController m_TemperatureController;

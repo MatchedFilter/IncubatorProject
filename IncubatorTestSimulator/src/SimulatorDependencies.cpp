@@ -422,9 +422,8 @@ namespace Eeprom24C
 namespace Incubator
 {
     uint64_t GetTimestampInMillisecond();
-    bool WriteToFlash(const uint32_t address, const FlashBuffer &buffer );
-    bool ReadFromFlash(const uint32_t address, FlashBuffer &buffer, const uint32_t size);
-    constexpr uint32_t BASE_ADDR = 0x0800C000UL;
+    bool WriteToFlash(const uint32_t flashBaseAddress, const uint32_t offset, const FlashBuffer &buffer);
+    bool ReadFromFlash(const uint32_t baseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size);
 
     static uint64_t s_ApplicationStartTimeInMillisecond;
     static bool s_bIsTimeInitialized = false;
@@ -444,10 +443,10 @@ namespace Incubator
         return milliseconds - s_ApplicationStartTimeInMillisecond;
     }
 
-    bool WriteToFlash(const uint32_t address, const FlashBuffer &buffer )
+    bool WriteToFlash(const uint32_t flashBaseAddress, const uint32_t offset, const FlashBuffer &buffer)
     {
         bool bResult = false;
-        const uint32_t addressToWrite = address - BASE_ADDR;
+        const uint32_t addressToWrite = offset;
 
         std::ifstream InternalFlashInFile ("InternalFlash.bin", std::ios::in | std::ios::binary);
         if (InternalFlashInFile.is_open())
@@ -465,10 +464,10 @@ namespace Incubator
         }
         return bResult;
     }
-    bool ReadFromFlash(const uint32_t address, FlashBuffer &buffer, const uint32_t size)
+    bool ReadFromFlash(const uint32_t baseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size)
     {
         bool bResult = false;
-        const uint32_t addressToRead = address - BASE_ADDR;
+        const uint32_t addressToRead = offset;
 
         std::ifstream internalFlashFile ("InternalFlash.bin", std::ios::in | std::ios::binary);
         if (internalFlashFile.is_open())

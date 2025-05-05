@@ -1,6 +1,6 @@
 #ifndef INCUBATOR_TIMEINFORMATIONDATACHANGEDEVENTHANDLER_H
 #define INCUBATOR_TIMEINFORMATIONDATACHANGEDEVENTHANDLER_H
-#include "Incubator/View/ITimeInformationDataChangedEventHandler.h"
+#include "Incubator/View/DataChangedEventHandler/ITimeInformationDataChangedEventHandler.h"
 #include "Incubator/Model/IModel.h"
 
 namespace Incubator

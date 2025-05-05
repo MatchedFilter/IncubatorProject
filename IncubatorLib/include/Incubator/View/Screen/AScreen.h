@@ -10,7 +10,7 @@ namespace Incubator
         inline AScreen(const EnumScreenType screenType) : m_ScreenType { screenType } { }
         inline virtual ~AScreen() { }
         inline EnumScreenType GetScreenType()const  { return m_ScreenType; }
-        virtual void OnUserAction(const JoystickEvent event) = 0;
+        virtual void OnUserAction(const JoystickEvent &event) = 0;
         virtual void Run() = 0;
 
     private:

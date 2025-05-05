@@ -1,6 +1,6 @@
 #ifndef INCUBATOR_PIDDATACHANGEDEVENTHANDLER_H
 #define INCUBATOR_PIDDATACHANGEDEVENTHANDLER_H
-#include "Incubator/View/IPidDataChangedEventHandler.h"
+#include "Incubator/View/DataChangedEventHandler/IPidDataChangedEventHandler.h"
 #include "Incubator/Model/IModel.h"
 
 namespace Incubator
