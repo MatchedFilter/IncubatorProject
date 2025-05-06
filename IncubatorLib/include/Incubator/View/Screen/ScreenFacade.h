@@ -3,6 +3,10 @@
 #include "TC2004/Lcd.h"
 #include "MenuScreen.h"
 #include "SettingsScreen.h"
+#include "IncubatorSettingsScreen.h"
+#include "TimeSettingsScreen.h"
+#include "DefaultsSettingsScreen.h"
+#include "QuestionScreen.h"
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 
 namespace Incubator
@@ -32,10 +36,21 @@ namespace Incubator
         AScreen *m_CurrentScreen;
         MenuScreen m_MenuScreen;
         SettingsScreen m_SettingsScreen;
+        TimeSettingsScreen m_TimeSettingsScreen;
+        IncubatorSettingsScreen m_IncubatorSettingsScreen;
+        DefaultsSettingsScreen m_DefaultsSettingsScreen;
+        QuestionScreen m_QuestionScreen;
+        
         DataChangedEventHandlers m_DataChangedEventHandlers;
-        IPidDataChangedEventHandler *m_PidDataChangedEventHandler;
-        ISettingsDataChangedEventHandler *m_SettingsDataChangedEventHandler;
-        ITimeInformationDataChangedEventHandler *m_TimeInformationDataChangedEventHandler;
+
+        SettingsData m_CurrentSettingsData;
+        TimeInformationData m_CurrentTimeInformationData;
+        PidData m_CurrentPidData;
+
+        SettingsData m_ChangedSettingsData;
+        TimeInformationData m_ChangedTimeInformationData;
+        PidData m_ChangedPidData;
+        
 
     };
 } // namespace Incubator

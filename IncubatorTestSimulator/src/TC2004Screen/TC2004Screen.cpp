@@ -22,6 +22,7 @@ namespace IncubatorSim
     static constexpr const uint8_t TC2004_CHAR_LOWER_O = 0x02U;
     static constexpr const uint8_t TC2004_CHAR_LOWER_G = 0x03U;
     static constexpr const uint8_t TC2004_CHAR_LOWER_C = 0x04U;
+    static constexpr const uint8_t TC2004_CHAR_UPPER_O = 0x05U;
     static constexpr const uint8_t TC2004_CHAR_DEGREE_SYMBOL = 0xDFU;
     static constexpr const uint8_t TC2004_CHAR_ARROW_SYMBOL = 0x7EU;
 
@@ -154,7 +155,11 @@ namespace IncubatorSim
         case TC2004_CHAR_LOWER_C:
             m_Lines[m_CursorCount] = (char16_t)0x00E7;
             break;
-    
+
+        case TC2004_CHAR_UPPER_O:
+            m_Lines[m_CursorCount] = (char16_t)0x00D6;
+            break;
+
         case TC2004_CHAR_DEGREE_SYMBOL:
             m_Lines[m_CursorCount] = (char16_t)0x00B0;
             break;

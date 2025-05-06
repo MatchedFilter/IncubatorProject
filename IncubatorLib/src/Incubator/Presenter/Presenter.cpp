@@ -172,7 +172,7 @@ namespace Incubator
         m_SpareModel = spareModel;
 
         m_PidDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
-        m_SettingsDataCache.Initialize(m_Model, m_SpareModel);
+        m_SettingsDataCache.Initialize(m_Model, m_SpareModel, m_View);
         m_TimeInformationDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
 
         DataChangedEventHandlers eventHandlers;

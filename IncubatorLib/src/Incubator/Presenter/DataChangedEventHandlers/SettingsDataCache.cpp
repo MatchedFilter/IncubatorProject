@@ -4,7 +4,8 @@ namespace Incubator
 {
     SettingsDataCache::SettingsDataCache() : 
         m_Model { nullptr },
-        m_SpareModel { nullptr }
+        m_SpareModel { nullptr },
+        m_View { nullptr }
     {
     }
 
@@ -21,6 +22,10 @@ namespace Incubator
         if (m_SpareModel != nullptr)
         {
             m_SpareModel->Update(data);
+        }
+        if (m_View != nullptr)
+        {
+            m_View->UpdateSettingsData(data);
         }
     }
 } // namespace Incubator

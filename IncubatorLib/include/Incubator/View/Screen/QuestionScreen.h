@@ -1,5 +1,5 @@
-#ifndef INCUBATOR_SETTINGSSCREEN_H
-#define INCUBATOR_SETTINGSSCREEN_H
+#ifndef INCUBATOR_QUESTIONSCREEN_H
+#define INCUBATOR_QUESTIONSCREEN_H
 #include "TC2004/Lcd.h"
 #include "AScreen.h"
 #include "Incubator/Time/TimerTask.h"
@@ -8,20 +8,21 @@
 namespace Incubator
 {
 
-    enum EnumSettingsScreenLine : uint8_t
+    enum EnumQuestionSelection : uint8_t
     {
-        SETTINGS_SCREEN_LINE_INCUBATOR,
-        SETTINGS_SCREEN_LINE_TIME
+        QUESTION_SELECTION_NO,
+        QUESTION_SELECTION_YES
     };
 
-    class SettingsScreen : public AScreen
+    class QuestionScreen : public AScreen
     {
     public:
-        SettingsScreen();
-        ~SettingsScreen();
+        QuestionScreen();
+        ~QuestionScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
         void OnInitial();
-        inline EnumSettingsScreenLine GetSettingsScreenLine() const { return m_SelectedLine; }
+        inline EnumQuestionSelection GetQuestionSelection() { return m_QuestionSelection; }
+        void Reset();
 
         virtual void Run() override;
 
@@ -29,9 +30,9 @@ namespace Incubator
 
     private:
         TC2004::Lcd *m_Lcd;
-        EnumSettingsScreenLine m_SelectedLine;
+        EnumQuestionSelection m_QuestionSelection;
 
     };
 } // namespace Incubator
 
-#endif // INCUBATOR_SETTINGSSCREEN_H
+#endif // INCUBATOR_QUESTIONSCREEN_H

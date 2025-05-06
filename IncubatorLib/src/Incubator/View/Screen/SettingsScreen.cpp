@@ -6,7 +6,7 @@ namespace Incubator
     SettingsScreen::SettingsScreen() : 
         AScreen { SCREEN_TYPE_SETTINGS },
         m_Lcd { nullptr },
-        m_SelectedLine { 0U }
+        m_SelectedLine { SETTINGS_SCREEN_LINE_INCUBATOR }
     {
     }
 
@@ -23,9 +23,9 @@ namespace Incubator
     {
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
-        m_Lcd->Print(TC2004::String80("--AYARLAR--"));
+        m_Lcd->Print(TC2004::String80("[Ayarlar]"));
         m_Lcd->MoveCursor(1U, 0U);
-        if (0U == m_SelectedLine)
+        if (SETTINGS_SCREEN_LINE_INCUBATOR == m_SelectedLine)
         {
             m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
         }
@@ -38,7 +38,7 @@ namespace Incubator
         m_Lcd->Print(TC2004::String80("ka"));
 
         m_Lcd->MoveCursor(2U, 0U);
-        if (1U == m_SelectedLine)
+        if (SETTINGS_SCREEN_LINE_TIME == m_SelectedLine)
         {
             m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
         }
@@ -58,11 +58,11 @@ namespace Incubator
     {
         switch (m_SelectedLine)
         {
-        case 0U:
+        case SETTINGS_SCREEN_LINE_INCUBATOR:
         {
             if(event.bIsDownPressed)
             {
-                m_SelectedLine = 1U;
+                m_SelectedLine = SETTINGS_SCREEN_LINE_TIME;
                 m_Lcd->MoveCursor(1U, 0U);
                 m_Lcd->Print(TC2004::String80(" "));
                 m_Lcd->MoveCursor(2U, 0U);
@@ -71,11 +71,11 @@ namespace Incubator
             break;
         }
 
-        case 1U:
+        case SETTINGS_SCREEN_LINE_TIME:
         {
             if(event.bIsUpPressed)
             {
-                m_SelectedLine = 0U;
+                m_SelectedLine = SETTINGS_SCREEN_LINE_INCUBATOR;
                 m_Lcd->MoveCursor(1U, 0U);
                 m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
                 m_Lcd->MoveCursor(2U, 0U);
