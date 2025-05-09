@@ -20,7 +20,7 @@ namespace Incubator
         SettingsScreen();
         ~SettingsScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
-        void OnInitial();
+        void OnInitial() override;
         inline EnumSettingsScreenLine GetSettingsScreenLine() const { return m_SelectedLine; }
 
         virtual void Run() override;
@@ -30,6 +30,10 @@ namespace Incubator
     private:
         TC2004::Lcd *m_Lcd;
         EnumSettingsScreenLine m_SelectedLine;
+
+    private:
+        void HandleScreenLineIncubator(const JoystickEvent &event);
+        void HandleScreenLineTime(const JoystickEvent &event);
 
     };
 } // namespace Incubator

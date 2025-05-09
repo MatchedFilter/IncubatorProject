@@ -3,6 +3,87 @@
 namespace Incubator
 {
 
+    void TimeSettingsScreen::HandleScreenLineTotalDay(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
+        else if (event.bIsDownPressed)
+        {
+            m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_DAY;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            // TODO: Create Total Day Set Screen
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    void TimeSettingsScreen::HandleScreenLineDay(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_TOTAL_DAY;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+        }
+        else if (event.bIsDownPressed)
+        {
+            m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_HOUR;
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            // TODO: Create Day Set Screen
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    void TimeSettingsScreen::HandleScreenLineHour(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_DAY;
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            // TODO: Create Day Set Screen
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+
     TimeSettingsScreen::TimeSettingsScreen() : 
         AScreen { SCREEN_TYPE_TIME_SETTINGS },
         m_Lcd { nullptr },
@@ -21,6 +102,7 @@ namespace Incubator
 
     void TimeSettingsScreen::OnInitial()
     {
+        Reset();
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
         m_Lcd->Print(TC2004::String80("[Zaman Ayarlar"));
@@ -76,52 +158,19 @@ namespace Incubator
         {
         case TIME_SETTINGS_SCREEN_LINE_TOTAL_DAY:
         {
-            if(event.bIsDownPressed)
-            {
-                m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_DAY;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-            }
+            HandleScreenLineTotalDay(event);
             break;
         }
 
         case TIME_SETTINGS_SCREEN_LINE_DAY:
         {
-            if(event.bIsUpPressed)
-            {
-                m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_TOTAL_DAY;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-            }
-            else if (event.bIsDownPressed)
-            {
-                m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_HOUR;
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-                m_Lcd->MoveCursor(3U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-            }
-            else
-            {
-                // intentionally left blank
-            }
+            HandleScreenLineDay(event);
             break;
         }
 
         case TIME_SETTINGS_SCREEN_LINE_HOUR:
         {
-            if(event.bIsUpPressed)
-            {
-                m_SelectedLine = TIME_SETTINGS_SCREEN_LINE_DAY;
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-                m_Lcd->MoveCursor(3U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-            }
+            HandleScreenLineHour(event);
             break;
         }
         

@@ -19,7 +19,7 @@ namespace Incubator
         TimeSettingsScreen();
         ~TimeSettingsScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
-        void OnInitial();
+        void OnInitial() override;
 
         virtual void Run() override;
 
@@ -28,6 +28,11 @@ namespace Incubator
     private:
         TC2004::Lcd *m_Lcd;
         EnumTimeSettingsScreenLine m_SelectedLine;
+
+    private:
+        void HandleScreenLineTotalDay(const JoystickEvent &event);
+        void HandleScreenLineDay(const JoystickEvent &event);
+        void HandleScreenLineHour(const JoystickEvent &event);
     };
 } // namespace Incubator
 

@@ -3,10 +3,112 @@
 namespace Incubator
 {
 
-    DefaultsSettingsScreen::DefaultsSettingsScreen() : 
+    void DefaultsSettingsScreen::HandleChickenLineEvent(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_INCUBATOR_SETTINGS);
+        }
+        else if(event.bIsDownPressed)
+        {
+            m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_QUESTION);
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80("Se"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
+            m_Lcd->Print(TC2004::String80("ilen: Tavuk"));
+            m_ChangedSettingsData.Reset();
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    void DefaultsSettingsScreen::HandleGooseLineEvent(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_INCUBATOR_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+        }
+        else if (event.bIsDownPressed)
+        {
+            m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_DUCK;
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_QUESTION);
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80("Se"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
+            m_Lcd->Print(TC2004::String80("ilen: Kaz"));
+            m_ChangedSettingsData.m_TemperatureInMilliCelcius = static_cast<uint32_t>(37700UL);
+            m_ChangedSettingsData.m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37000UL);
+            m_ChangedSettingsData.m_HumidityInPercentage = 60U;
+            m_ChangedSettingsData.m_LastDaysHumidityInPercentage = 70U;
+            m_ChangedSettingsData.m_TotalIncubationDayCount = 28U;
+            m_ChangedSettingsData.m_LastDaysCount = 3U;
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    void DefaultsSettingsScreen::HandleDuckLineEvent(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_INCUBATOR_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE;
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_QUESTION);
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80("Se"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
+            m_Lcd->Print(TC2004::String80("ilen: "));
+            m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
+            m_Lcd->Print(TC2004::String80("rdek"));
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    DefaultsSettingsScreen::DefaultsSettingsScreen(SettingsData &changedSettingsData) : 
         AScreen { SCREEN_TYPE_DEFAULTS_SETTINGS },
         m_Lcd { nullptr },
-        m_SelectedLine { DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN }
+        m_SelectedLine { DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN },
+        m_ChangedSettingsData { changedSettingsData }
     {
     }
 
@@ -21,6 +123,7 @@ namespace Incubator
 
     void DefaultsSettingsScreen::OnInitial()
     {
+        Reset();
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
         m_Lcd->Print(TC2004::String80("[Varsay"));
@@ -73,52 +176,19 @@ namespace Incubator
         {
         case DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN:
         {
-            if(event.bIsDownPressed)
-            {
-                m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-            }
+            HandleChickenLineEvent(event);
             break;
         }
 
         case DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE:
         {
-            if(event.bIsUpPressed)
-            {
-                m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-            }
-            else if (event.bIsDownPressed)
-            {
-                m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_DUCK;
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-                m_Lcd->MoveCursor(3U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-            }
-            else
-            {
-                // intentionally left blank
-            }
+            HandleGooseLineEvent(event);
             break;
         }
 
         case DEFAULTS_SETTINGS_SCREEN_LINE_DUCK:
         {
-            if(event.bIsUpPressed)
-            {
-                m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE;
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-                m_Lcd->MoveCursor(3U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-            }
+            HandleDuckLineEvent(event);
             break;
         }
         

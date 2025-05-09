@@ -6,6 +6,8 @@
 #include "IncubatorSettingsScreen.h"
 #include "TimeSettingsScreen.h"
 #include "DefaultsSettingsScreen.h"
+#include "TemperatureSettingsScreen.h"
+#include "TemperatureSetScreen.h"
 #include "QuestionScreen.h"
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 
@@ -33,11 +35,15 @@ namespace Incubator
 
     private:
         TC2004::Lcd *m_Lcd;
+        AScreen *m_ScreenList[SCREEN_TYPE_SIZE];
         AScreen *m_CurrentScreen;
         MenuScreen m_MenuScreen;
         SettingsScreen m_SettingsScreen;
         TimeSettingsScreen m_TimeSettingsScreen;
         IncubatorSettingsScreen m_IncubatorSettingsScreen;
+        TemperatureSettingsScreen m_TemperatureSettingsScreen;
+        TemperatureSetScreen m_TemperatureSetScreen;
+        TemperatureSetScreen m_TemperatureSetLastDaysScreen;
         DefaultsSettingsScreen m_DefaultsSettingsScreen;
         QuestionScreen m_QuestionScreen;
         
@@ -51,6 +57,9 @@ namespace Incubator
         TimeInformationData m_ChangedTimeInformationData;
         PidData m_ChangedPidData;
         
+    
+    private:
+        EnumScreenType DetermineNextScreen(const JoystickEvent event);
 
     };
 } // namespace Incubator

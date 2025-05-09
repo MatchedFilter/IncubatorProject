@@ -146,6 +146,7 @@ namespace Incubator
 
     void MenuScreen::OnInitial()
     {
+        Reset();
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
         m_Lcd->Print(TC2004::String80("Sck: ---- / ----"));
@@ -156,8 +157,6 @@ namespace Incubator
         m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_U);
         m_Lcd->Print(TC2004::String80("n: -- / --"));
     }
-
-
 
     void MenuScreen::UpdateSettingsData(const SettingsData &data)
     {
@@ -281,9 +280,12 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::OnUserAction(const JoystickEvent &)
+    void MenuScreen::OnUserAction(const JoystickEvent & event)
     {
-        // intentionally left blank
+        if (event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
     }
 
 

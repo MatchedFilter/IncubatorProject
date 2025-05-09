@@ -21,16 +21,18 @@ namespace Incubator
         IncubatorSettingsScreen();
         ~IncubatorSettingsScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
-        inline EnumIncubatorSettingsScreenLine GetLine() const { return m_SelectedLine; }
-        void OnInitial();
-
+        void OnInitial() override;
         virtual void Run() override;
-
         void OnUserAction(const JoystickEvent &event) override;
 
     private:
         TC2004::Lcd *m_Lcd;
         EnumIncubatorSettingsScreenLine m_SelectedLine;
+
+    private:
+        void HandleIncubatorSettingsLine(const JoystickEvent &event);
+        void HandleTemperatureSettingsLine(const JoystickEvent &event);
+        void HandleHumiditySettingsLine(const JoystickEvent &event);
     };
 } // namespace Incubator
 

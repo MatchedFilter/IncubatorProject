@@ -5,7 +5,12 @@ namespace Incubator
 {
     ScreenFacade::ScreenFacade() :
         m_Lcd { nullptr },
-        m_CurrentScreen { nullptr }
+        m_ScreenList { nullptr },
+        m_CurrentScreen { nullptr },
+        m_TemperatureSetScreen { m_DataChangedEventHandlers, m_ChangedSettingsData, m_CurrentSettingsData, false },
+        m_TemperatureSetLastDaysScreen { m_DataChangedEventHandlers, m_ChangedSettingsData, m_CurrentSettingsData, true },
+        m_DefaultsSettingsScreen { m_ChangedSettingsData },
+        m_QuestionScreen {m_DataChangedEventHandlers, m_ChangedSettingsData }
     {
     }
 
@@ -20,8 +25,22 @@ namespace Incubator
         m_SettingsScreen.Initialize(tc2004Lcd);
         m_IncubatorSettingsScreen.Initialize(tc2004Lcd);
         m_TimeSettingsScreen.Initialize(tc2004Lcd);
+        m_TemperatureSettingsScreen.Initialize(tc2004Lcd);
+        m_TemperatureSetScreen.Initialize(tc2004Lcd);
+        m_TemperatureSetLastDaysScreen.Initialize(tc2004Lcd);
         m_DefaultsSettingsScreen.Initialize(tc2004Lcd);
         m_QuestionScreen.Initialize(tc2004Lcd);
+
+        m_ScreenList[SCREEN_TYPE_MENU]                      = &m_MenuScreen;
+        m_ScreenList[SCREEN_TYPE_SETTINGS]                  = &m_SettingsScreen;
+        m_ScreenList[SCREEN_TYPE_INCUBATOR_SETTINGS]        = &m_IncubatorSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_TIME_SETTINGS]             = &m_TimeSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_TEMPERATURE_SETTINGS]      = &m_TemperatureSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_TEMPERATURE_SET]           = &m_TemperatureSetScreen;
+        m_ScreenList[SCREEN_TYPE_TEMPERATURE_SET_LAST_DAYS] = &m_TemperatureSetLastDaysScreen;
+        m_ScreenList[SCREEN_TYPE_DEFAULTS_SETTINGS]         = &m_DefaultsSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_QUESTION]                  = &m_QuestionScreen;
+
         m_CurrentScreen = &m_MenuScreen;
         m_DataChangedEventHandlers.Reset();
         m_DataChangedEventHandlers.Copy(*eventHandlers);
@@ -73,179 +92,15 @@ namespace Incubator
 
     void ScreenFacade::OnUserAction(const JoystickEvent &event)
     {
-
-        switch (m_CurrentScreen->GetScreenType())
+        const EnumScreenType screenType =  m_CurrentScreen->GetScreenType();
+        m_CurrentScreen->OnUserAction(event);
+        const EnumScreenType nextScreenType = m_CurrentScreen->GetNextScreen();
+        if (screenType != nextScreenType)
         {
-        case SCREEN_TYPE_MENU:
-        {
-            if (event.bIsButtonPressed)
-            {
-                m_CurrentScreen = &m_SettingsScreen;
-                m_SettingsScreen.OnInitial();
-            }
-            else
-            {
-                m_CurrentScreen->OnUserAction(event);
-            }
-            break;
-        }
-        case SCREEN_TYPE_SETTINGS:
-        {
-            if (event.bIsLeftPressed)
-            {
-                m_CurrentScreen = &m_MenuScreen;
-                m_MenuScreen.OnInitial();
-            }
-            else if (event.bIsRightPressed)
-            {
-                if (SETTINGS_SCREEN_LINE_INCUBATOR == m_SettingsScreen.GetSettingsScreenLine())
-                {
-                    m_IncubatorSettingsScreen.OnInitial();
-                    m_CurrentScreen = &m_IncubatorSettingsScreen;
-                }
-                else if (SETTINGS_SCREEN_LINE_TIME == m_SettingsScreen.GetSettingsScreenLine())
-                {
-                    m_TimeSettingsScreen.OnInitial();
-                    m_CurrentScreen = &m_TimeSettingsScreen;
-                }
-                else
-                {
-                    // intentionally left blank
-                }
-            }
-            else
-            {
-                m_SettingsScreen.OnUserAction(event);
-            }
-            break;
-        }
-        case SCREEN_TYPE_INCUBATOR_SETTINGS:
-        {
-            if (event.bIsLeftPressed)
-            {
-                m_CurrentScreen = &m_SettingsScreen;
-                m_SettingsScreen.OnInitial();
-            }
-            else if (event.bIsRightPressed)
-            {
-                if (INCUBATOR_SETTINGS_SCREEN_LINE_DEFAULT == m_IncubatorSettingsScreen.GetLine())
-                {
-                    m_CurrentScreen = &m_DefaultsSettingsScreen;
-                    m_DefaultsSettingsScreen.OnInitial();
-                }
-            }
-            else
-            {
-                m_IncubatorSettingsScreen.OnUserAction(event);
-            }
-            break;
-        }
-        case SCREEN_TYPE_TIME_SETTINGS:
-        {
-            if (event.bIsLeftPressed)
-            {
-                m_CurrentScreen = &m_SettingsScreen;
-                m_SettingsScreen.OnInitial();
-            }
-            else if (event.bIsRightPressed)
-            {
-            }
-            else
-            {
-                m_TimeSettingsScreen.OnUserAction(event);
-            }
-            break;
-        }
-        case SCREEN_TYPE_DEFAULTS_SETTINGS:
-        {
-            if (event.bIsLeftPressed)
-            {
-                m_CurrentScreen = &m_IncubatorSettingsScreen;
-                m_IncubatorSettingsScreen.OnInitial();
-            }
-            else if (event.bIsRightPressed)
-            {
-                m_CurrentScreen = &m_QuestionScreen;
-                m_ChangedSettingsData.Copy(m_CurrentSettingsData);
-                switch (m_DefaultsSettingsScreen.GetLine())
-                {
-                case DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN:
-                {
-                    m_QuestionScreen.OnInitial();
-                    m_Lcd->MoveCursor(1U, 0U);
-                    m_Lcd->Print(TC2004::String80("Se"));
-                    m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
-                    m_Lcd->Print(TC2004::String80("ilen: Tavuk"));
-                    m_ChangedSettingsData.Reset();
-                    break;
-                }
-
-                case DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE:
-                {
-                    m_QuestionScreen.OnInitial();
-                    m_Lcd->MoveCursor(1U, 0U);
-                    m_Lcd->Print(TC2004::String80("Se"));
-                    m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
-                    m_Lcd->Print(TC2004::String80("ilen: Kaz"));
-                    m_ChangedSettingsData.m_TemperatureInMilliCelcius = static_cast<uint32_t>(37700UL);
-                    m_ChangedSettingsData.m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37000UL);
-                    m_ChangedSettingsData.m_HumidityInPercentage = 60U;
-                    m_ChangedSettingsData.m_LastDaysHumidityInPercentage = 70U;
-                    m_ChangedSettingsData.m_TotalIncubationDayCount = 28U;
-                    m_ChangedSettingsData.m_LastDaysCount = 3U;
-
-                    break;
-                }
-
-                case DEFAULTS_SETTINGS_SCREEN_LINE_DUCK:
-                {
-                    m_QuestionScreen.OnInitial();
-                    m_Lcd->MoveCursor(1U, 0U);
-                    m_Lcd->Print(TC2004::String80("Se"));
-                    m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
-                    m_Lcd->Print(TC2004::String80("ilen: "));
-                    m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
-                    m_Lcd->Print(TC2004::String80("rdek"));
-
-                    m_ChangedSettingsData.m_TemperatureInMilliCelcius = static_cast<uint32_t>(37800UL);
-                    m_ChangedSettingsData.m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37200UL);
-                    m_ChangedSettingsData.m_HumidityInPercentage = 65U;
-                    m_ChangedSettingsData.m_LastDaysHumidityInPercentage = 80U;
-                    m_ChangedSettingsData.m_TotalIncubationDayCount = 24U;
-                    m_ChangedSettingsData.m_LastDaysCount = 4U;
-                    break;
-                }
-                
-                default:
-                    break;
-                }
-            }
-            else
-            {
-                m_DefaultsSettingsScreen.OnUserAction(event);
-            }
-            break;
-        }
-
-        case SCREEN_TYPE_QUESTION:
-        {
-            m_QuestionScreen.OnUserAction(event);
-            if (event.bIsButtonPressed)
-            {
-                if (QUESTION_SELECTION_YES == m_QuestionScreen.GetQuestionSelection())
-                {
-                    m_DataChangedEventHandlers.m_SettingsDataChangedEventHandler->OnUpdate(m_ChangedSettingsData);
-                }
-                m_QuestionScreen.Reset();
-                m_CurrentScreen = &m_DefaultsSettingsScreen; // TODO: will be updated
-                m_DefaultsSettingsScreen.OnInitial();
-            }
-            break;
-        }
-
-        
-        default:
-            break;
+            const EnumScreenType nextValidScreenType = (static_cast<uint32_t>(nextScreenType) < static_cast<uint32_t>(SCREEN_TYPE_SIZE)) ? nextScreenType : SCREEN_TYPE_MENU;
+            m_CurrentScreen = m_ScreenList[nextValidScreenType];
+            m_CurrentScreen->SetPreviousScreen(screenType);
+            m_CurrentScreen->OnInitial();
         }
     }
 

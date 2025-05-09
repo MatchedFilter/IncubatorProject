@@ -3,6 +3,87 @@
 namespace Incubator
 {
 
+    void IncubatorSettingsScreen::HandleIncubatorSettingsLine(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
+        else if(event.bIsDownPressed)
+        {
+            m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_TEMPERATURE;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_DEFAULTS_SETTINGS);
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    void IncubatorSettingsScreen::HandleTemperatureSettingsLine(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_DEFAULT;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+        }
+        else if (event.bIsDownPressed)
+        {
+            m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_HUMIDITY;
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_TEMPERATURE_SETTINGS);
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+    void IncubatorSettingsScreen::HandleHumiditySettingsLine(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_TEMPERATURE;
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            // TODO: Implement SCREEN_TYPE_TEMPERATURE_HUMIDITY
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
+
     IncubatorSettingsScreen::IncubatorSettingsScreen() : 
         AScreen { SCREEN_TYPE_INCUBATOR_SETTINGS },
         m_Lcd { nullptr },
@@ -21,6 +102,7 @@ namespace Incubator
 
     void IncubatorSettingsScreen::OnInitial()
     {
+        Reset();
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
         m_Lcd->Print(TC2004::String80("[Kulu"));
@@ -80,59 +162,25 @@ namespace Incubator
         {
         case INCUBATOR_SETTINGS_SCREEN_LINE_DEFAULT:
         {
-            if(event.bIsDownPressed)
-            {
-                m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_TEMPERATURE;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-            }
+            HandleIncubatorSettingsLine(event);
             break;
         }
 
         case INCUBATOR_SETTINGS_SCREEN_LINE_TEMPERATURE:
         {
-            if(event.bIsUpPressed)
-            {
-                m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_DEFAULT;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-            }
-            else if (event.bIsDownPressed)
-            {
-                m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_HUMIDITY;
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-                m_Lcd->MoveCursor(3U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-            }
-            else
-            {
-                // intentionally left blank
-            }
+            HandleTemperatureSettingsLine(event);
             break;
         }
 
         case INCUBATOR_SETTINGS_SCREEN_LINE_HUMIDITY:
         {
-            if(event.bIsUpPressed)
-            {
-                m_SelectedLine = INCUBATOR_SETTINGS_SCREEN_LINE_TEMPERATURE;
-                m_Lcd->MoveCursor(2U, 0U);
-                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-                m_Lcd->MoveCursor(3U, 0U);
-                m_Lcd->Print(TC2004::String80(" "));
-            }
+            HandleHumiditySettingsLine(event);
             break;
         }
         
         default:
             break;
         }
-        // intentionally left blank
     }
 
 

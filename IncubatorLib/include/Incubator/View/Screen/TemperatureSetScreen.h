@@ -1,5 +1,5 @@
-#ifndef INCUBATOR_QUESTIONSCREEN_H
-#define INCUBATOR_QUESTIONSCREEN_H
+#ifndef INCUBATOR_TEMPERATURESETSCREEN_H
+#define INCUBATOR_TEMPERATURESETSCREEN_H
 #include "TC2004/Lcd.h"
 #include "AScreen.h"
 #include "Incubator/Time/TimerTask.h"
@@ -8,14 +8,17 @@
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "EnumScreenType.h"
 #include "EnumQuestionSelection.h"
+
 namespace Incubator
 {
-    class QuestionScreen : public AScreen
+    class TemperatureSetScreen : public AScreen
     {
     public:
-        QuestionScreen(DataChangedEventHandlers &eventHandlers,
-            SettingsData &changedSettingsData);
-        ~QuestionScreen();
+        TemperatureSetScreen(DataChangedEventHandlers &eventHandlers,
+            SettingsData &changedSettingsData,
+            const SettingsData &currentSettingsData,
+            bool bIsForLastDays);
+        ~TemperatureSetScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
         void OnInitial() override;
 
@@ -28,7 +31,16 @@ namespace Incubator
         DataChangedEventHandlers &m_DataChangedEventHandlers;
         EnumQuestionSelection m_QuestionSelection;
         SettingsData &m_ChangedSettingsData;
+        const SettingsData &m_CurrentSettingsData;
+        const bool m_bIsForLastDays;
+        bool m_bIsInSaveState;
+
+    private:
+        static TC2004::String80 GetTemperatureString(const uint32_t temperatureInMillicelcius);
+        void OnSaveStateEnter();
+        void HandleForSaveState(const JoystickEvent &event);
+        void HandleForSetState(const JoystickEvent &event);
     };
 } // namespace Incubator
 
-#endif // INCUBATOR_QUESTIONSCREEN_H
+#endif // INCUBATOR_TEMPERATURESETSCREEN_H

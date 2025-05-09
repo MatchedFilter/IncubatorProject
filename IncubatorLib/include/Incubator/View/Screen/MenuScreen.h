@@ -21,7 +21,7 @@ namespace Incubator
         MenuScreen();
         ~MenuScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
-        void OnInitial();
+        void OnInitial() override;
 
         void UpdateSettingsData(const SettingsData &data);
         void UpdateTimeInformationData(const TimeInformationData &data);
@@ -32,7 +32,7 @@ namespace Incubator
         void OnModelFailure();
         virtual void Run() override;
 
-        void OnUserAction(const JoystickEvent&) override;
+        void OnUserAction(const JoystickEvent& event) override;
 
     private:
         TC2004::Lcd *m_Lcd;

@@ -18,11 +18,10 @@ namespace Incubator
     class DefaultsSettingsScreen : public AScreen
     {
     public:
-        DefaultsSettingsScreen();
+        DefaultsSettingsScreen(SettingsData &changedSettingsData);
         ~DefaultsSettingsScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
-        void OnInitial();
-        inline EnumDefaultsSettingsScreenLine GetLine() const { return m_SelectedLine; }
+        void OnInitial() override;
 
         virtual void Run() override;
 
@@ -30,7 +29,13 @@ namespace Incubator
 
     private:
         TC2004::Lcd *m_Lcd;
+        SettingsData &m_ChangedSettingsData;
         EnumDefaultsSettingsScreenLine m_SelectedLine;
+
+    private:
+        void HandleChickenLineEvent(const JoystickEvent &event);
+        void HandleGooseLineEvent(const JoystickEvent &event);
+        void HandleDuckLineEvent(const JoystickEvent &event);
     };
 } // namespace Incubator
 
