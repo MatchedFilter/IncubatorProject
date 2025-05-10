@@ -7,8 +7,11 @@
 #include "TimeSettingsScreen.h"
 #include "DefaultsSettingsScreen.h"
 #include "TemperatureSettingsScreen.h"
+#include "HumiditySettingsScreen.h"
 #include "DataSetScreen/TemperatureDataSetScreen.h"
 #include "DataSetScreen/TemperatureLastDaysDataSetScreen.h"
+#include "DataSetScreen/HumidityDataSetScreen.h"
+#include "DataSetScreen/HumidityLastDaysDataSetScreen.h"
 #include "QuestionScreen.h"
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "Incubator/IncubatorData/IncubatorInformationData.h"
@@ -44,8 +47,11 @@ namespace Incubator
         TimeSettingsScreen m_TimeSettingsScreen;
         IncubatorSettingsScreen m_IncubatorSettingsScreen;
         TemperatureSettingsScreen m_TemperatureSettingsScreen;
+        HumiditySettingsScreen m_HumiditySettingsScreen;
         TemperatureDataSetScreen m_TemperatureDataSetScreen;
         TemperatureLastDaysDataSetScreen m_TemperatureLastDaysDataSetScreen;
+        HumidityDataSetScreen m_HumidityDataSetScreen;
+        HumidityLastDaysDataSetScreen m_HumidityLastDaysDataSetScreen;
         DefaultsSettingsScreen m_DefaultsSettingsScreen;
         QuestionScreen m_QuestionScreen;
         

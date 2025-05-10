@@ -75,7 +75,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            // SetNextScreen(SCREEN_TYPE_HUMIDITY_SETTINGS);
+            SetNextScreen(SCREEN_TYPE_HUMIDITY_SETTINGS);
         }
         else
         {

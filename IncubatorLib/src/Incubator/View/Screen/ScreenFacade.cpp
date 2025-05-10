@@ -24,12 +24,23 @@ namespace Incubator
         m_IncubatorSettingsScreen.Initialize(tc2004Lcd);
         m_TimeSettingsScreen.Initialize(tc2004Lcd);
         m_TemperatureSettingsScreen.Initialize(tc2004Lcd);
+        m_HumiditySettingsScreen.Initialize(tc2004Lcd);
         m_TemperatureDataSetScreen.Initialize(tc2004Lcd,
                 &m_DataChangedEventHandlers,
                 &m_CurrentIncubatorInformationData,
                 &m_ChangedIncubatorInformationData);
 
         m_TemperatureLastDaysDataSetScreen.Initialize(tc2004Lcd,
+            &m_DataChangedEventHandlers,
+            &m_CurrentIncubatorInformationData,
+            &m_ChangedIncubatorInformationData);
+
+        m_HumidityDataSetScreen.Initialize(tc2004Lcd,
+            &m_DataChangedEventHandlers,
+            &m_CurrentIncubatorInformationData,
+            &m_ChangedIncubatorInformationData);
+
+        m_HumidityLastDaysDataSetScreen.Initialize(tc2004Lcd,
             &m_DataChangedEventHandlers,
             &m_CurrentIncubatorInformationData,
             &m_ChangedIncubatorInformationData);
@@ -42,13 +53,15 @@ namespace Incubator
         m_ScreenList[SCREEN_TYPE_INCUBATOR_SETTINGS]                = &m_IncubatorSettingsScreen;
         m_ScreenList[SCREEN_TYPE_TIME_SETTINGS]                     = &m_TimeSettingsScreen;
         m_ScreenList[SCREEN_TYPE_TEMPERATURE_SETTINGS]              = &m_TemperatureSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_HUMIDITY_SETTINGS]                 = &m_HumiditySettingsScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_TEMPERATURE]              = &m_TemperatureDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_TEMPERATURE_LAST_DAYS]    = &m_TemperatureLastDaysDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_HUMIDITY]                 = &m_HumidityDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_HUMIDITY_LAST_DAYS]       = &m_HumidityLastDaysDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DEFAULTS_SETTINGS]                 = &m_DefaultsSettingsScreen;
         m_ScreenList[SCREEN_TYPE_QUESTION]                          = &m_QuestionScreen;
 
         m_CurrentScreen = &m_MenuScreen;
-
     }
 
     void ScreenFacade::UpdatePidData(const PidData &data)

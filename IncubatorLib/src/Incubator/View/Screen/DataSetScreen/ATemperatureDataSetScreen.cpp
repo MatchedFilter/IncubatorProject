@@ -42,8 +42,8 @@ namespace Incubator
     void ATemperatureDataSetScreen::OnIncrementHighEvent()
     {
         const uint32_t nextTemperatureInMilliCelcius = GetChangedTemperatureInMilliCelcius() + HIGH_INCREMENT_IN_MILLICELCIUS;
-        uint32_t resultTemperatureInMilliCelcius = MAX_ALLOWED_TEMPEATURE_IN_MILLICELCIUS;
-        if (nextTemperatureInMilliCelcius < MAX_ALLOWED_TEMPEATURE_IN_MILLICELCIUS)
+        uint32_t resultTemperatureInMilliCelcius = MAX_ALLOWED_TEMPERATURE_IN_MILLICELCIUS;
+        if (nextTemperatureInMilliCelcius < MAX_ALLOWED_TEMPERATURE_IN_MILLICELCIUS)
         {
             resultTemperatureInMilliCelcius = nextTemperatureInMilliCelcius;
         }
@@ -53,8 +53,8 @@ namespace Incubator
     void ATemperatureDataSetScreen::OnIncrementLowEvent()
     {
         const uint32_t nextTemperatureInMilliCelcius = GetChangedTemperatureInMilliCelcius() + LOW_INCREMENT_IN_MILLICELCIUS;
-        uint32_t resultTemperatureInMilliCelcius = MAX_ALLOWED_TEMPEATURE_IN_MILLICELCIUS;
-        if (nextTemperatureInMilliCelcius < MAX_ALLOWED_TEMPEATURE_IN_MILLICELCIUS)
+        uint32_t resultTemperatureInMilliCelcius = MAX_ALLOWED_TEMPERATURE_IN_MILLICELCIUS;
+        if (nextTemperatureInMilliCelcius < MAX_ALLOWED_TEMPERATURE_IN_MILLICELCIUS)
         {
             resultTemperatureInMilliCelcius = nextTemperatureInMilliCelcius;
         }
@@ -64,11 +64,11 @@ namespace Incubator
     void ATemperatureDataSetScreen::OnDecrementHighEvent()
     {
         const uint32_t changedTemperatureInMilliCelcius = GetChangedTemperatureInMilliCelcius();
-        uint32_t resultTemperatureInMilliCelcius = MIN_ALLOWED_TEMPEATURE_IN_MILLICELCIUS;
+        uint32_t resultTemperatureInMilliCelcius = MIN_ALLOWED_TEMPERATURE_IN_MILLICELCIUS;
         if (changedTemperatureInMilliCelcius > HIGH_INCREMENT_IN_MILLICELCIUS)
         {
             const uint32_t nextTemperatureInMilliCelcius = changedTemperatureInMilliCelcius - HIGH_INCREMENT_IN_MILLICELCIUS;
-            if (nextTemperatureInMilliCelcius > MIN_ALLOWED_TEMPEATURE_IN_MILLICELCIUS)
+            if (nextTemperatureInMilliCelcius > MIN_ALLOWED_TEMPERATURE_IN_MILLICELCIUS)
             {
                 resultTemperatureInMilliCelcius = nextTemperatureInMilliCelcius;
             }
@@ -79,11 +79,11 @@ namespace Incubator
     void ATemperatureDataSetScreen::OnDecrementLowEvent()
     {
         const uint32_t changedTemperatureInMilliCelcius = GetChangedTemperatureInMilliCelcius();
-        uint32_t resultTemperatureInMilliCelcius = MIN_ALLOWED_TEMPEATURE_IN_MILLICELCIUS;
+        uint32_t resultTemperatureInMilliCelcius = MIN_ALLOWED_TEMPERATURE_IN_MILLICELCIUS;
         if (changedTemperatureInMilliCelcius > LOW_INCREMENT_IN_MILLICELCIUS)
         {
             const uint32_t nextTemperatureInMilliCelcius = changedTemperatureInMilliCelcius - LOW_INCREMENT_IN_MILLICELCIUS;
-            if (nextTemperatureInMilliCelcius > MIN_ALLOWED_TEMPEATURE_IN_MILLICELCIUS)
+            if (nextTemperatureInMilliCelcius > MIN_ALLOWED_TEMPERATURE_IN_MILLICELCIUS)
             {
                 resultTemperatureInMilliCelcius = nextTemperatureInMilliCelcius;
             }

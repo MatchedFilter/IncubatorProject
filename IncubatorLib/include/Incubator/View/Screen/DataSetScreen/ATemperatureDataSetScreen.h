@@ -27,8 +27,8 @@ namespace Incubator
         virtual EnumScreenType GetNextScreenForNoSelection() const final override;
 
     private:
-        static constexpr uint32_t MAX_ALLOWED_TEMPEATURE_IN_MILLICELCIUS = static_cast<uint32_t>(55000UL);
-        static constexpr uint32_t MIN_ALLOWED_TEMPEATURE_IN_MILLICELCIUS = static_cast<uint32_t>(15000UL);
+        static constexpr uint32_t MAX_ALLOWED_TEMPERATURE_IN_MILLICELCIUS = static_cast<uint32_t>(55000UL);
+        static constexpr uint32_t MIN_ALLOWED_TEMPERATURE_IN_MILLICELCIUS = static_cast<uint32_t>(15000UL);
         static constexpr uint32_t HIGH_INCREMENT_IN_MILLICELCIUS = static_cast<uint32_t>(1000UL);
         static constexpr uint32_t LOW_INCREMENT_IN_MILLICELCIUS = static_cast<uint32_t>(100UL);
         static TC2004::String80 GetTemperatureString(const uint32_t temperatureInMillicelcius);
