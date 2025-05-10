@@ -15,7 +15,9 @@
 #include "QuestionScreen/SaveQuestionScreen.h"
 #include "QuestionScreen/TimeResetQuestionScreen.h"
 #include "CurrentTimeSettingsScreen.h"
-#include "DataSetScreen/DayDataSetScreen.h"
+#include "DataSetScreen/CurrentDayDataSetScreen.h"
+#include "DataSetScreen/CurrentHourDataSetScreen.h"
+#include "DataSetScreen/CurrentMinuteDataSetScreen.h"
 
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "Incubator/IncubatorData/IncubatorInformationData.h"
@@ -60,7 +62,9 @@ namespace Incubator
         SaveQuestionScreen m_SaveQuestionScreen;
         TimeResetQuestionScreen m_TimeResetQuestionScreen;
         CurrentTimeSettingsScreen m_CurrentTimeSettingsScreen;
-        DayDataSetScreen m_DayDataSetScreen;
+        CurrentDayDataSetScreen m_CurrentDayDataSetScreen;
+        CurrentHourDataSetScreen m_CurrentHourDataSetScreen;
+        CurrentMinuteDataSetScreen m_CurrentMinuteDataSetScreen;
         
         DataChangedEventHandlers m_DataChangedEventHandlers;
 

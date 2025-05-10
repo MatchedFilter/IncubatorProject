@@ -52,7 +52,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            // TODO: Add Current Hour Set Screen
+            SetNextScreen(SCREEN_TYPE_DATA_SET_CURRENT_HOUR);
         }
         else
         {
@@ -76,7 +76,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            // TODO: Add Current Minute Set Screen
+            SetNextScreen(SCREEN_TYPE_DATA_SET_CURRENT_MINUTE);
         }
         else
         {

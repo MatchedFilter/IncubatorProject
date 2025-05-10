@@ -33,7 +33,9 @@ namespace Incubator
         m_SaveQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_SettingsData);
         m_TimeResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_TimeInformationData);
         m_CurrentTimeSettingsScreen.Initialize(tc2004Lcd);
-        m_DayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
+        m_CurrentDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
+        m_CurrentHourDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
+        m_CurrentMinuteDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
 
         m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
         m_ScreenList[SCREEN_TYPE_SETTINGS]                          = &m_SettingsScreen;
@@ -49,7 +51,9 @@ namespace Incubator
         m_ScreenList[SCREEN_TYPE_QUESTION_SAVE]                     = &m_SaveQuestionScreen;
         m_ScreenList[SCREEN_TYPE_QUESTION_TIME_RESET]               = &m_TimeResetQuestionScreen;
         m_ScreenList[SCREEN_TYPE_CURRENT_TIME_SETTINGS]             = &m_CurrentTimeSettingsScreen;
-        m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_DAY]              = &m_DayDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_DAY]              = &m_CurrentDayDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_HOUR]             = &m_CurrentHourDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_MINUTE]           = &m_CurrentMinuteDataSetScreen;
 
         m_CurrentScreen = &m_MenuScreen;
     }

@@ -129,7 +129,7 @@ namespace Incubator
     void MenuScreen::DisplayHour()
     {
         m_Lcd->MoveCursor(3U, 5U);
-        const uint8_t currentHour = static_cast<uint8_t>(((Time::TimeUtils::GetIncubatorTimestampInSecond()/ static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(24UL)) % static_cast<uint32_t>(60UL));
+        const uint8_t currentHour = static_cast<uint8_t>(((Time::TimeUtils::GetIncubatorTimestampInSecond() / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(60UL)) % static_cast<uint32_t>(24UL));
         TC2004::String80 hourString;
         hourString.Clear();
         if (currentHour < 10U)

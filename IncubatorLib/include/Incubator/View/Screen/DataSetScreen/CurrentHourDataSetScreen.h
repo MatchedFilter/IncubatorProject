@@ -1,15 +1,15 @@
-#ifndef INCUBATOR_DAYDATASETSCREEN_H
-#define INCUBATOR_DAYDATASETSCREEN_H
+#ifndef INCUBATOR_CURRENTHOURDATASETSCREEN_H
+#define INCUBATOR_CURRENTHOURDATASETSCREEN_H
 #include "TC2004/Lcd.h"
 #include "ADataSetScreen.h"
 
 namespace Incubator
 {
-    class DayDataSetScreen : public ADataSetScreen
+    class CurrentHourDataSetScreen : public ADataSetScreen
     {
     public:
-        DayDataSetScreen();
-        ~DayDataSetScreen();
+        CurrentHourDataSetScreen();
+        ~CurrentHourDataSetScreen();
 
     protected:
         virtual void PrintCurrentData() const final override;
@@ -22,15 +22,15 @@ namespace Incubator
         virtual EnumScreenType GetNextScreenForNoSelection() const final override;
 
     private:
-        static constexpr uint8_t MIN_ALLOWED_DAY_COUNT = 1U;
+        static constexpr uint8_t MAX_ALLOWED_HOUR_COUNT = 23U;
+        static constexpr uint8_t MIN_ALLOWED_HOUR_COUNT = 0U;
         static constexpr uint8_t HIGH_INCREMENT_COUNT = 10U;
         static constexpr uint8_t LOW_INCREMENT_COUNT = 1U;
 
     private:
-        static uint8_t GetDayFromSecond(const uint32_t &second);
-        void SetSecondFromDayCount(const uint8_t &dayCount);
+        void SetSecondFromHour(const uint8_t &hour);
         
     };
 } // namespace Incubator
 
-#endif // INCUBATOR_DAYDATASETSCREEN_H
+#endif // INCUBATOR_CURRENTHOURDATASETSCREEN_H
