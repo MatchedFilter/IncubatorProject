@@ -19,7 +19,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            // TODO: Create Total Day Set Screen
+            // SetNextScreen(SCREEN_TYPE_TIME_SET_TOTAL_DAYS);
         }
         else
         {
@@ -51,6 +51,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
+            // SetNextScreen(SCREEN_TYPE_TIME_SET_LAST_DAYS);
             // TODO: Create Day Set Screen
         }
         else

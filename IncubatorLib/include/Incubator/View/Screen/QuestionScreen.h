@@ -13,10 +13,12 @@ namespace Incubator
     class QuestionScreen : public AScreen
     {
     public:
-        QuestionScreen(DataChangedEventHandlers &eventHandlers,
-            SettingsData &changedSettingsData);
+        QuestionScreen();
         ~QuestionScreen();
-        void Initialize(TC2004::Lcd *tc2004Lcd);
+        void Initialize(TC2004::Lcd *tc2004Lcd,
+            DataChangedEventHandlers *eventHandlers,
+            SettingsData *changedSettingsData
+        );
         void OnInitial() override;
 
         virtual void Reset() override;
@@ -25,9 +27,9 @@ namespace Incubator
 
     private:
         TC2004::Lcd *m_Lcd;
-        DataChangedEventHandlers &m_DataChangedEventHandlers;
         EnumQuestionSelection m_QuestionSelection;
-        SettingsData &m_ChangedSettingsData;
+        DataChangedEventHandlers *m_DataChangedEventHandlers;
+        SettingsData *m_ChangedSettingsData;
     };
 } // namespace Incubator
 

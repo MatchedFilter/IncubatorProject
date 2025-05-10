@@ -1,4 +1,5 @@
 #include "Incubator/View/Screen/DefaultsSettingsScreen.h"
+#include <cassert>
 
 namespace Incubator
 {
@@ -24,7 +25,7 @@ namespace Incubator
             m_Lcd->Print(TC2004::String80("Se"));
             m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
             m_Lcd->Print(TC2004::String80("ilen: Tavuk"));
-            m_ChangedSettingsData.Reset();
+            m_ChangedSettingsData->Reset();
         }
         else
         {
@@ -61,12 +62,12 @@ namespace Incubator
             m_Lcd->Print(TC2004::String80("Se"));
             m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
             m_Lcd->Print(TC2004::String80("ilen: Kaz"));
-            m_ChangedSettingsData.m_TemperatureInMilliCelcius = static_cast<uint32_t>(37700UL);
-            m_ChangedSettingsData.m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37000UL);
-            m_ChangedSettingsData.m_HumidityInPercentage = 60U;
-            m_ChangedSettingsData.m_LastDaysHumidityInPercentage = 70U;
-            m_ChangedSettingsData.m_TotalIncubationDayCount = 28U;
-            m_ChangedSettingsData.m_LastDaysCount = 3U;
+            m_ChangedSettingsData->m_TemperatureInMilliCelcius = static_cast<uint32_t>(37700UL);
+            m_ChangedSettingsData->m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37000UL);
+            m_ChangedSettingsData->m_HumidityInPercentage = 60U;
+            m_ChangedSettingsData->m_LastDaysHumidityInPercentage = 70U;
+            m_ChangedSettingsData->m_TotalIncubationDayCount = 28U;
+            m_ChangedSettingsData->m_LastDaysCount = 3U;
         }
         else
         {
@@ -97,6 +98,13 @@ namespace Incubator
             m_Lcd->Print(TC2004::String80("ilen: "));
             m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
             m_Lcd->Print(TC2004::String80("rdek"));
+            m_ChangedSettingsData->m_TemperatureInMilliCelcius = static_cast<uint32_t>(37500UL);
+            m_ChangedSettingsData->m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37100UL);
+            m_ChangedSettingsData->m_HumidityInPercentage = 65U;
+            m_ChangedSettingsData->m_LastDaysHumidityInPercentage = 75U;
+            m_ChangedSettingsData->m_TotalIncubationDayCount = 28U;
+            m_ChangedSettingsData->m_LastDaysCount = 3U;
+
         }
         else
         {
@@ -104,11 +112,11 @@ namespace Incubator
         }
     }
 
-    DefaultsSettingsScreen::DefaultsSettingsScreen(SettingsData &changedSettingsData) : 
+    DefaultsSettingsScreen::DefaultsSettingsScreen() : 
         AScreen { SCREEN_TYPE_DEFAULTS_SETTINGS },
         m_Lcd { nullptr },
         m_SelectedLine { DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN },
-        m_ChangedSettingsData { changedSettingsData }
+        m_ChangedSettingsData { nullptr }
     {
     }
 
@@ -116,9 +124,11 @@ namespace Incubator
     {
     }
 
-    void DefaultsSettingsScreen::Initialize(TC2004::Lcd *tc2004Lcd)
+    void DefaultsSettingsScreen::Initialize(TC2004::Lcd *tc2004Lcd, SettingsData *changedSettingsData)
     {
         m_Lcd = tc2004Lcd;
+        m_ChangedSettingsData = changedSettingsData;
+        assert(nullptr != m_ChangedSettingsData);
     }
 
     void DefaultsSettingsScreen::OnInitial()

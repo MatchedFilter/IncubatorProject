@@ -1,16 +1,16 @@
 #include "Incubator/View/Screen/QuestionScreen.h"
 #include "TC2004/String80.h"
+#include <cassert>
 
 namespace Incubator
 {
 
-    QuestionScreen::QuestionScreen(DataChangedEventHandlers &eventHandlers,
-            SettingsData &changedSettingsData) : 
+    QuestionScreen::QuestionScreen() : 
         AScreen { SCREEN_TYPE_QUESTION },
         m_Lcd { nullptr },
-        m_DataChangedEventHandlers { eventHandlers },
         m_QuestionSelection { QUESTION_SELECTION_NO },
-        m_ChangedSettingsData { changedSettingsData }
+        m_DataChangedEventHandlers { nullptr },
+        m_ChangedSettingsData { nullptr }
     {
     }
 
@@ -18,9 +18,17 @@ namespace Incubator
     {
     }
 
-    void QuestionScreen::Initialize(TC2004::Lcd *tc2004Lcd)
+    void QuestionScreen::Initialize(TC2004::Lcd *tc2004Lcd,
+        DataChangedEventHandlers *eventHandlers,
+        SettingsData *changedSettingsData
+    )
     {
         m_Lcd = tc2004Lcd;
+        m_DataChangedEventHandlers = eventHandlers;
+        m_ChangedSettingsData = changedSettingsData;
+
+        assert(nullptr != m_DataChangedEventHandlers);
+        assert(nullptr != m_ChangedSettingsData);
     }
 
     void QuestionScreen::OnInitial()
@@ -68,7 +76,7 @@ namespace Incubator
             if (QUESTION_SELECTION_YES == m_QuestionSelection)
             {
                 SetNextScreen(SCREEN_TYPE_MENU);
-                m_DataChangedEventHandlers.m_SettingsDataChangedEventHandler->OnUpdate(m_ChangedSettingsData);
+                m_DataChangedEventHandlers->m_SettingsDataChangedEventHandler->OnUpdate(*m_ChangedSettingsData);
             }
             else
             {

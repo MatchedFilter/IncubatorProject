@@ -7,9 +7,11 @@
 #include "TimeSettingsScreen.h"
 #include "DefaultsSettingsScreen.h"
 #include "TemperatureSettingsScreen.h"
-#include "TemperatureSetScreen.h"
+#include "DataSetScreen/TemperatureDataSetScreen.h"
+#include "DataSetScreen/TemperatureLastDaysDataSetScreen.h"
 #include "QuestionScreen.h"
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
+#include "Incubator/IncubatorData/IncubatorInformationData.h"
 
 namespace Incubator
 {
@@ -42,22 +44,15 @@ namespace Incubator
         TimeSettingsScreen m_TimeSettingsScreen;
         IncubatorSettingsScreen m_IncubatorSettingsScreen;
         TemperatureSettingsScreen m_TemperatureSettingsScreen;
-        TemperatureSetScreen m_TemperatureSetScreen;
-        TemperatureSetScreen m_TemperatureSetLastDaysScreen;
+        TemperatureDataSetScreen m_TemperatureDataSetScreen;
+        TemperatureLastDaysDataSetScreen m_TemperatureLastDaysDataSetScreen;
         DefaultsSettingsScreen m_DefaultsSettingsScreen;
         QuestionScreen m_QuestionScreen;
         
         DataChangedEventHandlers m_DataChangedEventHandlers;
 
-        SettingsData m_CurrentSettingsData;
-        TimeInformationData m_CurrentTimeInformationData;
-        PidData m_CurrentPidData;
-
-        SettingsData m_ChangedSettingsData;
-        TimeInformationData m_ChangedTimeInformationData;
-        PidData m_ChangedPidData;
-        
-    
+        IncubatorInformationData m_CurrentIncubatorInformationData;
+        IncubatorInformationData m_ChangedIncubatorInformationData;
     private:
         EnumScreenType DetermineNextScreen(const JoystickEvent event);
 

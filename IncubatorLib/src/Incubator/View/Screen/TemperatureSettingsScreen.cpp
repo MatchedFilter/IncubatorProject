@@ -19,7 +19,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_TEMPERATURE_SET);
+            SetNextScreen(SCREEN_TYPE_DATA_SET_TEMPERATURE);
         }
         else
         {
@@ -44,7 +44,7 @@ namespace Incubator
 
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_TEMPERATURE_SET_LAST_DAYS);
+            SetNextScreen(SCREEN_TYPE_DATA_SET_TEMPERATURE_LAST_DAYS);
         }
         else
         {
