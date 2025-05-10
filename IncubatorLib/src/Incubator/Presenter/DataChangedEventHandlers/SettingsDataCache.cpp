@@ -15,15 +15,15 @@ namespace Incubator
 
     void SettingsDataCache::OnUpdate(const SettingsData &data)
     {
-        if (m_Model != nullptr)
+        if (nullptr != m_Model)
         {
             m_Model->Update(data);
         }
-        if (m_SpareModel != nullptr)
+        if (nullptr != m_SpareModel)
         {
             m_SpareModel->Update(data);
         }
-        if (m_View != nullptr)
+        if (nullptr != m_View)
         {
             m_View->UpdateSettingsData(data);
         }

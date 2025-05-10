@@ -12,7 +12,11 @@
 #include "DataSetScreen/TemperatureLastDaysDataSetScreen.h"
 #include "DataSetScreen/HumidityDataSetScreen.h"
 #include "DataSetScreen/HumidityLastDaysDataSetScreen.h"
-#include "QuestionScreen.h"
+#include "QuestionScreen/SaveQuestionScreen.h"
+#include "QuestionScreen/TimeResetQuestionScreen.h"
+#include "CurrentTimeSettingsScreen.h"
+#include "DataSetScreen/DayDataSetScreen.h"
+
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "Incubator/IncubatorData/IncubatorInformationData.h"
 
@@ -53,7 +57,10 @@ namespace Incubator
         HumidityDataSetScreen m_HumidityDataSetScreen;
         HumidityLastDaysDataSetScreen m_HumidityLastDaysDataSetScreen;
         DefaultsSettingsScreen m_DefaultsSettingsScreen;
-        QuestionScreen m_QuestionScreen;
+        SaveQuestionScreen m_SaveQuestionScreen;
+        TimeResetQuestionScreen m_TimeResetQuestionScreen;
+        CurrentTimeSettingsScreen m_CurrentTimeSettingsScreen;
+        DayDataSetScreen m_DayDataSetScreen;
         
         DataChangedEventHandlers m_DataChangedEventHandlers;
 

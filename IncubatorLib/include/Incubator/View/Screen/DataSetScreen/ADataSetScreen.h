@@ -8,7 +8,7 @@
 #include "Incubator/IncubatorData/TimeInformationData.h"
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "Incubator/View/Screen/EnumScreenType.h"
-#include "Incubator/View/Screen/EnumQuestionSelection.h"
+#include "Incubator/View/Screen/QuestionScreen/EnumQuestionSelection.h"
 
 namespace Incubator
 {

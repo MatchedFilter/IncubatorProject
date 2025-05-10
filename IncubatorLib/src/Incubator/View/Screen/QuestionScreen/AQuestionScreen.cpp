@@ -1,44 +1,35 @@
-#include "Incubator/View/Screen/QuestionScreen.h"
+#include "Incubator/View/Screen/QuestionScreen/AQuestionScreen.h"
 #include "TC2004/String80.h"
 #include <cassert>
 
 namespace Incubator
 {
 
-    QuestionScreen::QuestionScreen() : 
-        AScreen { SCREEN_TYPE_QUESTION },
+    AQuestionScreen::AQuestionScreen( const EnumScreenType screenType ) : 
+        AScreen { screenType },
         m_Lcd { nullptr },
         m_QuestionSelection { QUESTION_SELECTION_NO },
-        m_DataChangedEventHandlers { nullptr },
-        m_ChangedSettingsData { nullptr }
+        m_DataChangedEventHandlers { nullptr }
     {
     }
 
-    QuestionScreen::~QuestionScreen()
+    AQuestionScreen::~AQuestionScreen()
     {
     }
 
-    void QuestionScreen::Initialize(TC2004::Lcd *tc2004Lcd,
-        DataChangedEventHandlers *eventHandlers,
-        SettingsData *changedSettingsData
+    void AQuestionScreen::Initialize(TC2004::Lcd *tc2004Lcd,
+        DataChangedEventHandlers *eventHandlers
     )
     {
         m_Lcd = tc2004Lcd;
         m_DataChangedEventHandlers = eventHandlers;
-        m_ChangedSettingsData = changedSettingsData;
 
         assert(nullptr != m_DataChangedEventHandlers);
-        assert(nullptr != m_ChangedSettingsData);
     }
 
-    void QuestionScreen::OnInitial()
+    void AQuestionScreen::OnInitial()
     {
         Reset();
-        m_Lcd->MoveCursor(0U, 0U);
-        m_Lcd->Print(TC2004::String80("Kaydedilsin mi?"));
-        m_Lcd->MoveCursor(2U, 0U);
-        m_Lcd->Print(TC2004::String80("                    "));
-
         m_Lcd->MoveCursor(3U, 0U);
         if (QUESTION_SELECTION_NO == m_QuestionSelection)
         {
@@ -58,25 +49,25 @@ namespace Incubator
         }
     }
 
-    void QuestionScreen::Reset()
+    void AQuestionScreen::Reset()
     {
         AScreen::Reset();
         m_QuestionSelection = QUESTION_SELECTION_NO;
     }
 
-    void QuestionScreen::Run()
+    void AQuestionScreen::Run()
     {
         // intentionally left blank
     }
 
-    void QuestionScreen::OnUserAction(const JoystickEvent &event)
+    void AQuestionScreen::OnUserAction(const JoystickEvent &event)
     {
         if (event.bIsButtonPressed)
         {
             if (QUESTION_SELECTION_YES == m_QuestionSelection)
             {
                 SetNextScreen(SCREEN_TYPE_MENU);
-                m_DataChangedEventHandlers->m_SettingsDataChangedEventHandler->OnUpdate(*m_ChangedSettingsData);
+                NotifyChangedData();
             }
             else
             {

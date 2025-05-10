@@ -105,7 +105,7 @@ namespace Incubator
         SettingsData settings2;
         TimeInformationData timeInformation2;
         timeInformation2.Reset();
-        const bool bSpareModelValid = ReadModel(m_SpareModel, pid1, settings1, timeInformation1);
+        const bool bSpareModelValid = ReadModel(m_SpareModel, pid1, settings1, timeInformation2);
 
         bool bResult = true;
         if (bModelValid && bSpareModelValid)
@@ -171,9 +171,9 @@ namespace Incubator
         m_Model = model;
         m_SpareModel = spareModel;
 
-        m_PidDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
+        m_PidDataChangedEventHandler.Initialize(m_Model, m_SpareModel, m_View);
         m_SettingsDataCache.Initialize(m_Model, m_SpareModel, m_View);
-        m_TimeInformationDataChangedEventHandler.Initialize(m_Model, m_SpareModel);
+        m_TimeInformationDataChangedEventHandler.Initialize(m_Model, m_SpareModel, m_View);
 
         DataChangedEventHandlers eventHandlers;
         eventHandlers.Reset();
@@ -201,6 +201,15 @@ namespace Incubator
                 m_bIsInitialized = true;
                 m_View->UpdateSettingsData(settings);
                 m_View->UpdateTimeInformationData(timeInformation);
+                const uint64_t currentTimestampInMillisecond = static_cast<uint64_t>(timeInformation.m_CurrentTimestampInSecond);
+                Time::TimeUtils::SetIncubatorTimestampInSecond(currentTimestampInMillisecond);
+
+                constexpr uint32_t MODEL_UPDATE_DURATION_IN_MILLISECOND = static_cast<uint32_t>(30UL) * static_cast<uint32_t>(1000UL); // half minute
+                m_ModelUpdateTimerTask.SetDurationInMillisecond(MODEL_UPDATE_DURATION_IN_MILLISECOND);
+                constexpr uint32_t SPARE_MODEL_UPDATE_DURATION_IN_MILLISECOND = static_cast<uint32_t>(5UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(1000UL); // 5 minute
+                m_SpareModelUpdateTimerTask.SetDurationInMillisecond(SPARE_MODEL_UPDATE_DURATION_IN_MILLISECOND);
+                m_ModelUpdateTimerTask.Start();
+                m_SpareModelUpdateTimerTask.Start();
             }
             else
             {
@@ -233,6 +242,23 @@ namespace Incubator
 
     void Presenter::Run(void)
     {
+        if (m_ModelUpdateTimerTask.IsFinished())
+        {
+            m_ModelUpdateTimerTask.Start();
+            TimeInformationData timeInfoData;
+            timeInfoData.m_CurrentTimestampInSecond = Time::TimeUtils::GetIncubatorTimestampInSecond();
+            m_Model->Update(timeInfoData);
+            m_View->UpdateTimeInformationData(timeInfoData);
+        }
+        if (m_SpareModelUpdateTimerTask.IsFinished())
+        {
+            m_SpareModelUpdateTimerTask.Start();
+            TimeInformationData timeInfoData;
+            timeInfoData.m_CurrentTimestampInSecond = Time::TimeUtils::GetIncubatorTimestampInSecond();
+            m_Model->Update(timeInfoData);
+            m_SpareModel->Update(timeInfoData);
+            m_View->UpdateTimeInformationData(timeInfoData);
+        }
     }
 
 } // namespace Incubator

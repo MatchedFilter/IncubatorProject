@@ -1,5 +1,6 @@
 #include "Incubator/View/Screen/MenuScreen.h"
 #include "Incubator/IncubatorDependencies.h"
+#include "Incubator/Time/TimeUtils.h"
 
 namespace Incubator
 {
@@ -94,26 +95,77 @@ namespace Incubator
     {
         if (m_bTimeInformationProvided)
         {
-            m_Lcd->MoveCursor(2U, 5U);
-            TC2004::String80 dayString;
-            dayString.Clear();
-            const uint8_t currentDay = static_cast<uint8_t>(((m_TimeInformationData.m_CurrentTimestampInSecond / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(24UL));
-            if (currentDay < 10U)
-            {
-                dayString += " ";
-            }
-            dayString += static_cast<int32_t>(currentDay);
-            m_Lcd->Print(dayString);
-
-            dayString.Clear();
-            m_Lcd->MoveCursor(2U, 10U);
-            if (m_SettingsData.m_TotalIncubationDayCount < 10U)
-            {
-                dayString += " ";
-            }
-            dayString += static_cast<int32_t>(m_SettingsData.m_TotalIncubationDayCount);
-            m_Lcd->Print(dayString);
+            DisplayDay();
+            DisplayHour();
+            DisplayMinute();
+            DisplaySecond();
         }
+    }
+
+    void MenuScreen::DisplayDay()
+    {
+        m_Lcd->MoveCursor(2U, 5U);
+        TC2004::String80 dayString;
+        dayString.Clear();
+        
+        const uint8_t currentDay = static_cast<uint8_t>(((Time::TimeUtils::GetIncubatorTimestampInSecond() / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(24UL));
+        if (currentDay < 10U)
+        {
+            dayString += " ";
+        }
+        dayString += static_cast<int32_t>(currentDay);
+        m_Lcd->Print(dayString);
+
+        dayString.Clear();
+        m_Lcd->MoveCursor(2U, 10U);
+        if (m_SettingsData.m_TotalIncubationDayCount < 10U)
+        {
+            dayString += " ";
+        }
+        dayString += static_cast<int32_t>(m_SettingsData.m_TotalIncubationDayCount);
+        m_Lcd->Print(dayString);
+    }
+
+    void MenuScreen::DisplayHour()
+    {
+        m_Lcd->MoveCursor(3U, 5U);
+        const uint8_t currentHour = static_cast<uint8_t>(((Time::TimeUtils::GetIncubatorTimestampInSecond()/ static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(24UL)) % static_cast<uint32_t>(60UL));
+        TC2004::String80 hourString;
+        hourString.Clear();
+        if (currentHour < 10U)
+        {
+            hourString += " ";
+        }
+        hourString += static_cast<int32_t>(currentHour);
+        m_Lcd->Print(hourString);
+    }
+
+    void MenuScreen::DisplayMinute()
+    {
+        m_Lcd->MoveCursor(3U, 11U);
+        const uint8_t currentMinute = static_cast<uint8_t>((Time::TimeUtils::GetIncubatorTimestampInSecond()/ static_cast<uint32_t>(60UL)) % static_cast<uint32_t>(60UL));
+        TC2004::String80 minuteString;
+        minuteString.Clear();
+        if (currentMinute < 10U)
+        {
+            minuteString += " ";
+        }
+        minuteString += static_cast<int32_t>(currentMinute);
+        m_Lcd->Print(minuteString);
+    }
+
+    void MenuScreen::DisplaySecond()
+    {
+        m_Lcd->MoveCursor(3U, 16U);
+        const uint8_t currentSecond = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() % static_cast<uint32_t>(60UL));
+        TC2004::String80 secondString;
+        secondString.Clear();
+        if (currentSecond < 10U)
+        {
+            secondString += " ";
+        }
+        secondString += static_cast<int32_t>(currentSecond);
+        m_Lcd->Print(secondString);
     }
 
     MenuScreen::MenuScreen() : 
@@ -156,6 +208,8 @@ namespace Incubator
         m_Lcd->Print(TC2004::String80("G"));
         m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_U);
         m_Lcd->Print(TC2004::String80("n: -- / --"));
+        m_Lcd->MoveCursor(3U, 0U);
+        m_Lcd->Print(TC2004::String80("Saat:-- Dk:-- S:--"));
     }
 
     void MenuScreen::UpdateSettingsData(const SettingsData &data)

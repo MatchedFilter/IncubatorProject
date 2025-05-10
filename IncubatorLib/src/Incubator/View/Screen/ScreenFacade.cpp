@@ -22,31 +22,18 @@ namespace Incubator
         m_MenuScreen.Initialize(tc2004Lcd);
         m_SettingsScreen.Initialize(tc2004Lcd);
         m_IncubatorSettingsScreen.Initialize(tc2004Lcd);
-        m_TimeSettingsScreen.Initialize(tc2004Lcd);
+        m_TimeSettingsScreen.Initialize(tc2004Lcd, &m_ChangedIncubatorInformationData.m_TimeInformationData);
         m_TemperatureSettingsScreen.Initialize(tc2004Lcd);
         m_HumiditySettingsScreen.Initialize(tc2004Lcd);
-        m_TemperatureDataSetScreen.Initialize(tc2004Lcd,
-                &m_DataChangedEventHandlers,
-                &m_CurrentIncubatorInformationData,
-                &m_ChangedIncubatorInformationData);
-
-        m_TemperatureLastDaysDataSetScreen.Initialize(tc2004Lcd,
-            &m_DataChangedEventHandlers,
-            &m_CurrentIncubatorInformationData,
-            &m_ChangedIncubatorInformationData);
-
-        m_HumidityDataSetScreen.Initialize(tc2004Lcd,
-            &m_DataChangedEventHandlers,
-            &m_CurrentIncubatorInformationData,
-            &m_ChangedIncubatorInformationData);
-
-        m_HumidityLastDaysDataSetScreen.Initialize(tc2004Lcd,
-            &m_DataChangedEventHandlers,
-            &m_CurrentIncubatorInformationData,
-            &m_ChangedIncubatorInformationData);
-        
+        m_TemperatureDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_TemperatureLastDaysDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_HumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_HumidityLastDaysDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
         m_DefaultsSettingsScreen.Initialize(tc2004Lcd, &m_ChangedIncubatorInformationData.m_SettingsData);
-        m_QuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_SettingsData);
+        m_SaveQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_SettingsData);
+        m_TimeResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_TimeInformationData);
+        m_CurrentTimeSettingsScreen.Initialize(tc2004Lcd);
+        m_DayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
 
         m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
         m_ScreenList[SCREEN_TYPE_SETTINGS]                          = &m_SettingsScreen;
@@ -59,7 +46,10 @@ namespace Incubator
         m_ScreenList[SCREEN_TYPE_DATA_SET_HUMIDITY]                 = &m_HumidityDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_HUMIDITY_LAST_DAYS]       = &m_HumidityLastDaysDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DEFAULTS_SETTINGS]                 = &m_DefaultsSettingsScreen;
-        m_ScreenList[SCREEN_TYPE_QUESTION]                          = &m_QuestionScreen;
+        m_ScreenList[SCREEN_TYPE_QUESTION_SAVE]                     = &m_SaveQuestionScreen;
+        m_ScreenList[SCREEN_TYPE_QUESTION_TIME_RESET]               = &m_TimeResetQuestionScreen;
+        m_ScreenList[SCREEN_TYPE_CURRENT_TIME_SETTINGS]             = &m_CurrentTimeSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_DAY]              = &m_DayDataSetScreen;
 
         m_CurrentScreen = &m_MenuScreen;
     }

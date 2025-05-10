@@ -184,7 +184,7 @@ namespace Incubator
         flashBuffer.Reset();
         static constexpr uint32_t WORD_SIZE = (TimeInformationData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
             + ((TimeInformationData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
-        if (ReadFromFlash(m_FlashBaseAddress, SETTINGS_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
+        if (ReadFromFlash(m_FlashBaseAddress, TIME_INFORMATION_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
         {
             static constexpr uint32_t BUFFER_TOTAL_SIZE = WORD_SIZE * static_cast<uint32_t>(sizeof(uint32_t));
             

@@ -29,8 +29,8 @@ namespace Incubator
 
     private:
         TC2004::Lcd *m_Lcd;
-        SettingsData *m_ChangedSettingsData;
         EnumDefaultsSettingsScreenLine m_SelectedLine;
+        SettingsData *m_ChangedSettingsData;
 
     private:
         void HandleChickenLineEvent(const JoystickEvent &event);

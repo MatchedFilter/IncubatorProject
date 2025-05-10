@@ -5,6 +5,8 @@
 #include "Incubator/Presenter/DataChangedEventHandlers/PidDataChangedEventHandler.h"
 #include "Incubator/Presenter/DataChangedEventHandlers/SettingsDataCache.h"
 #include "Incubator/Presenter/DataChangedEventHandlers/TimeInformationDataChangedEventHandler.h"
+#include "Incubator/Time/TimerTask.h"
+
 
 namespace Incubator
 {
@@ -31,8 +33,9 @@ namespace Incubator
         PidDataChangedEventHandler m_PidDataChangedEventHandler;
         SettingsDataCache m_SettingsDataCache;
         TimeInformationDataChangedEventHandler m_TimeInformationDataChangedEventHandler;
-
         SettingsData m_SettingsData;
+        Time::TimerTask m_ModelUpdateTimerTask;
+        Time::TimerTask m_SpareModelUpdateTimerTask;
 
 
     private:

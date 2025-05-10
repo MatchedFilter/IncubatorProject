@@ -20,7 +20,8 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_QUESTION);
+            SetNextScreen(SCREEN_TYPE_QUESTION_SAVE);
+            m_Lcd->Clear();
             m_Lcd->MoveCursor(1U, 0U);
             m_Lcd->Print(TC2004::String80("Se"));
             m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
@@ -57,7 +58,8 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_QUESTION);
+            SetNextScreen(SCREEN_TYPE_QUESTION_SAVE);
+            m_Lcd->Clear();
             m_Lcd->MoveCursor(1U, 0U);
             m_Lcd->Print(TC2004::String80("Se"));
             m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
@@ -91,7 +93,8 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_QUESTION);
+            SetNextScreen(SCREEN_TYPE_QUESTION_SAVE);
+            m_Lcd->Clear();
             m_Lcd->MoveCursor(1U, 0U);
             m_Lcd->Print(TC2004::String80("Se"));
             m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);

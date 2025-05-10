@@ -23,9 +23,9 @@ namespace Incubator
         inline void SetNextScreen(const EnumScreenType nextScreen) { m_NextScreen = nextScreen; }
         
     private:
+    const EnumScreenType m_ScreenType;
         EnumScreenType m_NextScreen;
         EnumScreenType m_PreviousScreen;
-        const EnumScreenType m_ScreenType;
     };
 } // namespace Incubator
 

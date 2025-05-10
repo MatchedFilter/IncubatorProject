@@ -59,6 +59,10 @@ namespace Incubator
         void DisplayHumidityInformation();
         void StartToDisplayHumidityInformation();
         void DisplayTimeInformation();
+        void DisplayDay();
+        void DisplayHour();
+        void DisplayMinute();
+        void DisplaySecond();
 
     };
 } // namespace Incubator

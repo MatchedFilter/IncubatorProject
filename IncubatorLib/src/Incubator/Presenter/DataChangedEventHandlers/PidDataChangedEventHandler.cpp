@@ -14,13 +14,17 @@ namespace Incubator
 
     void PidDataChangedEventHandler::OnUpdate(const PidData &data)
     {
-        if (m_Model != nullptr)
+        if (nullptr != m_Model)
         {
             m_Model->Update(data);
         }
-        if (m_SpareModel != nullptr)
+        if (nullptr != m_SpareModel)
         {
             m_SpareModel->Update(data);
+        }
+        if (nullptr != m_View)
+        {
+            m_View->UpdatePidData(data);
         }
     }
 } // namespace Incubator

@@ -435,7 +435,7 @@ namespace Incubator
         auto now = std::chrono::system_clock::now();
         auto duration = now.time_since_epoch();
         uint64_t milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-        if (s_bIsTimeInitialized)
+        if (!s_bIsTimeInitialized)
         {
             s_bIsTimeInitialized = true;
             s_ApplicationStartTimeInMillisecond = milliseconds;

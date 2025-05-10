@@ -12,7 +12,7 @@ const char *INCUBATOR_VERSION = INCUBATOR_SOFTWARE_VERSION;
 namespace IncubatorSim
 {
     IncubatorTestSimulator g_IncubatorTestSimulator;
-    static Incubator::IncubatorApp s_IncubatorApp;
+    static Incubator::IncubatorApp *s_IncubatorApp = new Incubator::IncubatorApp();
     static bool s_bApplicationRunning = true;
 
     static void RunIncubatorApp();
@@ -21,7 +21,7 @@ namespace IncubatorSim
     {
         while (s_bApplicationRunning)
         {
-            s_IncubatorApp.Run();
+            s_IncubatorApp->Run();
         }
     }
 } // namespace IncubatorSim
@@ -29,7 +29,7 @@ namespace IncubatorSim
 int main(int argc, char *argv[])
 {
     IncubatorSim::g_IncubatorTestSimulator.Initialize();
-    IncubatorSim::s_IncubatorApp.Initialize();
+    IncubatorSim::s_IncubatorApp->Initialize();
     std::thread incubatorThread = std::thread(IncubatorSim::RunIncubatorApp);
     while (IncubatorSim::s_bApplicationRunning)
     {
