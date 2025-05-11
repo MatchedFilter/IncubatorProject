@@ -211,9 +211,9 @@ namespace Incubator
         m_ScreenFacade.OnHumidityFailure();
     }
 
-    void Lcd2004View::UpdatePidData(const PidData &data)
+    void Lcd2004View::UpdateAdminData(const AdminData &data)
     {
-        m_ScreenFacade.UpdatePidData(data);
+        m_ScreenFacade.UpdateAdminData(data);
     }
 
     void Lcd2004View::UpdateSettingsData(const SettingsData &data)

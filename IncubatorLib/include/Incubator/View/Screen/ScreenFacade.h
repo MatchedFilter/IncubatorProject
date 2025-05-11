@@ -46,7 +46,7 @@ namespace Incubator
         ~ScreenFacade();
         void Initialize(TC2004::Lcd * tc2004Lcd, const DataChangedEventHandlers *eventHandlers);
 
-        void UpdatePidData(const PidData &data);
+        void UpdateAdminData(const AdminData &data);
         void UpdateSettingsData(const SettingsData &data);
         void UpdateTimeInformationData(const TimeInformationData &data);
         void UpdateTemperature(const double &temperatureInCelcius);

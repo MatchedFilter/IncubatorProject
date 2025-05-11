@@ -7,7 +7,7 @@ namespace Incubator
 
     AdministratorResetQuestionScreen::AdministratorResetQuestionScreen() : 
         AQuestionScreen { SCREEN_TYPE_QUESTION_ADMIN_RESET },
-        m_PidData { nullptr }
+        m_AdminData { nullptr }
     {
     }
 
@@ -39,18 +39,18 @@ namespace Incubator
 
     void AdministratorResetQuestionScreen::Initialize(TC2004::Lcd *tc2004Lcd,
         DataChangedEventHandlers *eventHandlers,
-        PidData *changedPidData)
+        AdminData *changedAdminData)
     {
         AQuestionScreen::Initialize(tc2004Lcd, eventHandlers);
-        m_PidData = changedPidData;
+        m_AdminData = changedAdminData;
 
-        assert(nullptr != m_PidData);
+        assert(nullptr != m_AdminData);
     }
 
     void AdministratorResetQuestionScreen::NotifyChangedData()
     {
-        m_PidData->Reset();
-        m_DataChangedEventHandlers->m_PidDataChangedEventHandler->OnUpdate(*m_PidData);
+        m_AdminData->Reset();
+        m_DataChangedEventHandlers->m_AdminDataChangedEventHandler->OnUpdate(*m_AdminData);
     }
 
     EnumScreenType AdministratorResetQuestionScreen::GetNextScreenWhenYesSelected() const

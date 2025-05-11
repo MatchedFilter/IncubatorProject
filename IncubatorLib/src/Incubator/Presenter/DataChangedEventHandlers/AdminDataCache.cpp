@@ -1,25 +1,25 @@
-#include "Incubator/Presenter/DataChangedEventHandlers/PidDataCache.h"
+#include "Incubator/Presenter/DataChangedEventHandlers/AdminDataCache.h"
 
 namespace Incubator
 {
-    PidDataCache::PidDataCache() : 
+    AdminDataCache::AdminDataCache() : 
         m_Model { nullptr },
         m_SpareModel { nullptr },
         m_bUpdated { false }
     {
     }
 
-    PidDataCache::~PidDataCache()
+    AdminDataCache::~AdminDataCache()
     {
     }
 
-    void PidDataCache::OnUpdate(const PidData &data)
+    void AdminDataCache::OnUpdate(const AdminData &data)
     {
         if (false == m_bUpdated)
         {
             m_bUpdated = true;
         }
-        m_PidData.Copy(data);
+        m_AdminData.Copy(data);
 
         if (nullptr != m_Model)
         {
@@ -31,31 +31,31 @@ namespace Incubator
         }
         if (nullptr != m_View)
         {
-            m_View->UpdatePidData(data);
+            m_View->UpdateAdminData(data);
         }
     }
     
-    bool PidDataCache::GetPid(double &p, double &i, double &d)const 
+    bool AdminDataCache::GetPid(double &p, double &i, double &d)const 
     {
         bool bResult = false;
         if (m_bUpdated)
         {
             bResult = true;
-            p = static_cast<double>(m_PidData.m_P) / 10.0;
-            i = static_cast<double>(m_PidData.m_I) / 10.0;
-            d = static_cast<double>(m_PidData.m_D) / 10.0;
+            p = static_cast<double>(m_AdminData.m_P) / 10.0;
+            i = static_cast<double>(m_AdminData.m_I) / 10.0;
+            d = static_cast<double>(m_AdminData.m_D) / 10.0;
         }
         return bResult;
     }
 
-    bool PidDataCache::GetHumidityHysterisisDiff(uint8_t &upperDiff, uint8_t &lowerDiff) const
+    bool AdminDataCache::GetHumidityHysterisisDiff(uint8_t &upperDiff, uint8_t &lowerDiff) const
     {
         bool bResult = false;
         if (m_bUpdated)
         {
             bResult = true;
-            upperDiff = m_PidData.m_UpperHumidityDifference;
-            lowerDiff = m_PidData.m_LowerHumidityDifference;
+            upperDiff = m_AdminData.m_UpperHumidityDifference;
+            lowerDiff = m_AdminData.m_LowerHumidityDifference;
         }
         return bResult; 
     }

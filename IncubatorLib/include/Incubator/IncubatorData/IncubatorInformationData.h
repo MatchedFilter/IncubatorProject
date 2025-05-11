@@ -2,13 +2,13 @@
 #define INCUBATOR_INCUBATORDATA_INCUBATORINFORMATIONDATA_H
 #include "SettingsData.h"
 #include "TimeInformationData.h"
-#include "PidData.h"
+#include "AdminData.h"
 namespace Incubator
 {
     struct IncubatorInformationData
     {
     public:
-        PidData m_PidData;
+        AdminData m_AdminData;
         SettingsData m_SettingsData;
         TimeInformationData m_TimeInformationData;
 

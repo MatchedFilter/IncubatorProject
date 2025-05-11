@@ -1,18 +1,18 @@
-#ifndef INCUBATOR_PIDDATACACHE_H
-#define INCUBATOR_PIDDATACACHE_H
-#include "Incubator/View/DataChangedEventHandler/IPidDataChangedEventHandler.h"
+#ifndef INCUBATOR_ADMINDATACACHE_H
+#define INCUBATOR_ADMINDATACACHE_H
+#include "Incubator/View/DataChangedEventHandler/IAdminDataChangedEventHandler.h"
 #include "Incubator/Model/IModel.h"
 #include "Incubator/View/IView.h"
 
 namespace Incubator
 {
-    class PidDataCache : public IPidDataChangedEventHandler
+    class AdminDataCache : public IAdminDataChangedEventHandler
     {
     public:
-        PidDataCache();
-        virtual ~PidDataCache();
+        AdminDataCache();
+        virtual ~AdminDataCache();
         inline void Initialize(IModel *model, IModel* spareModel, IView *view) { m_Model = model; m_SpareModel = spareModel; m_View = view; }
-        virtual void OnUpdate(const PidData &data) override;
+        virtual void OnUpdate(const AdminData &data) override;
         bool GetPid(double &p, double &i, double &d) const;
         bool GetHumidityHysterisisDiff(uint8_t &upperDiff, uint8_t &lowerDiff) const;
 
@@ -21,8 +21,8 @@ namespace Incubator
         IModel *m_SpareModel;
         IView *m_View;
         bool m_bUpdated;
-        PidData m_PidData;
+        AdminData m_AdminData;
     };
 } // namespace Incubator
 
-#endif // INCUBATOR_PIDDATACACHE_H
+#endif // INCUBATOR_ADMINDATACACHE_H

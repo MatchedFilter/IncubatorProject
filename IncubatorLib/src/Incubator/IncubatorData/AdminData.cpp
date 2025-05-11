@@ -1,8 +1,8 @@
-#include "Incubator/IncubatorData/PidData.h"
+#include "Incubator/IncubatorData/AdminData.h"
 
 namespace Incubator
 {
-    void PidData::Reset()
+    void AdminData::Reset()
     {
         m_P = static_cast<int32_t>(50L);
         m_I = static_cast<int32_t>(5L);
@@ -11,7 +11,7 @@ namespace Incubator
         m_LowerHumidityDifference = 3U;
     }
 
-    void PidData::Copy(const PidData &other)
+    void AdminData::Copy(const AdminData &other)
     {
         m_P = other.m_P;
         m_I = other.m_I;
@@ -21,7 +21,7 @@ namespace Incubator
     }
 
 
-    bool PidData::Serialize(MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> &writer) const
+    bool AdminData::Serialize(MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> &writer) const
     {
         bool bResult = false;
         if (writer.GetRemainingSize() >= DATA_SIZE)
@@ -37,7 +37,7 @@ namespace Incubator
         return bResult;
     }
 
-    bool PidData::Deserialize(MF::ByteStreamReader<INCUBATOR_BUFFER_SIZE> &reader)
+    bool AdminData::Deserialize(MF::ByteStreamReader<INCUBATOR_BUFFER_SIZE> &reader)
     {
         bool bResult = false;
         if (reader.GetRemainingSize() >= DATA_SIZE)

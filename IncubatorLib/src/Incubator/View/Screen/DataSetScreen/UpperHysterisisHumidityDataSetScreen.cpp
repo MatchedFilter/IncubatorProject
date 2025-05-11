@@ -14,17 +14,17 @@ namespace Incubator
 
     uint8_t UpperHysterisisHumidityDataSetScreen::GetCurrentDifference() const
     {
-        return m_CurrentIncubatorInformationData->m_PidData.m_UpperHumidityDifference;
+        return m_CurrentIncubatorInformationData->m_AdminData.m_UpperHumidityDifference;
     }
 
     uint8_t UpperHysterisisHumidityDataSetScreen::GetChangedDifference() const
     {
-        return m_ChangedIncubatorInformationData->m_PidData.m_UpperHumidityDifference;
+        return m_ChangedIncubatorInformationData->m_AdminData.m_UpperHumidityDifference;
     }
 
     void UpperHysterisisHumidityDataSetScreen::SetChangedDifference(const uint8_t &difference)
     {
-        m_ChangedIncubatorInformationData->m_PidData.m_UpperHumidityDifference = difference;
+        m_ChangedIncubatorInformationData->m_AdminData.m_UpperHumidityDifference = difference;
     }
 
 } // namespace Incubator

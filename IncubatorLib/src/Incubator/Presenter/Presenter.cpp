@@ -6,7 +6,7 @@
 namespace Incubator
 {
 
-    bool Presenter::ReadModel(IModel *model, PidData &pid, SettingsData &settings, TimeInformationData &timeInformation)
+    bool Presenter::ReadModel(IModel *model, AdminData &pid, SettingsData &settings, TimeInformationData &timeInformation)
     {
         bool bResult = false;
         if (model != nullptr)
@@ -39,7 +39,7 @@ namespace Incubator
         return bResult;
     }
     
-    bool Presenter::UpdateModel(IModel *model, PidData& data)
+    bool Presenter::UpdateModel(IModel *model, AdminData& data)
     {
         bool bResult = false;
         constexpr uint32_t MAX_TRY_COUNT = static_cast<uint32_t>(5UL);
@@ -93,15 +93,15 @@ namespace Incubator
         return bResult;
     }
 
-    bool Presenter::SyncModels(PidData &pid, SettingsData &settings, TimeInformationData &timeInformation)
+    bool Presenter::SyncModels(AdminData &pid, SettingsData &settings, TimeInformationData &timeInformation)
     {
-        PidData pid1;
+        AdminData pid1;
         SettingsData settings1;
         TimeInformationData timeInformation1;
         timeInformation1.Reset();
         const bool bModelValid = ReadModel(m_Model, pid1, settings1, timeInformation1);
 
-        PidData pid2;
+        AdminData pid2;
         SettingsData settings2;
         TimeInformationData timeInformation2;
         timeInformation2.Reset();
@@ -171,22 +171,22 @@ namespace Incubator
         m_Model = model;
         m_SpareModel = spareModel;
 
-        m_PidDataCache.Initialize(m_Model, m_SpareModel, m_View);
+        m_AdminDataCache.Initialize(m_Model, m_SpareModel, m_View);
         m_SettingsDataCache.Initialize(m_Model, m_SpareModel, m_View);
         m_TimeInformationDataChangedEventHandler.Initialize(m_Model, m_SpareModel, m_View);
 
         DataChangedEventHandlers eventHandlers;
         eventHandlers.Reset();
-        eventHandlers.m_PidDataChangedEventHandler = &m_PidDataCache;
+        eventHandlers.m_AdminDataChangedEventHandler = &m_AdminDataCache;
         eventHandlers.m_SettingsDataChangedEventHandler = &m_SettingsDataCache;
         eventHandlers.m_TimeInformationDataChangedEventHandler = &m_TimeInformationDataChangedEventHandler;
         
         if (m_View->Initialize(&eventHandlers))
         {
-            PidData pid;
+            AdminData adminSettings;
             SettingsData settings;
             TimeInformationData timeInformation;
-            pid.Reset();
+            adminSettings.Reset();
             settings.Reset();
             timeInformation.Reset();
             // (void) UpdateModel(m_Model, pid);
@@ -196,7 +196,7 @@ namespace Incubator
             // (void) UpdateModel(m_SpareModel, settings);
             // (void) UpdateModel(m_SpareModel, timeInformation);
             
-            if (SyncModels(pid, settings, timeInformation))
+            if (SyncModels(adminSettings, settings, timeInformation))
             {
                 m_bIsInitialized = true;
                 m_View->UpdateSettingsData(settings);
@@ -212,7 +212,7 @@ namespace Incubator
                 m_SpareModelUpdateTimerTask.Start();
 
                 m_SettingsDataCache.OnUpdate(settings);
-                m_PidDataCache.OnUpdate(pid);
+                m_AdminDataCache.OnUpdate(adminSettings);
             }
             else
             {
@@ -254,12 +254,12 @@ namespace Incubator
 
     bool Presenter::GetPidData(double &p, double &i, double &d) const
     {
-        return m_PidDataCache.GetPid(p,i,d);
+        return m_AdminDataCache.GetPid(p,i,d);
     }
     
     bool Presenter::GetHumidityHysterisisDiff(uint8_t &upperDiff, uint8_t &lowerDiff) const
     {
-        return m_PidDataCache.GetHumidityHysterisisDiff(upperDiff, lowerDiff);
+        return m_AdminDataCache.GetHumidityHysterisisDiff(upperDiff, lowerDiff);
 
     }
 

@@ -21,11 +21,11 @@ namespace Incubator
         m_Eeprom24C32.Initialize();
     }
 
-    bool EepromModel::Update(const PidData &data)
+    bool EepromModel::Update(const AdminData &data)
     {
         bool bResult = false;
         MF::MFBuffer<INCUBATOR_BUFFER_SIZE> buffer;
-        buffer.m_Size = PidData::DATA_SIZE;
+        buffer.m_Size = AdminData::DATA_SIZE;
         MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> writer(buffer);
         if (data.Serialize(writer))
         {
@@ -88,14 +88,14 @@ namespace Incubator
         return bResult;
     }
 
-    bool EepromModel::Get(PidData &data)
+    bool EepromModel::Get(AdminData &data)
     {
         bool bResult = false;
         Eeprom24C::EepromBuffer eBuffer;
         eBuffer.m_Size = static_cast<uint32_t>(0UL);
-        if (m_Eeprom24C32.Read(PID_DATA_START_MEMORY_ADDRESS, eBuffer, PidData::DATA_SIZE))
+        if (m_Eeprom24C32.Read(PID_DATA_START_MEMORY_ADDRESS, eBuffer, AdminData::DATA_SIZE))
         {
-            if (eBuffer.m_Size == PidData::DATA_SIZE)
+            if (eBuffer.m_Size == AdminData::DATA_SIZE)
             {
                 MF::MFBuffer<INCUBATOR_BUFFER_SIZE> buffer;
                 for (uint32_t i = static_cast<uint32_t>(0UL); i < eBuffer.m_Size; i++)

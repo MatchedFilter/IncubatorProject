@@ -20,19 +20,19 @@ namespace Incubator
     {
     }
 
-    bool InternalFlashModel::Update(const PidData &data)
+    bool InternalFlashModel::Update(const AdminData &data)
     {
         bool bResult = false;
         MF::MFBuffer<INCUBATOR_BUFFER_SIZE> buffer;
-        static constexpr uint32_t WORD_SIZE = (PidData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
-            + ((PidData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
+        static constexpr uint32_t WORD_SIZE = (AdminData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
+            + ((AdminData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
 
         static constexpr uint32_t BUFFER_TOTAL_SIZE = WORD_SIZE * static_cast<uint32_t>(sizeof(uint32_t));
         for (uint32_t i = static_cast<uint32_t>(0UL); i < BUFFER_TOTAL_SIZE; i++)
         {
             buffer.m_Buffer[i] = 0x00U;
         }
-        buffer.m_Size = PidData::DATA_SIZE;
+        buffer.m_Size = AdminData::DATA_SIZE;
         MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> writer(buffer);
         if (data.Serialize(writer))
         {
@@ -117,13 +117,13 @@ namespace Incubator
         return bResult;
     }
 
-    bool InternalFlashModel::Get(PidData &data)
+    bool InternalFlashModel::Get(AdminData &data)
     {
         bool bResult = false;
         FlashBuffer flashBuffer;
         flashBuffer.Reset();
-        static constexpr uint32_t WORD_SIZE = (PidData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
-            + ((PidData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
+        static constexpr uint32_t WORD_SIZE = (AdminData::DATA_SIZE / static_cast<uint32_t>(sizeof(uint32_t))) 
+            + ((AdminData::DATA_SIZE % static_cast<uint32_t>(4UL)) != static_cast<uint32_t>(0UL));
         if (ReadFromFlash(m_FlashBaseAddress, PID_DATA_START_MEMORY_ADDRESS_OFFSET, flashBuffer, WORD_SIZE))
         {
             static constexpr uint32_t BUFFER_TOTAL_SIZE = WORD_SIZE * static_cast<uint32_t>(sizeof(uint32_t));
@@ -136,7 +136,7 @@ namespace Incubator
             {
                 buffer.m_Buffer[i] = flashPtr[i];
             }
-            buffer.m_Size = PidData::DATA_SIZE;
+            buffer.m_Size = AdminData::DATA_SIZE;
             MF::ByteStreamReader<INCUBATOR_BUFFER_SIZE> reader(buffer);
             if (data.Deserialize(reader))
             {

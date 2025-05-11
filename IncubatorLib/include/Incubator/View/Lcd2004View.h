@@ -22,7 +22,7 @@ namespace Incubator
         virtual void UpdateHumidity(const uint8_t humidityInPercentage) override;
         virtual void OnHumidityFailure() override;
 
-        virtual void UpdatePidData(const PidData &data) override;
+        virtual void UpdateAdminData(const AdminData &data) override;
         virtual void UpdateSettingsData(const SettingsData &data) override;
         virtual void UpdateTimeInformationData(const TimeInformationData &data) override;
         virtual void OnModelFailure()override;

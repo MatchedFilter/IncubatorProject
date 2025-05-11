@@ -15,17 +15,17 @@ namespace Incubator
 
     int32_t DDataSetScreen::GetCurrentValue() const
     {
-        return m_CurrentIncubatorInformationData->m_PidData.m_D;
+        return m_CurrentIncubatorInformationData->m_AdminData.m_D;
     }
 
     int32_t DDataSetScreen::GetChangedValue() const
     {
-        return m_ChangedIncubatorInformationData->m_PidData.m_D;
+        return m_ChangedIncubatorInformationData->m_AdminData.m_D;
     }
 
     void DDataSetScreen::SetChangedValue(const int32_t value)
     {
-        m_ChangedIncubatorInformationData->m_PidData.m_D = value;
+        m_ChangedIncubatorInformationData->m_AdminData.m_D = value;
     }
 
 } // namespace Incubator

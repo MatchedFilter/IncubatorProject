@@ -1,11 +1,11 @@
-#ifndef INCUBATOR_INCUBATORDATA_PIDDATA_H
-#define INCUBATOR_INCUBATORDATA_PIDDATA_H
+#ifndef INCUBATOR_INCUBATORDATA_ADMINDATA_H
+#define INCUBATOR_INCUBATORDATA_ADMINDATA_H
 #include "MF/ByteStreamReader.h"
 #include "MF/ByteStreamWriter.h"
 #include "IncubatorDataConstants.h"
 namespace Incubator
 {
-    struct PidData
+    struct AdminData
     {
     public:
         int32_t m_P;
@@ -23,11 +23,11 @@ namespace Incubator
 
     public:
         void Reset();
-        void Copy(const PidData &other);
+        void Copy(const AdminData &other);
         bool Serialize(MF::ByteStreamWriter<INCUBATOR_BUFFER_SIZE> &writer) const;
         bool Deserialize(MF::ByteStreamReader<INCUBATOR_BUFFER_SIZE> &reader);
     };
     
 } // namespace Incubator
 
-#endif // INCUBATOR_INCUBATORDATA_PIDDATA_H
+#endif // INCUBATOR_INCUBATORDATA_ADMINDATA_H

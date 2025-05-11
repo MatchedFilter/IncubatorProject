@@ -90,7 +90,7 @@ namespace Incubator
 
     void APidDataSetScreen::NotifyChangedData()
     {
-        m_DataChangedEventHandlers->m_PidDataChangedEventHandler->OnUpdate(m_ChangedIncubatorInformationData->m_PidData);
+        m_DataChangedEventHandlers->m_AdminDataChangedEventHandler->OnUpdate(m_ChangedIncubatorInformationData->m_AdminData);
     }
 
     EnumScreenType APidDataSetScreen::GetNextScreenForYesSelection() const

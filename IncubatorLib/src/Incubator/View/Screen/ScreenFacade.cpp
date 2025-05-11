@@ -49,7 +49,7 @@ namespace Incubator
         m_HysterisisHumiditySettingsScreen.Initialize(tc2004Lcd);
         m_UpperHysterisisHumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
         m_LowerHysterisisHumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
-        m_AdministratorResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_PidData);
+        m_AdministratorResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_AdminData);
 
         m_ScreenList[SCREEN_TYPE_MAIN]                              = &m_MainScreen;
         m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
@@ -86,9 +86,9 @@ namespace Incubator
         m_CurrentScreen = &m_MainScreen;
     }
 
-    void ScreenFacade::UpdatePidData(const PidData &data)
+    void ScreenFacade::UpdateAdminData(const AdminData &data)
     {
-        m_CurrentIncubatorInformationData.m_PidData.Copy(data);
+        m_CurrentIncubatorInformationData.m_AdminData.Copy(data);
     }
 
     void ScreenFacade::UpdateSettingsData(const SettingsData &data)

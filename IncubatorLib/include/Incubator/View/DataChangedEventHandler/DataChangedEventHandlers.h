@@ -1,6 +1,6 @@
 #ifndef INCUBATOR_DATACHANGEDEVENTHANDLERS_H
 #define INCUBATOR_DATACHANGEDEVENTHANDLERS_H
-#include "IPidDataChangedEventHandler.h"
+#include "IAdminDataChangedEventHandler.h"
 #include "ISettingsDataChangedEventHandler.h"
 #include "ITimeInformationDataChangedEventHandler.h"
 
@@ -8,19 +8,19 @@ namespace Incubator
 {
     struct DataChangedEventHandlers
     {
-        IPidDataChangedEventHandler *m_PidDataChangedEventHandler;
+        IAdminDataChangedEventHandler *m_AdminDataChangedEventHandler;
         ISettingsDataChangedEventHandler *m_SettingsDataChangedEventHandler;
         ITimeInformationDataChangedEventHandler *m_TimeInformationDataChangedEventHandler;
         inline void Reset()
         {
-            m_PidDataChangedEventHandler = nullptr;
+            m_AdminDataChangedEventHandler = nullptr;
             m_SettingsDataChangedEventHandler = nullptr;
             m_TimeInformationDataChangedEventHandler = nullptr;
         }
 
         inline void Copy(const DataChangedEventHandlers &other)
         {
-            m_PidDataChangedEventHandler = other.m_PidDataChangedEventHandler;
+            m_AdminDataChangedEventHandler = other.m_AdminDataChangedEventHandler;
             m_SettingsDataChangedEventHandler = other.m_SettingsDataChangedEventHandler;
             m_TimeInformationDataChangedEventHandler = other.m_TimeInformationDataChangedEventHandler;
         }

@@ -1,7 +1,7 @@
 #ifndef INCUBATOR_AdministratorResetQuestionScreen_H
 #define INCUBATOR_AdministratorResetQuestionScreen_H
 #include "AQuestionScreen.h"
-#include "Incubator/IncubatorData/PidData.h"
+#include "Incubator/IncubatorData/AdminData.h"
 namespace Incubator
 {
     class AdministratorResetQuestionScreen : public AQuestionScreen
@@ -14,14 +14,14 @@ namespace Incubator
         
         void Initialize(TC2004::Lcd *tc2004Lcd,
             DataChangedEventHandlers *eventHandlers,
-            PidData *changedPidData);
+            AdminData *changedAdminData);
 
     protected:
         virtual void NotifyChangedData() override;
         virtual EnumScreenType GetNextScreenWhenYesSelected() const;
 
     private:
-    PidData *m_PidData;
+        AdminData *m_AdminData;
     };
 } // namespace Incubator
 
