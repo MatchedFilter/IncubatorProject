@@ -2,6 +2,8 @@
 #define INCUBATOR_SCREENFACADE_H
 #include "TC2004/Lcd.h"
 #include "MainScreen.h"
+#include "MenuScreen.h"
+#include "SensorsStatusScreen.h"
 #include "SettingsScreen.h"
 #include "IncubatorSettingsScreen.h"
 #include "TimeSettingsScreen.h"
@@ -44,6 +46,7 @@ namespace Incubator
         void UpdateTime(const uint32_t timestampInSeconds);
 
         void OnModelFailure();
+        void UpdateSensorsStatus(const SensorsStatusData &data);
         void OnUserAction(const JoystickEvent &event);
         void Run();
 
@@ -52,6 +55,8 @@ namespace Incubator
         AScreen *m_ScreenList[SCREEN_TYPE_SIZE];
         AScreen *m_CurrentScreen;
         MainScreen m_MainScreen;
+        MenuScreen m_MenuScreen;
+        SensorsStatusScreen m_SensorsStatusScreen;
         SettingsScreen m_SettingsScreen;
         TimeSettingsScreen m_TimeSettingsScreen;
         IncubatorSettingsScreen m_IncubatorSettingsScreen;

@@ -231,6 +231,10 @@ namespace Incubator
         m_ScreenFacade.OnModelFailure();
     }
 
+    void Lcd2004View::UpdateSensorsStatus(const SensorsStatusData &data)
+    {
+        m_ScreenFacade.UpdateSensorsStatus(data);
+    }
 
     void Lcd2004View::Run()
     {
@@ -240,7 +244,5 @@ namespace Incubator
             m_ScreenFacade.Run();
         }
     }
-
-
 
 } // namespace Incubator

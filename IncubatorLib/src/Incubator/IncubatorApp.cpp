@@ -33,6 +33,12 @@ namespace Incubator
                 m_PrevSht31Humidity = humidityInPercent;
             }
         }
+        m_SensorsStatusData.m_Sht31Status = SENSOR_STATUS_ERROR;
+        if (bResult)
+        {
+            m_SensorsStatusData.m_Sht31Status = SENSOR_STATUS_NO_ERROR;
+        }
+
         return bResult;
     }
 
@@ -44,7 +50,7 @@ namespace Incubator
             bResult = true;
             if (false == m_DHT11Sensor.Read(temperatureInCelcius, humidityInPercent))
             {
-                constexpr uint8_t ALLOWED_DHT11_FAIL_COUNT = 7U;
+                constexpr uint8_t ALLOWED_DHT11_FAIL_COUNT = 15U;
                 if (m_Dht11FailCount > ALLOWED_DHT11_FAIL_COUNT)
                 {
                     bResult = false;
@@ -64,6 +70,11 @@ namespace Incubator
                 m_PrevDht11Humidity = humidityInPercent;
             }
         }
+        m_SensorsStatusData.m_Dht11Status = SENSOR_STATUS_ERROR;
+        if (bResult)
+        {
+            m_SensorsStatusData.m_Dht11Status = SENSOR_STATUS_NO_ERROR;
+        }
         return bResult;
     }
 
@@ -73,11 +84,12 @@ namespace Incubator
         if (m_TemperatureSensor.Read(temperatureInCelcius))
         {
             constexpr double TOLERANCE = 7.0;
+            constexpr uint8_t ALLOWED_DHT11_FAILURE_COUNT_FOR_NTC_COMPARISION = 15U;
             if (0U == m_Sht31FailCount)
             {
                 bResult = ((sht31Temp - temperatureInCelcius) < TOLERANCE) && ((sht31Temp - temperatureInCelcius) > -TOLERANCE);
             }
-            else if (0U == m_Dht11FailCount)
+            else if (ALLOWED_DHT11_FAILURE_COUNT_FOR_NTC_COMPARISION > m_Dht11FailCount)
             {
                 bResult = ((dht11Temp - temperatureInCelcius) < TOLERANCE) && ((dht11Temp - temperatureInCelcius) > -TOLERANCE);
             }
@@ -89,6 +101,11 @@ namespace Incubator
         if (bResult)
         {
             m_PrevNtc = temperatureInCelcius;
+            m_SensorsStatusData.m_NtcStatus = SENSOR_STATUS_NO_ERROR;
+        }
+        else
+        {
+            m_SensorsStatusData.m_NtcStatus = SENSOR_STATUS_ERROR;
         }
         return bResult;
     }
@@ -136,6 +153,7 @@ namespace Incubator
 
     void IncubatorApp::UpdatePresenter(const bool &bTemperatureValid, const double &temperatureInCelcius, const bool &bHumidityValid, const double &humidityInPercent)
     {
+        m_Presenter.UpdateSensorsStatus(m_SensorsStatusData);
         if (bTemperatureValid)
         {
             m_Presenter.UpdateTemperature(temperatureInCelcius);
@@ -220,7 +238,8 @@ namespace Incubator
         m_PrevSht31Temp { 0.0 },
         m_PrevSht31Humidity { 0.0 },
         m_PrevNtc { 0.0 },
-        m_SettingsValid { false }
+        m_SettingsValid { false },
+        m_SensorsStatusData { .m_Sht31Status = SENSOR_STATUS_ERROR, .m_NtcStatus = SENSOR_STATUS_ERROR, .m_Dht11Status = SENSOR_STATUS_ERROR }
     {
     }
 

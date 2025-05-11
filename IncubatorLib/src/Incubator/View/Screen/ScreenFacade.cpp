@@ -20,6 +20,8 @@ namespace Incubator
         m_DataChangedEventHandlers.Copy(*eventHandlers);
 
         m_MainScreen.Initialize(tc2004Lcd);
+        m_MenuScreen.Initialize(tc2004Lcd);
+        m_SensorsStatusScreen.Initialize(tc2004Lcd);
         m_SettingsScreen.Initialize(tc2004Lcd);
         m_IncubatorSettingsScreen.Initialize(tc2004Lcd);
         m_TimeSettingsScreen.Initialize(tc2004Lcd, &m_ChangedIncubatorInformationData.m_TimeInformationData);
@@ -41,6 +43,8 @@ namespace Incubator
         m_LastDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
 
         m_ScreenList[SCREEN_TYPE_MAIN]                              = &m_MainScreen;
+        m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
+        m_ScreenList[SCREEN_TYPE_SENSORS_STATUS]                    = &m_SensorsStatusScreen;
         m_ScreenList[SCREEN_TYPE_SETTINGS]                          = &m_SettingsScreen;
         m_ScreenList[SCREEN_TYPE_INCUBATOR_SETTINGS]                = &m_IncubatorSettingsScreen;
         m_ScreenList[SCREEN_TYPE_TIME_SETTINGS]                     = &m_TimeSettingsScreen;
@@ -107,6 +111,12 @@ namespace Incubator
         m_CurrentScreen = &m_MainScreen;
         m_MainScreen.OnModelFailure();
     }
+
+    void ScreenFacade::UpdateSensorsStatus(const SensorsStatusData &data)
+    {
+        m_SensorsStatusScreen.UpdateSensorsStatus(data);
+    }
+
 
     void ScreenFacade::OnUserAction(const JoystickEvent &event)
     {

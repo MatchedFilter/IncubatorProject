@@ -5,7 +5,9 @@ namespace Incubator
     enum EnumScreenType
     {
         SCREEN_TYPE_MAIN,
+        SCREEN_TYPE_MENU,
         SCREEN_TYPE_SETTINGS,
+        SCREEN_TYPE_SENSORS_STATUS,
         SCREEN_TYPE_INCUBATOR_SETTINGS,
         SCREEN_TYPE_TIME_SETTINGS,
         SCREEN_TYPE_DEFAULTS_SETTINGS,

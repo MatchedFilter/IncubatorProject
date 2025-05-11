@@ -127,132 +127,135 @@ namespace DHT11
     
     uint8_t ReadDataPin(const uint8_t id)
     {
-        int dataPinValue;
-        switch (s_Dht11ReadingState)
+        int dataPinValue = 0;
+        if (false == IncubatorSim::g_IncubatorTestSimulator.IsDHT11Failed())
         {
-        case DHT11_READING_STATE_STARTED:
-            dataPinValue = 0;
-            s_Dht11ReadingState = DHT11_READING_STATE_INITIALIZATION_LOW_TO_HIGH;
-            break;
-
-        case DHT11_READING_STATE_INITIALIZATION_LOW_TO_HIGH:
+            switch (s_Dht11ReadingState)
             {
-                if (GetTimestampInMicrosecondFromTimer(0) < 80)
-                {
-                    dataPinValue = 0;
-                }
-                else
-                {
-                    dataPinValue = 1;
-                    s_Dht11ReadingState = DHT11_READING_STATE_INITIALIZATION_HIGH_TO_LOW;
-                }
-            }
-            break;
+            case DHT11_READING_STATE_STARTED:
+                dataPinValue = 0;
+                s_Dht11ReadingState = DHT11_READING_STATE_INITIALIZATION_LOW_TO_HIGH;
+                break;
 
-
-        case DHT11_READING_STATE_INITIALIZATION_HIGH_TO_LOW:
-            {
-                uint8_t humidityPercentage, temperatureInCelcius;
-                bool bDhtValidity = IncubatorSim::g_IncubatorTestSimulator.GetHumidityPercentageAndTemperatureInCelcius(humidityPercentage, temperatureInCelcius);
-                uint8_t checkSum = humidityPercentage + temperatureInCelcius;
-                s_Dht11Data[0] = (humidityPercentage & 0b10000000) != 0;
-                s_Dht11Data[1] = (humidityPercentage & 0b01000000) != 0;
-                s_Dht11Data[2] = (humidityPercentage & 0b00100000) != 0;
-                s_Dht11Data[3] = (humidityPercentage & 0b00010000) != 0;
-                s_Dht11Data[4] = (humidityPercentage & 0b00001000) != 0;
-                s_Dht11Data[5] = (humidityPercentage & 0b00000100) != 0;
-                s_Dht11Data[6] = (humidityPercentage & 0b00000010) != 0;
-                s_Dht11Data[7] = (humidityPercentage & 0b00000001) != 0;
-                s_Dht11Data[16] = (temperatureInCelcius & 0b10000000) != 0;
-                s_Dht11Data[17] = (temperatureInCelcius & 0b01000000) != 0;
-                s_Dht11Data[18] = (temperatureInCelcius & 0b00100000) != 0;
-                s_Dht11Data[19] = (temperatureInCelcius & 0b00010000) != 0;
-                s_Dht11Data[20] = (temperatureInCelcius & 0b00001000) != 0;
-                s_Dht11Data[21] = (temperatureInCelcius & 0b00000100) != 0;
-                s_Dht11Data[22] = (temperatureInCelcius & 0b00000010) != 0;
-                s_Dht11Data[23] = (temperatureInCelcius & 0b00000001) != 0;
-                s_Dht11Data[32] = (checkSum & 0b10000000) != 0;
-                s_Dht11Data[33] = (checkSum & 0b01000000) != 0;
-                s_Dht11Data[34] = (checkSum & 0b00100000) != 0;
-                s_Dht11Data[35] = (checkSum & 0b00010000) != 0;
-                s_Dht11Data[36] = (checkSum & 0b00001000) != 0;
-                s_Dht11Data[37] = (checkSum & 0b00000100) != 0;
-                s_Dht11Data[38] = (checkSum & 0b00000010) != 0;
-                s_Dht11Data[39] = (checkSum & 0b00000001) != 0;
-                if (GetTimestampInMicrosecondFromTimer(0) < 80)
+            case DHT11_READING_STATE_INITIALIZATION_LOW_TO_HIGH:
                 {
-                    dataPinValue = 1;
-                }
-                else
-                {
-                    if (bDhtValidity)
+                    if (GetTimestampInMicrosecondFromTimer(0) < 80)
                     {
                         dataPinValue = 0;
-                        s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
                     }
                     else
                     {
-                        if (GetTimestampInMicrosecondFromTimer(0) < 90)
+                        dataPinValue = 1;
+                        s_Dht11ReadingState = DHT11_READING_STATE_INITIALIZATION_HIGH_TO_LOW;
+                    }
+                }
+                break;
+
+
+            case DHT11_READING_STATE_INITIALIZATION_HIGH_TO_LOW:
+                {
+                    uint8_t humidityPercentage, temperatureInCelcius;
+                    bool bDhtValidity = IncubatorSim::g_IncubatorTestSimulator.GetHumidityPercentageAndTemperatureInCelcius(humidityPercentage, temperatureInCelcius);
+                    uint8_t checkSum = humidityPercentage + temperatureInCelcius;
+                    s_Dht11Data[0] = (humidityPercentage & 0b10000000) != 0;
+                    s_Dht11Data[1] = (humidityPercentage & 0b01000000) != 0;
+                    s_Dht11Data[2] = (humidityPercentage & 0b00100000) != 0;
+                    s_Dht11Data[3] = (humidityPercentage & 0b00010000) != 0;
+                    s_Dht11Data[4] = (humidityPercentage & 0b00001000) != 0;
+                    s_Dht11Data[5] = (humidityPercentage & 0b00000100) != 0;
+                    s_Dht11Data[6] = (humidityPercentage & 0b00000010) != 0;
+                    s_Dht11Data[7] = (humidityPercentage & 0b00000001) != 0;
+                    s_Dht11Data[16] = (temperatureInCelcius & 0b10000000) != 0;
+                    s_Dht11Data[17] = (temperatureInCelcius & 0b01000000) != 0;
+                    s_Dht11Data[18] = (temperatureInCelcius & 0b00100000) != 0;
+                    s_Dht11Data[19] = (temperatureInCelcius & 0b00010000) != 0;
+                    s_Dht11Data[20] = (temperatureInCelcius & 0b00001000) != 0;
+                    s_Dht11Data[21] = (temperatureInCelcius & 0b00000100) != 0;
+                    s_Dht11Data[22] = (temperatureInCelcius & 0b00000010) != 0;
+                    s_Dht11Data[23] = (temperatureInCelcius & 0b00000001) != 0;
+                    s_Dht11Data[32] = (checkSum & 0b10000000) != 0;
+                    s_Dht11Data[33] = (checkSum & 0b01000000) != 0;
+                    s_Dht11Data[34] = (checkSum & 0b00100000) != 0;
+                    s_Dht11Data[35] = (checkSum & 0b00010000) != 0;
+                    s_Dht11Data[36] = (checkSum & 0b00001000) != 0;
+                    s_Dht11Data[37] = (checkSum & 0b00000100) != 0;
+                    s_Dht11Data[38] = (checkSum & 0b00000010) != 0;
+                    s_Dht11Data[39] = (checkSum & 0b00000001) != 0;
+                    if (GetTimestampInMicrosecondFromTimer(0) < 80)
+                    {
+                        dataPinValue = 1;
+                    }
+                    else
+                    {
+                        if (bDhtValidity)
+                        {
+                            dataPinValue = 0;
+                            s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
+                        }
+                        else
+                        {
+                            if (GetTimestampInMicrosecondFromTimer(0) < 90)
+                            {
+                                dataPinValue = 1;
+                            }
+                            else
+                            {
+                                dataPinValue = 0;
+                                s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
+                            }
+                        }
+                    }
+                }
+                break;
+
+            case DHT11_READING_STATE_READING_LOW_TO_HIGH:
+                    dataPinValue = 1;
+                    if (GetTimestampInMicrosecondFromTimer(0) < 20)
+                    {
+                        dataPinValue = 0;
+                    }
+                    else
+                    {
+                        dataPinValue = 1;
+                        s_Dht11ReadingState = DHT11_READING_STATE_READING_HIGH_TO_LOW;
+                    }
+                break;
+
+            case DHT11_READING_STATE_READING_HIGH_TO_LOW:
+                {
+                    if (!s_Dht11Data[s_Dht11ReadingCount])
+                    {
+                        if (GetTimestampInMicrosecondFromTimer(0) < 23UL)
                         {
                             dataPinValue = 1;
                         }
                         else
                         {
                             dataPinValue = 0;
+                            s_Dht11ReadingCount++;
+                            s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
+                        }
+                    }
+                    else
+                    {
+                        if (GetTimestampInMicrosecondFromTimer(0) < 75UL)
+                        {
+                            dataPinValue = 1;
+                        }
+                        else
+                        {
+                            dataPinValue = 0;
+                            s_Dht11ReadingCount++;
                             s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
                         }
                     }
                 }
+                break;
+            
+            default:
+                dataPinValue = 0;
+                break;
             }
-            break;
-
-        case DHT11_READING_STATE_READING_LOW_TO_HIGH:
-                dataPinValue = 1;
-                if (GetTimestampInMicrosecondFromTimer(0) < 20)
-                {
-                    dataPinValue = 0;
-                }
-                else
-                {
-                    dataPinValue = 1;
-                    s_Dht11ReadingState = DHT11_READING_STATE_READING_HIGH_TO_LOW;
-                }
-            break;
-
-        case DHT11_READING_STATE_READING_HIGH_TO_LOW:
-            {
-                if (!s_Dht11Data[s_Dht11ReadingCount])
-                {
-                    if (GetTimestampInMicrosecondFromTimer(0) < 23UL)
-                    {
-                        dataPinValue = 1;
-                    }
-                    else
-                    {
-                        dataPinValue = 0;
-                        s_Dht11ReadingCount++;
-                        s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
-                    }
-                }
-                else
-                {
-                    if (GetTimestampInMicrosecondFromTimer(0) < 75UL)
-                    {
-                        dataPinValue = 1;
-                    }
-                    else
-                    {
-                        dataPinValue = 0;
-                        s_Dht11ReadingCount++;
-                        s_Dht11ReadingState = DHT11_READING_STATE_READING_LOW_TO_HIGH;
-                    }
-                }
-            }
-            break;
-        
-        default:
-            dataPinValue = 0;
-            break;
         }
         return dataPinValue;
     }
@@ -557,6 +560,10 @@ namespace SHT3X
                     crc = static_cast<uint8_t>(NRCS5_LOOK_UP_TABLE[index] ^ static_cast<uint8_t>(crc << 8U));
                 }
             }
+        }
+        if (IncubatorSim::g_IncubatorTestSimulator.IsSHT31Failed())
+        {
+            crc = crc + 1U;
         }
         return crc;
     }

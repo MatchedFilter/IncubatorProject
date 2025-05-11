@@ -12,7 +12,9 @@ namespace Incubator
     {
         DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN,
         DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE,
-        DEFAULTS_SETTINGS_SCREEN_LINE_DUCK
+        DEFAULTS_SETTINGS_SCREEN_LINE_DUCK,
+        DEFAULTS_SETTINGS_SCREEN_LINE_QUAIL
+
     };
 
     class DefaultsSettingsScreen : public AScreen
@@ -36,6 +38,7 @@ namespace Incubator
         void HandleChickenLineEvent(const JoystickEvent &event);
         void HandleGooseLineEvent(const JoystickEvent &event);
         void HandleDuckLineEvent(const JoystickEvent &event);
+        void HandleQuailLineEvent(const JoystickEvent &event);
     };
 } // namespace Incubator
 

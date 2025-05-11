@@ -3,6 +3,7 @@
 #include <cinttypes>
 #include "Incubator/IncubatorData/PidData.h"
 #include "Incubator/IncubatorData/SettingsData.h"
+#include "Incubator/IncubatorData/SensorsStatusData.h"
 #include "Incubator/IncubatorData/TimeInformationData.h"
 #include "DataChangedEventHandler/DataChangedEventHandlers.h"
 namespace Incubator
@@ -19,6 +20,7 @@ namespace Incubator
         virtual void UpdateSettingsData(const SettingsData &data) = 0;
         virtual void UpdateTimeInformationData(const TimeInformationData &data) = 0;
         virtual void OnModelFailure() = 0;
+        virtual void UpdateSensorsStatus(const SensorsStatusData &data) = 0;
         
     };
 } // namespace Incubator

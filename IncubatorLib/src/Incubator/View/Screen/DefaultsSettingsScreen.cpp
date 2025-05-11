@@ -91,6 +91,25 @@ namespace Incubator
             m_Lcd->MoveCursor(3U, 0U);
             m_Lcd->Print(TC2004::String80(" "));
         }
+        else if (event.bIsDownPressed)
+        {
+            m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_QUAIL;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80(" Kaz    "));
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" "));
+            m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
+            m_Lcd->Print(TC2004::String80("rdek    "));
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->Print(TC2004::String80("B"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("ld"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("rc"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("n"));
+        }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
             SetNextScreen(SCREEN_TYPE_QUESTION_SAVE);
@@ -114,6 +133,51 @@ namespace Incubator
             // intentionally left blank
         }
     }
+
+    void DefaultsSettingsScreen::HandleQuailLineEvent(const JoystickEvent &event)
+    {
+        if (event.bIsLeftPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_INCUBATOR_SETTINGS);
+        }
+        else if(event.bIsUpPressed)
+        {
+            m_SelectedLine = DEFAULTS_SETTINGS_SCREEN_LINE_DUCK;
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80(" Tavuk    "));
+            m_Lcd->MoveCursor(2U, 0U);
+            m_Lcd->Print(TC2004::String80(" Kaz    "));
+            m_Lcd->MoveCursor(3U, 0U);
+            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
+            m_Lcd->Print(TC2004::String80("rdek    "));
+        }
+        else if (event.bIsRightPressed || event.bIsButtonPressed)
+        {
+            SetNextScreen(SCREEN_TYPE_QUESTION_SAVE);
+            m_Lcd->Clear();
+            m_Lcd->MoveCursor(1U, 0U);
+            m_Lcd->Print(TC2004::String80("B"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("ld"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("rc"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("n"));
+            m_ChangedSettingsData->m_TemperatureInMilliCelcius = static_cast<uint32_t>(37500UL);
+            m_ChangedSettingsData->m_LastDaysTemperatureInMilliCelcius = static_cast<uint32_t>(37100UL);
+            m_ChangedSettingsData->m_HumidityInPercentage = 67U;
+            m_ChangedSettingsData->m_LastDaysHumidityInPercentage = 75U;
+            m_ChangedSettingsData->m_TotalIncubationDayCount = 18U;
+            m_ChangedSettingsData->m_LastDaysCount = 3U;
+
+        }
+        else
+        {
+            // intentionally left blank
+        }
+    }
+
 
     DefaultsSettingsScreen::DefaultsSettingsScreen() : 
         AScreen { SCREEN_TYPE_DEFAULTS_SETTINGS },
@@ -202,6 +266,12 @@ namespace Incubator
         case DEFAULTS_SETTINGS_SCREEN_LINE_DUCK:
         {
             HandleDuckLineEvent(event);
+            break;
+        }
+
+        case DEFAULTS_SETTINGS_SCREEN_LINE_QUAIL:
+        {
+            HandleQuailLineEvent(event);
             break;
         }
         

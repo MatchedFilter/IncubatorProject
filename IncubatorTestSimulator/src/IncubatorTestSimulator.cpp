@@ -125,31 +125,31 @@ namespace IncubatorSim
             exit(127);
         }
 
-        if (!m_DHT11Component.Initialize(m_Renderer, 900, 10))
+        if (!m_DHT11Component.Initialize(m_Renderer, 50, 550))
         {
             std::cerr << "Unable to initialize DHT11TestComponent" << std::endl;
             exit(127); 
         }
 
-        if (!m_NTCComponent.Initialize(m_Renderer, 900, 150))
+        if (!m_NTCComponent.Initialize(m_Renderer, 200, 550))
         {
             std::cerr << "Unable to initialize NTCComponent" << std::endl;
             exit(127); 
         }
 
-        if (!m_SHT31Component.Initialize(m_Renderer, 900, 300))
+        if (!m_SHT31Component.Initialize(m_Renderer, 350, 550))
         {
             std::cerr << "Unable to initialize SHT31TestComponent" << std::endl;
             exit(127); 
         }
 
-        if (!m_JoystickButton.Initialize(m_Renderer, 100, 550))
+        if (!m_JoystickButton.Initialize(m_Renderer, 900, 100))
         {
             std::cerr << "Unable to initialize JoystickButton" << std::endl;
             exit(127);
         }
 
-        if (!m_HumidityGeneratorComponent.Initialize(m_Renderer, 400, 550, 128, 128, "resources/images/Humidity_Generator.png"))
+        if (!m_HumidityGeneratorComponent.Initialize(m_Renderer, 550, 550, 128, 128, "resources/images/Humidity_Generator.png"))
         {
             std::cerr << "Unable to initialize HumidityGeneratorTestComponent" << std::endl;
             exit(127);

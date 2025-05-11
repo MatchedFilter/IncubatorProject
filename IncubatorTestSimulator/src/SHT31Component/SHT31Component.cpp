@@ -57,6 +57,12 @@ namespace IncubatorSim
         m_TemperatureSlider.Initialize(m_Renderer, m_ImageRect.x, m_ImageRect.y + 130, 120, 7, 20);
         m_HumiditySlider.Initialize(m_Renderer, m_ImageRect.x, m_ImageRect.y + 170, 120, 7, 20);
 
+        m_WorkingWidget.Initialize(renderer,
+            m_ImageRect.x + m_ImageRect.w - 4,
+            m_ImageRect.y + 4,
+            10, 10
+        );
+
         m_SHT31Font = TTF_OpenFont(SHT31_FONT_PATH, SHT31_FONT_SIZE);
         if (m_SHT31Font == nullptr)
         {
@@ -89,6 +95,7 @@ namespace IncubatorSim
 
     void SHT31Component::HandleEvents(const SDL_Event &event)
     {
+        m_WorkingWidget.HandleEvents(event);
         m_TemperatureSlider.HandleEvents(event);
         m_HumiditySlider.HandleEvents(event);
     }
@@ -96,11 +103,12 @@ namespace IncubatorSim
     void SHT31Component::Run()
     {
         SDL_RenderCopy(m_Renderer, m_ImageTexture, NULL, &m_ImageRect);
+        m_WorkingWidget.Run();
         m_TemperatureSlider.Run();
         m_HumiditySlider.Run();
+        
         m_TemperatureInCelcius = (static_cast<double>(m_TemperatureSlider.GetSliderValue()) / 5.0) + 25.0;
         sprintf(m_TemperatureStringValue, "%.02lf", m_TemperatureInCelcius);
-
         SDL_Surface *temperatureSurfaceText = TTF_RenderText_Solid(m_SHT31Font ,m_TemperatureStringValue, {30, 213, 30});
         SDL_Texture *temperatureTextureText = SDL_CreateTextureFromSurface(m_Renderer, temperatureSurfaceText);
         SDL_FreeSurface(temperatureSurfaceText);

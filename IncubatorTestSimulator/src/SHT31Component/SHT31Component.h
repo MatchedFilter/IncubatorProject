@@ -3,6 +3,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include "Widgets/Slider.h"
+#include "Widgets/OnOffWidget.h"
 
 namespace IncubatorSim
 {
@@ -15,6 +16,8 @@ namespace IncubatorSim
         void GetHumidityPercentageAndTemperature(double &humidityPercentage, double &temperature);
         void HandleEvents(const SDL_Event &event);
         void Run();
+        
+        bool IsFailed() const { return false == m_WorkingWidget.IsOn(); }
 
     private:
         SDL_Renderer *m_Renderer;
@@ -25,6 +28,7 @@ namespace IncubatorSim
         SDL_Rect m_HumidityTextRect;
         Slider m_TemperatureSlider;
         Slider m_HumiditySlider;
+        OnOffWidget m_WorkingWidget;
         TTF_Font *m_SHT31Font;
 
     private:

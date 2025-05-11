@@ -239,6 +239,11 @@ namespace Incubator
         m_View->OnHumidityFailure();
     }
 
+    void Presenter::UpdateSensorsStatus(const SensorsStatusData &data)
+    {
+        m_View->UpdateSensorsStatus(data);
+    }
+
 
     void Presenter::Run(void)
     {

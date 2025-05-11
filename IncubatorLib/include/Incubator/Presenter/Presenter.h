@@ -22,6 +22,7 @@ namespace Incubator
 
         void OnTemperatureFailure();
         void OnHumidityFailure();
+        void UpdateSensorsStatus(const SensorsStatusData &data);
 
         void Run(void);
 

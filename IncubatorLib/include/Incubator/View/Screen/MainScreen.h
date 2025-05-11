@@ -56,8 +56,10 @@ namespace Incubator
         TC2004::String80 GetTargetHumidity() const;
         void DisplayTemperatureInformation();
         void StartToDisplayTemperatureInformation();
+        void DisplayTemperatureFailure();
         void DisplayHumidityInformation();
         void StartToDisplayHumidityInformation();
+        void DisplayHumidityFailure();
         void DisplayTimeInformation();
         void DisplayDay();
         void DisplayHour();

@@ -26,6 +26,7 @@ namespace Incubator
         virtual void UpdateSettingsData(const SettingsData &data) override;
         virtual void UpdateTimeInformationData(const TimeInformationData &data) override;
         virtual void OnModelFailure()override;
+        virtual void UpdateSensorsStatus(const SensorsStatusData &data) override;
 
         void Run();
 

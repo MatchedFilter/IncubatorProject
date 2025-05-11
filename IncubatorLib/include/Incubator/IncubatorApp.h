@@ -5,6 +5,7 @@
 #include "View/Lcd2004View.h"
 #include "Model/EepromModel.h"
 #include "Model/InternalFlashModel.h"
+#include "Incubator/IncubatorData/SensorsStatusData.h"
 
 #include "DHT11/DHT11Sensor.h"
 #include "NTC/TemperatureSensor.h"
@@ -44,11 +45,12 @@ namespace Incubator
         double m_PrevSht31Humidity;
         double m_PrevNtc;
         static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
-        static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(250UL);
+        static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
         bool m_SettingsValid;
         SettingsData m_SettingsData;
         TemperatureController m_TemperatureController;
         HumidityController m_HumidityController;
+        SensorsStatusData m_SensorsStatusData;
 
     private:
         bool ReadSht31(double &temperatureInCelcius, double &humidityInPercent);

@@ -63,6 +63,15 @@ namespace Incubator
         m_Lcd->Print(TC2004::String80("Sck: ---- / ----    "));
     }
 
+    void MainScreen::DisplayTemperatureFailure()
+    {
+        m_Lcd->MoveCursor(0U, 0U);
+        m_Lcd->Print(TC2004::String80("Sck Hatas"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+        m_Lcd->Print(TC2004::String80("          "));
+        m_Lcd->MoveCursor(3U, 0U);
+    }
+    
     void MainScreen::DisplayHumidityInformation()
     {
         if (m_bIsHumiditySet)
@@ -89,6 +98,14 @@ namespace Incubator
     {
         m_Lcd->MoveCursor(1U, 0U);
         m_Lcd->Print(TC2004::String80("Nem: -- / --        "));
+    }
+
+    void MainScreen::DisplayHumidityFailure()
+    {
+        m_Lcd->MoveCursor(1U, 0U);
+        m_Lcd->Print(TC2004::String80("Nem Hatas"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+        m_Lcd->Print(TC2004::String80("          "));
     }
 
     void MainScreen::DisplayTimeInformation()
@@ -259,11 +276,6 @@ namespace Incubator
             if (UPDATE_STATUS_INVALID != m_TemperatureUpdateStatus)
             {
                 m_TemperatureUpdateStatus = UPDATE_STATUS_INVALID;
-                m_Lcd->MoveCursor(0U, 0U);
-                m_Lcd->Print(TC2004::String80("Sck Hatas"));
-                m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
-                m_Lcd->Print(TC2004::String80("          "));
-                m_Lcd->MoveCursor(3U, 0U);
             }
         }
     }
@@ -275,10 +287,6 @@ namespace Incubator
             if (UPDATE_STATUS_INVALID != m_HumidityUpdateStatus)
             {
                 m_HumidityUpdateStatus = UPDATE_STATUS_INVALID;
-                m_Lcd->MoveCursor(1U, 0U);
-                m_Lcd->Print(TC2004::String80("Nem Hatas"));
-                m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
-                m_Lcd->Print(TC2004::String80("          "));
             }
         }
     }
@@ -312,7 +320,7 @@ namespace Incubator
                 }
                 else
                 {
-                    // intentionally left blank
+                    DisplayHumidityFailure();
                 }
 
                 if (UPDATE_STATUS_SCREEN_UPDATED == m_TemperatureUpdateStatus)
@@ -326,7 +334,7 @@ namespace Incubator
                 }
                 else
                 {
-                    // intentionally left blank
+                    DisplayTemperatureFailure();
                 }
 
                 DisplayTimeInformation();
@@ -338,7 +346,7 @@ namespace Incubator
     {
         if (event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_SETTINGS);
+            SetNextScreen(SCREEN_TYPE_MENU);
         }
     }
 

@@ -87,7 +87,10 @@ namespace Incubator
         }
         m_Lcd->Print(TC2004::String80("Toplam G"));
         m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_U);
-        m_Lcd->Print(TC2004::String80("n"));
+        m_Lcd->Print(TC2004::String80("n Say"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+        m_Lcd->Print(TC2004::String80("s"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
 
         m_Lcd->MoveCursor(2U, 0U);
         if (INCUBATOR_TIME_SETTINGS_SCREEN_LINE_LAST_DAYS == m_SelectedLine)
@@ -100,7 +103,10 @@ namespace Incubator
         }
         m_Lcd->Print(TC2004::String80("Son G"));
         m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_U);
-        m_Lcd->Print(TC2004::String80("n"));
+        m_Lcd->Print(TC2004::String80("n Say"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+        m_Lcd->Print(TC2004::String80("s"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
     }
 
     void IncubatorTimeSettingsScreen::Run()

@@ -1,17 +1,17 @@
-#include "Incubator/View/Screen/SettingsScreen.h"
+#include "Incubator/View/Screen/MenuScreen.h"
 
 namespace Incubator
 {
 
-    void SettingsScreen::HandleScreenLineIncubator(const JoystickEvent &event)
+    void MenuScreen::HandleScreenLineSettings(const JoystickEvent &event)
     {
         if (event.bIsLeftPressed)
         {
-            SetNextScreen(SCREEN_TYPE_MENU);
+            SetNextScreen(SCREEN_TYPE_MAIN);
         }
         else if(event.bIsDownPressed)
         {
-            m_SelectedLine = SETTINGS_SCREEN_LINE_TIME;
+            m_SelectedLine = MENU_SCREEN_LINE_SENSORS_STATUS;
             m_Lcd->MoveCursor(1U, 0U);
             m_Lcd->Print(TC2004::String80(" "));
             m_Lcd->MoveCursor(2U, 0U);
@@ -19,7 +19,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_INCUBATOR_SETTINGS);
+            SetNextScreen(SCREEN_TYPE_SETTINGS);
         }
         else
         {
@@ -27,15 +27,15 @@ namespace Incubator
         }
     }
 
-    void SettingsScreen::HandleScreenLineTime(const JoystickEvent &event)
+    void MenuScreen::HandleScreenLineSensorsStatus(const JoystickEvent &event)
     {
         if (event.bIsLeftPressed)
         {
-            SetNextScreen(SCREEN_TYPE_MENU);
+            SetNextScreen(SCREEN_TYPE_MAIN);
         }
         else if(event.bIsUpPressed)
         {
-            m_SelectedLine = SETTINGS_SCREEN_LINE_INCUBATOR;
+            m_SelectedLine = MENU_SCREEN_LINE_SETTINGS;
             m_Lcd->MoveCursor(1U, 0U);
             m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
             m_Lcd->MoveCursor(2U, 0U);
@@ -43,7 +43,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            SetNextScreen(SCREEN_TYPE_TIME_SETTINGS);
+            SetNextScreen(SCREEN_TYPE_SENSORS_STATUS);
         }
         else
         {
@@ -51,30 +51,32 @@ namespace Incubator
         }
     }
 
-    SettingsScreen::SettingsScreen() : 
-        AScreen { SCREEN_TYPE_SETTINGS },
+    MenuScreen::MenuScreen() : 
+        AScreen { SCREEN_TYPE_MENU },
         m_Lcd { nullptr },
-        m_SelectedLine { SETTINGS_SCREEN_LINE_INCUBATOR }
+        m_SelectedLine { MENU_SCREEN_LINE_SETTINGS }
     {
     }
 
-    SettingsScreen::~SettingsScreen()
+    MenuScreen::~MenuScreen()
     {
     }
 
-    void SettingsScreen::Initialize(TC2004::Lcd *tc2004Lcd)
+    void MenuScreen::Initialize(TC2004::Lcd *tc2004Lcd)
     {
         m_Lcd = tc2004Lcd;
     }
 
-    void SettingsScreen::OnInitial()
+    void MenuScreen::OnInitial()
     {
         Reset();
         m_Lcd->Clear();
         m_Lcd->MoveCursor(0U, 0U);
-        m_Lcd->Print(TC2004::String80("[Ayarlar]"));
+        m_Lcd->Print(TC2004::String80("[Men"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_U);
+        m_Lcd->Print(TC2004::String80("]"));
         m_Lcd->MoveCursor(1U, 0U);
-        if (SETTINGS_SCREEN_LINE_INCUBATOR == m_SelectedLine)
+        if (MENU_SCREEN_LINE_SETTINGS == m_SelectedLine)
         {
             m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
         }
@@ -82,12 +84,10 @@ namespace Incubator
         {
             m_Lcd->Print(TC2004::String80(" "));
         }
-        m_Lcd->Print(TC2004::String80("Kulu"));
-        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_C);
-        m_Lcd->Print(TC2004::String80("ka"));
+        m_Lcd->Print(TC2004::String80("Ayarlar"));
 
         m_Lcd->MoveCursor(2U, 0U);
-        if (SETTINGS_SCREEN_LINE_TIME == m_SelectedLine)
+        if (MENU_SCREEN_LINE_SENSORS_STATUS == m_SelectedLine)
         {
             m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
         }
@@ -95,27 +95,30 @@ namespace Incubator
         {
             m_Lcd->Print(TC2004::String80(" "));
         }
-        m_Lcd->Print(TC2004::String80("Zaman"));
+        m_Lcd->Print(TC2004::String80("Sens"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_O);
+        m_Lcd->Print(TC2004::String80("r Durumlar"));
+        m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
     }
 
-    void SettingsScreen::Run()
+    void MenuScreen::Run()
     {
         // intentionally left blank
     }
 
-    void SettingsScreen::OnUserAction(const JoystickEvent &event)
+    void MenuScreen::OnUserAction(const JoystickEvent &event)
     {
         switch (m_SelectedLine)
         {
-        case SETTINGS_SCREEN_LINE_INCUBATOR:
+        case MENU_SCREEN_LINE_SETTINGS:
         {
-            HandleScreenLineIncubator(event);
+            HandleScreenLineSettings(event);
             break;
         }
 
-        case SETTINGS_SCREEN_LINE_TIME:
+        case MENU_SCREEN_LINE_SENSORS_STATUS:
         {
-            HandleScreenLineTime(event);
+            HandleScreenLineSensorsStatus(event);
             break;
         }
         
