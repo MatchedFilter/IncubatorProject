@@ -66,7 +66,7 @@ namespace Incubator
         {
             if (QUESTION_SELECTION_YES == m_QuestionSelection)
             {
-                SetNextScreen(SCREEN_TYPE_MAIN);
+                SetNextScreen(GetNextScreenWhenYesSelected());
                 NotifyChangedData();
             }
             else
@@ -109,5 +109,9 @@ namespace Incubator
         }
     }
 
+    EnumScreenType AQuestionScreen::GetNextScreenWhenYesSelected() const
+    {
+        return SCREEN_TYPE_MAIN;
+    }
 
 } // namespace Incubator

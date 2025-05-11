@@ -41,6 +41,15 @@ namespace Incubator
         m_IncubatorTimeSettingsScreen.Initialize(tc2004Lcd);
         m_TotalDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
         m_LastDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_AdministatorSettingsScreen.Initialize(tc2004Lcd);
+        m_TemperaturePidSettingsScreen.Initialize(tc2004Lcd);
+        m_PDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_IDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_DDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_HysterisisHumiditySettingsScreen.Initialize(tc2004Lcd);
+        m_UpperHysterisisHumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_LowerHysterisisHumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_AdministratorResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_PidData);
 
         m_ScreenList[SCREEN_TYPE_MAIN]                              = &m_MainScreen;
         m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
@@ -64,6 +73,15 @@ namespace Incubator
         m_ScreenList[SCREEN_TYPE_INCUBATOR_TIME_SETTINGS]           = &m_IncubatorTimeSettingsScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_TOTAL_DAY_COUNT]          = &m_TotalDayDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_LAST_DAY_COUNT]           = &m_LastDayDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_ADMINISTRATOR_SETTINGS]            = &m_AdministatorSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_TEMPERATURE_PID]                   = &m_TemperaturePidSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_P]                        = &m_PDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_I]                        = &m_IDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_D]                        = &m_DDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_HYSTERISIS_HUMIDITY]               = &m_HysterisisHumiditySettingsScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_UPPER_HYSTERISIS]         = &m_UpperHysterisisHumidityDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_LOWER_HYSTERISIS]         = &m_LowerHysterisisHumidityDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_QUESTION_ADMIN_RESET]              = &m_AdministratorResetQuestionScreen;
 
         m_CurrentScreen = &m_MainScreen;
     }

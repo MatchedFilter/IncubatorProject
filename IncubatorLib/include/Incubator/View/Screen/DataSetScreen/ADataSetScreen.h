@@ -36,6 +36,7 @@ namespace Incubator
         virtual void OnDecrementHighEvent() = 0;
         virtual void OnDecrementLowEvent() = 0;
         virtual void NotifyChangedData() = 0;
+        inline virtual EnumScreenType GetNextScreenForYesSelection() const { return SCREEN_TYPE_MAIN; }
         virtual EnumScreenType GetNextScreenForNoSelection() const = 0;
 
     protected:

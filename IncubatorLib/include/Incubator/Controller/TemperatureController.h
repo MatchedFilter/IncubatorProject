@@ -3,13 +3,17 @@
 #include <cinttypes>
 namespace Incubator
 {
+
+    constexpr uint16_t MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE = static_cast<uint16_t>(1000UL);
+
     class TemperatureController
     {
     public:
         TemperatureController();
         ~TemperatureController();
         void SetDesiredTemperature(const double &desiredTemperatureInCelcius);
-        double Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond);
+        void SetPid(const double &p, const double &i, const double &d);
+        uint16_t Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond);
         void OnTemperatureFailure();
 
     private:

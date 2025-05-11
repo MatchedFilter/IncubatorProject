@@ -11,7 +11,16 @@ namespace Incubator
     enum EnumSettingsScreenLine : uint8_t
     {
         SETTINGS_SCREEN_LINE_INCUBATOR,
-        SETTINGS_SCREEN_LINE_TIME
+        SETTINGS_SCREEN_LINE_TIME,
+        SETTINGS_SCREEN_LINE_ADMINISTRATOR,
+
+    };
+
+    enum EnumAdministratorEnterLevel: uint8_t
+    {
+        ADMINISTRATOR_ENTER_LEVEL_0,
+        ADMINISTRATOR_ENTER_LEVEL_1,
+        ADMINISTRATOR_ENTER_LEVEL_2,
     };
 
     class SettingsScreen : public AScreen
@@ -30,10 +39,14 @@ namespace Incubator
     private:
         TC2004::Lcd *m_Lcd;
         EnumSettingsScreenLine m_SelectedLine;
+        static constexpr uint32_t ADMINISTRATOR_CLICK_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
+        Time::TimerTask m_AdministratorClickTimerTask;
+        EnumAdministratorEnterLevel m_AdministratorEnterLevel;
 
     private:
         void HandleScreenLineIncubator(const JoystickEvent &event);
         void HandleScreenLineTime(const JoystickEvent &event);
+        void HandleScreenLineAdministrator(const JoystickEvent &event);
 
     };
 } // namespace Incubator

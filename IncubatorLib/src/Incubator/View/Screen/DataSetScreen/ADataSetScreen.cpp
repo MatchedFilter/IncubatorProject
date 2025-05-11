@@ -35,12 +35,11 @@ namespace Incubator
         {
             if (QUESTION_SELECTION_YES == m_QuestionSelection)
             {
-                SetNextScreen(SCREEN_TYPE_MAIN);
+                SetNextScreen(GetNextScreenForYesSelection());
                 NotifyChangedData();
             }
             else
             {
-                GetNextScreenForNoSelection();
                 SetNextScreen(GetNextScreenForNoSelection());
             }
         }

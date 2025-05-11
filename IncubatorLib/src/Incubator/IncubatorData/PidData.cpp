@@ -4,9 +4,11 @@ namespace Incubator
 {
     void PidData::Reset()
     {
-        m_P = 5.0;
-        m_I = 0.0;
-        m_D = 0.0;
+        m_P = static_cast<int32_t>(50L);
+        m_I = static_cast<int32_t>(5L);
+        m_D = static_cast<int32_t>(3L);
+        m_UpperHumidityDifference = 3U;
+        m_LowerHumidityDifference = 3U;
     }
 
     void PidData::Copy(const PidData &other)
@@ -14,6 +16,8 @@ namespace Incubator
         m_P = other.m_P;
         m_I = other.m_I;
         m_D = other.m_D;
+        m_UpperHumidityDifference = other.m_UpperHumidityDifference;
+        m_LowerHumidityDifference = other.m_LowerHumidityDifference;
     }
 
 
@@ -23,9 +27,12 @@ namespace Incubator
         if (writer.GetRemainingSize() >= DATA_SIZE)
         {
             bResult = true;
-            (void) writer.Write8Bytes(m_P, MF::ENDIAN_TYPE_BIG);
-            (void) writer.Write8Bytes(m_I, MF::ENDIAN_TYPE_BIG);
-            (void) writer.Write8Bytes(m_D, MF::ENDIAN_TYPE_BIG);
+            (void) writer.Write4Bytes(m_P, MF::ENDIAN_TYPE_BIG);
+            (void) writer.Write4Bytes(m_I, MF::ENDIAN_TYPE_BIG);
+            (void) writer.Write4Bytes(m_D, MF::ENDIAN_TYPE_BIG);
+            (void) writer.WriteByte(m_UpperHumidityDifference);
+            (void) writer.WriteByte(m_LowerHumidityDifference);
+
         }
         return bResult;
     }
@@ -36,9 +43,11 @@ namespace Incubator
         if (reader.GetRemainingSize() >= DATA_SIZE)
         {
             bResult = true;
-            (void) reader.Read8Bytes(m_P, MF::ENDIAN_TYPE_BIG);
-            (void) reader.Read8Bytes(m_I, MF::ENDIAN_TYPE_BIG);
-            (void) reader.Read8Bytes(m_D, MF::ENDIAN_TYPE_BIG);
+            (void) reader.Read4Bytes(m_P, MF::ENDIAN_TYPE_BIG);
+            (void) reader.Read4Bytes(m_I, MF::ENDIAN_TYPE_BIG);
+            (void) reader.Read4Bytes(m_D, MF::ENDIAN_TYPE_BIG);
+            (void) reader.ReadByte(m_UpperHumidityDifference);
+            (void) reader.ReadByte(m_LowerHumidityDifference);
         }
         return bResult;
     }

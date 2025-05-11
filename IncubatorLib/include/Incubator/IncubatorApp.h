@@ -44,23 +44,27 @@ namespace Incubator
         double m_PrevSht31Temp;
         double m_PrevSht31Humidity;
         double m_PrevNtc;
-        static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
-        static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
-        bool m_SettingsValid;
-        SettingsData m_SettingsData;
+        inline static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
+        inline static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
         TemperatureController m_TemperatureController;
         HumidityController m_HumidityController;
         SensorsStatusData m_SensorsStatusData;
+        uint16_t m_TemperatureOutputValue;
+        Time::TimerTask m_TemperatureOutputTimeoutTask;
+        Time::TimerTask m_TemperatureOutputTimerTask;
+        uint16_t m_TemperatureOutputControlCounter;
 
     private:
         bool ReadSht31(double &temperatureInCelcius, double &humidityInPercent);
         bool ReadDht11(double &temperatureInCelcius, double &humidityInPercent);
         bool ReadNtc(double &temperatureInCelcius, const double &sht31Temp, const double &dht11Temp);
-        void ReadSensors(bool &bTemperatureValid, double &temperatureInCelcius, bool &bHumidityValid, double &humidityInPercent); 
+        void ReadSensors(bool &bTemperatureValid, double &temperatureInCelcius, bool &bHumidityValid, uint8_t &humidityInPercent); 
         void UpdatePresenter(const bool &bTemperatureValid, const double &temperatureInCelcius, const bool &bHumidityValid, const double &humidityInPercent);
         bool GetDesiredTemperature(double &desiredTemperatureInCelcius);
-        bool GetDesiredHumidity(double &desiredHumidityInPercent);
-        void ControlTemperature(const bool &bTemperatureValid, const double &temperatureInCelcius);
+        bool GetDesiredHumidity(uint8_t &desiredHumidityInPercent);
+        bool CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius);
+        void ControlTemperature();
+        void ControlHumidity(uint8_t &humidityInPercentage, bool bHumidityValid);
 
     };
 } // namespace Incubator

@@ -110,8 +110,7 @@ namespace Incubator
         return bResult;
     }
 
-
-    void IncubatorApp::ReadSensors(bool &bTemperatureValid, double &temperatureInCelcius, bool &bHumidityValid, double &humidityInPercent)
+    void IncubatorApp::ReadSensors(bool &bTemperatureValid, double &temperatureInCelcius, bool &bHumidityValid, uint8_t &humidityInPercent)
     {
         double sht31Temp = 0.0;
         double sht31Humidity = 0.0;
@@ -128,14 +127,14 @@ namespace Incubator
         {
             bHumidityValid = true;
             bTemperatureValid = true;
-            humidityInPercent = sht31Humidity;
+            humidityInPercent = static_cast<uint8_t>(sht31Humidity);
             temperatureInCelcius = sht31Temp;
         }
         else if (bDht11Working)
         {
             bHumidityValid = true;
             bTemperatureValid = true;
-            humidityInPercent = dht11Humidity;
+            humidityInPercent = static_cast<uint8_t>(dht11Humidity);
             temperatureInCelcius = bNtcWorking ? ntcTemp : dht11Temp;
         }
         else if (bNtcWorking)
@@ -173,52 +172,143 @@ namespace Incubator
         }
     }
 
-    void IncubatorApp::ControlTemperature(const bool &bTemperatureValid, const double &temperatureInCelcius)
+    bool IncubatorApp::CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius)
     {
+        bool bResult = false;
         double desiredTemperatureInCelcius;
         if (bTemperatureValid)
         {
             if (GetDesiredTemperature(desiredTemperatureInCelcius))
             {
-                m_TemperatureController.SetDesiredTemperature(desiredTemperatureInCelcius);
-                double output = m_TemperatureController.Control(temperatureInCelcius, SENSOR_READ_TIMEOUT_IN_MILLISECOND);
-            }
-        }
-    }
+                const double temperatureDifference = desiredTemperatureInCelcius - temperatureInCelcius;
+                constexpr double THRESHOLD_TEMPERATURE_LOW_DIFFERENCE_IN_MILLICELCIUS = 5.0;
+                constexpr double THRESHOLD_TEMPERATURE_HIGH_DIFFERENCE_IN_MILLICELCIUS = -1.0;
 
-    bool IncubatorApp::GetDesiredTemperature(double &desiredTemperatureInCelcius)
-    {
-        bool bResult = false;
-        if (m_SettingsValid)
-        {
-            bResult = true;
-            const uint8_t dayCount = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
-            if (dayCount >= (m_SettingsData.m_TotalIncubationDayCount - m_SettingsData.m_LastDaysCount))
-            {
-                desiredTemperatureInCelcius = static_cast<double>(m_SettingsData.m_LastDaysTemperatureInMilliCelcius) / 1000.0;
-            }
-            else
-            {
-                desiredTemperatureInCelcius = static_cast<double>(m_SettingsData.m_TemperatureInMilliCelcius) / 1000.0;
+                if (temperatureDifference > THRESHOLD_TEMPERATURE_LOW_DIFFERENCE_IN_MILLICELCIUS)
+                {
+                    bResult = true;
+                    m_TemperatureOutputValue = MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE;
+                }
+                else if (temperatureDifference < THRESHOLD_TEMPERATURE_HIGH_DIFFERENCE_IN_MILLICELCIUS)
+                {
+                    bResult = true;
+                    m_TemperatureOutputValue = static_cast<uint16_t>(0UL);
+                }
+                else
+                {
+                    m_TemperatureController.SetDesiredTemperature(desiredTemperatureInCelcius);
+                    double p,i,d;
+                    if (m_Presenter.GetPidData(p,i,d))
+                    {
+                        bResult = true;
+                        m_TemperatureController.SetPid(p,i,d);
+                        m_TemperatureOutputValue = m_TemperatureController.Control(temperatureInCelcius, SENSOR_READ_TIMEOUT_IN_MILLISECOND);
+                    }
+                }
             }
         }
         return bResult;
     }
 
-    bool IncubatorApp::GetDesiredHumidity(double &desiredHumidityInPercent)
+    void IncubatorApp::ControlTemperature()
     {
-        bool bResult = false;
-        if (m_SettingsValid)
+        if (m_TemperatureOutputTimeoutTask.IsFinished())
         {
-            bResult = true;
-            const uint8_t dayCount = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
-            if (dayCount >= (m_SettingsData.m_TotalIncubationDayCount - m_SettingsData.m_LastDaysCount))
+            m_TemperatureOutputValue = static_cast<uint16_t>(0UL);
+        }
+        if (m_TemperatureOutputTimerTask.IsFinished())
+        {
+            m_TemperatureOutputTimerTask.Start();
+            m_TemperatureOutputControlCounter += static_cast<uint16_t>(2UL);
+
+            if (m_TemperatureOutputValue > m_TemperatureOutputControlCounter)
             {
-                desiredHumidityInPercent = static_cast<double>(m_SettingsData.m_LastDaysHumidityInPercentage);
+                TurnOnHeater();
             }
             else
             {
-                desiredHumidityInPercent = static_cast<double>(m_SettingsData.m_HumidityInPercentage);
+                TurnOffHeater();
+            }
+            if (MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE <= m_TemperatureOutputControlCounter)
+            {
+                m_TemperatureOutputControlCounter = static_cast<uint16_t>(0UL);
+            }
+        }
+    }
+
+    void IncubatorApp::ControlHumidity(uint8_t &humidityInPercentage, bool bHumidityValid)
+    {
+        EnumState state = STATE_OFF;
+        if (bHumidityValid)
+        {
+            m_HumidityController.UpdateHumidityFailStatus(false);
+            uint8_t desiredHumidityInPercentage;
+            if (GetDesiredHumidity(desiredHumidityInPercentage))
+            {
+                uint8_t upperDiff, lowerDiff;
+                if (m_Presenter.GetHumidityHysterisisDiff(upperDiff, lowerDiff))
+                {
+                    const uint8_t upperThresholdInPercentage = ((desiredHumidityInPercentage + upperDiff) > 100U) ? 100U : desiredHumidityInPercentage + upperDiff;
+                    const uint8_t lowerThresholdInPercentage = (lowerDiff > desiredHumidityInPercentage) ? 0U : desiredHumidityInPercentage - lowerDiff;
+                    m_HumidityController.SetHumidityThresholds(upperThresholdInPercentage, lowerThresholdInPercentage);
+                    state = m_HumidityController.Control(humidityInPercentage);
+                }
+
+            }
+        }
+        else
+        {
+            m_HumidityController.UpdateHumidityFailStatus(true);
+            state = m_HumidityController.Control(humidityInPercentage);
+        }
+        if (STATE_OFF == state)
+        {
+            TurnOffHumidityGenerator();
+        }
+        else
+        {
+            TurnOnHumidityGenerator();
+        }
+
+    }
+
+
+    bool IncubatorApp::GetDesiredTemperature(double &desiredTemperatureInCelcius)
+    {
+        bool bResult = false;
+        SettingsData settings;
+        if (m_Presenter.GetSettingsData(settings))
+        {
+            bResult = true;
+            const uint8_t dayCount = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
+            if (dayCount >= (settings.m_TotalIncubationDayCount - settings.m_LastDaysCount))
+            {
+                desiredTemperatureInCelcius = static_cast<double>(settings.m_LastDaysTemperatureInMilliCelcius) / 1000.0;
+            }
+            else
+            {
+                desiredTemperatureInCelcius = static_cast<double>(settings.m_TemperatureInMilliCelcius) / 1000.0;
+            }
+        }
+
+        return bResult;
+    }
+
+    bool IncubatorApp::GetDesiredHumidity(uint8_t &desiredHumidityInPercent)
+    {
+        bool bResult = false;
+        SettingsData settings;
+        if (m_Presenter.GetSettingsData(settings))
+        {
+            bResult = true;
+            const uint8_t dayCount = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
+            if (dayCount >= (settings.m_TotalIncubationDayCount - settings.m_LastDaysCount))
+            {
+                desiredHumidityInPercent = settings.m_LastDaysHumidityInPercentage;
+            }
+            else
+            {
+                desiredHumidityInPercent = settings.m_HumidityInPercentage;
             }
         }
         return bResult;
@@ -226,7 +316,7 @@ namespace Incubator
 
 
     IncubatorApp::IncubatorApp() :
-        m_InternalFlashModel { static_cast<uint32_t>(0x0800F000UL) },
+        m_InternalFlashModel { static_cast<uint32_t>(0x0801F000UL) },
         m_DHT11Sensor { 0x00U },
         m_TemperatureSensor { 0x00U },
         m_SHT31Sensor { 0x00U },
@@ -238,8 +328,9 @@ namespace Incubator
         m_PrevSht31Temp { 0.0 },
         m_PrevSht31Humidity { 0.0 },
         m_PrevNtc { 0.0 },
-        m_SettingsValid { false },
-        m_SensorsStatusData { .m_Sht31Status = SENSOR_STATUS_ERROR, .m_NtcStatus = SENSOR_STATUS_ERROR, .m_Dht11Status = SENSOR_STATUS_ERROR }
+        m_SensorsStatusData { .m_Sht31Status = SENSOR_STATUS_ERROR, .m_NtcStatus = SENSOR_STATUS_ERROR, .m_Dht11Status = SENSOR_STATUS_ERROR },
+        m_TemperatureOutputValue { static_cast<uint16_t>(0U)},
+        m_TemperatureOutputControlCounter { static_cast<uint16_t>(0U)}
     {
     }
 
@@ -263,6 +354,13 @@ namespace Incubator
         m_Sht31FailureReadTimerTask.Start();
         m_Dht11FailureReadTimerTask.SetDurationInMillisecond(SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND);
         m_Dht11FailureReadTimerTask.Start();
+
+        constexpr uint32_t TEMPERATURE_OUTPUT_VALUE_SET_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(5000UL);
+        m_TemperatureOutputTimeoutTask.SetDurationInMillisecond(TEMPERATURE_OUTPUT_VALUE_SET_TIMEOUT_IN_MILLISECOND);
+        
+        constexpr uint32_t TEMPERATURE_OUTPUT_CONTROL_DURATION_IN_MILLISECOND = static_cast<uint32_t>(2UL);
+        m_TemperatureOutputTimerTask.SetDurationInMillisecond(TEMPERATURE_OUTPUT_CONTROL_DURATION_IN_MILLISECOND);
+        m_TemperatureOutputTimerTask.Start();
     }
 
     void IncubatorApp::Run(void)
@@ -273,11 +371,18 @@ namespace Incubator
         if (m_SensorReadTimerTask.IsFinished())
         {
             m_SensorReadTimerTask.Start();
-            double temperatureInCelcius, humidityInPercent;
+            double temperatureInCelcius;
+            uint8_t humidityInPercent;
             bool bTemperatureIsValid, bHumidityIsValid;
             ReadSensors(bTemperatureIsValid, temperatureInCelcius, bHumidityIsValid, humidityInPercent);
             UpdatePresenter(bTemperatureIsValid, temperatureInCelcius, bHumidityIsValid, humidityInPercent);
+            if (CalculateTemperatureOutput(bTemperatureIsValid, temperatureInCelcius))
+            {
+                m_TemperatureOutputTimeoutTask.Start();
+            }
+            ControlHumidity(humidityInPercent, bHumidityIsValid);
         }
+        ControlTemperature();
     }
 
 } // namespace Incubator

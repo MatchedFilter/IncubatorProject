@@ -31,7 +31,7 @@ namespace Incubator
     {
         m_Lcd = tc2004Lcd;
         m_SensorsStatusData.Reset();
-        constexpr uint32_t SENSOR_STATUS_SCREEN_UPDATE_TIME_IN_MILLISECOND = static_cast<uint32_t>(500UL);
+        constexpr uint32_t SENSOR_STATUS_SCREEN_UPDATE_TIME_IN_MILLISECOND = static_cast<uint32_t>(200UL);
         m_SensorStatusScreenUpdateTimerTask.SetDurationInMillisecond(SENSOR_STATUS_SCREEN_UPDATE_TIME_IN_MILLISECOND);
     }
 

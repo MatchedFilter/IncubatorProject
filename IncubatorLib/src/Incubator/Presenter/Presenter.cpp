@@ -171,13 +171,13 @@ namespace Incubator
         m_Model = model;
         m_SpareModel = spareModel;
 
-        m_PidDataChangedEventHandler.Initialize(m_Model, m_SpareModel, m_View);
+        m_PidDataCache.Initialize(m_Model, m_SpareModel, m_View);
         m_SettingsDataCache.Initialize(m_Model, m_SpareModel, m_View);
         m_TimeInformationDataChangedEventHandler.Initialize(m_Model, m_SpareModel, m_View);
 
         DataChangedEventHandlers eventHandlers;
         eventHandlers.Reset();
-        eventHandlers.m_PidDataChangedEventHandler = &m_PidDataChangedEventHandler;
+        eventHandlers.m_PidDataChangedEventHandler = &m_PidDataCache;
         eventHandlers.m_SettingsDataChangedEventHandler = &m_SettingsDataCache;
         eventHandlers.m_TimeInformationDataChangedEventHandler = &m_TimeInformationDataChangedEventHandler;
         
@@ -210,6 +210,9 @@ namespace Incubator
                 m_SpareModelUpdateTimerTask.SetDurationInMillisecond(SPARE_MODEL_UPDATE_DURATION_IN_MILLISECOND);
                 m_ModelUpdateTimerTask.Start();
                 m_SpareModelUpdateTimerTask.Start();
+
+                m_SettingsDataCache.OnUpdate(settings);
+                m_PidDataCache.OnUpdate(pid);
             }
             else
             {
@@ -244,6 +247,21 @@ namespace Incubator
         m_View->UpdateSensorsStatus(data);
     }
 
+    bool Presenter::GetSettingsData(SettingsData &data) const
+    {
+        return m_SettingsDataCache.GetSettingsData(data);
+    }
+
+    bool Presenter::GetPidData(double &p, double &i, double &d) const
+    {
+        return m_PidDataCache.GetPid(p,i,d);
+    }
+    
+    bool Presenter::GetHumidityHysterisisDiff(uint8_t &upperDiff, uint8_t &lowerDiff) const
+    {
+        return m_PidDataCache.GetHumidityHysterisisDiff(upperDiff, lowerDiff);
+
+    }
 
     void Presenter::Run(void)
     {

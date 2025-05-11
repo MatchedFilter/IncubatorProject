@@ -27,6 +27,7 @@ namespace Incubator
             DataChangedEventHandlers *eventHandlers
         );
         virtual void NotifyChangedData() = 0;
+        virtual EnumScreenType GetNextScreenWhenYesSelected() const;
 
     protected:
         TC2004::Lcd *m_Lcd;

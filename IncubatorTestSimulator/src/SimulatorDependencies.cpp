@@ -426,7 +426,7 @@ namespace Incubator
 {
     uint64_t GetTimestampInMillisecond();
     bool WriteToFlash(const uint32_t flashBaseAddress, const uint32_t offset, const FlashBuffer &buffer);
-    bool ReadFromFlash(const uint32_t baseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size);
+    bool ReadFromFlash(const uint32_t flashBaseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size);
 
     static uint64_t s_ApplicationStartTimeInMillisecond;
     static bool s_bIsTimeInitialized = false;
@@ -467,7 +467,7 @@ namespace Incubator
         }
         return bResult;
     }
-    bool ReadFromFlash(const uint32_t baseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size)
+    bool ReadFromFlash(const uint32_t flashBaseAddress, const uint32_t offset, FlashBuffer &buffer, const uint32_t size)
     {
         bool bResult = false;
         const uint32_t addressToRead = offset;

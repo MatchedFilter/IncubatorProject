@@ -84,6 +84,10 @@ namespace Incubator
                 humidityString += " ";
             }
             humidityString += static_cast<int32_t>(m_HumidityInPercent);
+            if (m_HumidityInPercent < 100U)
+            {
+                humidityString += " ";
+            }
             m_Lcd->Print(humidityString);
         }
         if (m_bIsIncubatorDataProvided)

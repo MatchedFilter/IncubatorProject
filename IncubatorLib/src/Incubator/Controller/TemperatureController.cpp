@@ -22,7 +22,15 @@ namespace Incubator
         m_DesiredTemperatureInCelcius = desiredTemperatureInCelcius;
     }
 
-    double TemperatureController::Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond)
+    void TemperatureController::SetPid(const double &p, const double &i, const double &d)
+    {
+        m_PConstant = p;
+        m_IConstant = i;
+        m_DConstant = d;
+    }
+
+
+    uint16_t TemperatureController::Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond)
     {
         if (false == m_bIsTemperatureValid)
         {
@@ -37,7 +45,19 @@ namespace Incubator
             (m_IConstant * error * timeDifferenceInMillisecond) +
             (m_DConstant * ((error - previousError) / timeDifferenceInMillisecond));
 
-        return result;
+        uint16_t output = static_cast<uint16_t>(0U);
+        if (result > 0.0)
+        {
+            if (result < static_cast<uint16_t>(MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE))
+            {
+                output = static_cast<uint16_t>(result);
+            }
+            else
+            {
+                output = MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE;
+            }
+        }
+        return output;
     }
 
     void TemperatureController::OnTemperatureFailure()

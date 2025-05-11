@@ -8,14 +8,18 @@ namespace Incubator
     struct PidData
     {
     public:
-        double m_P;
-        double m_I;
-        double m_D;
+        int32_t m_P;
+        int32_t m_I;
+        int32_t m_D;
+        uint8_t m_UpperHumidityDifference;
+        uint8_t m_LowerHumidityDifference;
 
         static constexpr uint32_t DATA_SIZE = 
             static_cast<uint32_t>(sizeof(m_P)) +
             static_cast<uint32_t>(sizeof(m_I)) +
-            static_cast<uint32_t>(sizeof(m_D));
+            static_cast<uint32_t>(sizeof(m_D)) +
+            static_cast<uint32_t>(sizeof(m_UpperHumidityDifference)) +
+            static_cast<uint32_t>(sizeof(m_LowerHumidityDifference));
 
     public:
         void Reset();

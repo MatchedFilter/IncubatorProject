@@ -2,7 +2,7 @@
 #define INCUBATOR_PRESENTER_H
 #include "Incubator/View/IView.h"
 #include "Incubator/Model/IModel.h"
-#include "Incubator/Presenter/DataChangedEventHandlers/PidDataChangedEventHandler.h"
+#include "Incubator/Presenter/DataChangedEventHandlers/PidDataCache.h"
 #include "Incubator/Presenter/DataChangedEventHandlers/SettingsDataCache.h"
 #include "Incubator/Presenter/DataChangedEventHandlers/TimeInformationDataChangedEventHandler.h"
 #include "Incubator/Time/TimerTask.h"
@@ -23,6 +23,9 @@ namespace Incubator
         void OnTemperatureFailure();
         void OnHumidityFailure();
         void UpdateSensorsStatus(const SensorsStatusData &data);
+        bool GetSettingsData(SettingsData &data) const;
+        bool GetPidData(double &p, double &i, double &d) const;
+        bool GetHumidityHysterisisDiff(uint8_t &upperDiff, uint8_t &lowerDiff) const;
 
         void Run(void);
 
@@ -31,7 +34,7 @@ namespace Incubator
         IModel *m_Model;
         IModel *m_SpareModel;
         bool m_bIsInitialized;
-        PidDataChangedEventHandler m_PidDataChangedEventHandler;
+        PidDataCache m_PidDataCache;
         SettingsDataCache m_SettingsDataCache;
         TimeInformationDataChangedEventHandler m_TimeInformationDataChangedEventHandler;
         SettingsData m_SettingsData;

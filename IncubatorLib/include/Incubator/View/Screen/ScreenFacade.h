@@ -23,6 +23,16 @@
 #include "IncubatorTimeSettingsScreen.h"
 #include "DataSetScreen/TotalDayDataSetScreen.h"
 #include "DataSetScreen/LastDayDataSetScreen.h"
+#include "AdministatorSettingsScreen.h"
+#include "TemperaturePidSettingsScreen.h"
+#include "DataSetScreen/PDataSetScreen.h"
+#include "DataSetScreen/IDataSetScreen.h"
+#include "DataSetScreen/DDataSetScreen.h"
+#include "HysterisisHumiditySettingsScreen.h"
+#include "DataSetScreen/UpperHysterisisHumidityDataSetScreen.h"
+#include "DataSetScreen/LowerHysterisisHumidityDataSetScreen.h"
+#include "QuestionScreen/AdministratorResetQuestionScreen.h"
+
 
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "Incubator/IncubatorData/IncubatorInformationData.h"
@@ -76,6 +86,15 @@ namespace Incubator
         IncubatorTimeSettingsScreen m_IncubatorTimeSettingsScreen;
         TotalDayDataSetScreen m_TotalDayDataSetScreen;
         LastDayDataSetScreen m_LastDayDataSetScreen;
+        AdministatorSettingsScreen m_AdministatorSettingsScreen;
+        TemperaturePidSettingsScreen m_TemperaturePidSettingsScreen;
+        PDataSetScreen m_PDataSetScreen;
+        IDataSetScreen m_IDataSetScreen;
+        DDataSetScreen m_DDataSetScreen;
+        HysterisisHumiditySettingsScreen m_HysterisisHumiditySettingsScreen;
+        UpperHysterisisHumidityDataSetScreen m_UpperHysterisisHumidityDataSetScreen;
+        LowerHysterisisHumidityDataSetScreen m_LowerHysterisisHumidityDataSetScreen;
+        AdministratorResetQuestionScreen m_AdministratorResetQuestionScreen;
         
         DataChangedEventHandlers m_DataChangedEventHandlers;
 
