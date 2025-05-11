@@ -139,8 +139,6 @@ namespace Incubator
             m_bSwitchPressed = bIsSwitchPressed;
             m_JoystickSensorTimerTask.Start();
         }
-        
-        uint32_t horizontalValue = m_JoystickSensor.ReadHorizontalValue();
     }
 
     void Lcd2004View::OnUserAction(const JoystickEvent event)

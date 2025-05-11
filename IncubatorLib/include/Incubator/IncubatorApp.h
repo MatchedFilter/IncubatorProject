@@ -44,8 +44,8 @@ namespace Incubator
         double m_PrevSht31Temp;
         double m_PrevSht31Humidity;
         double m_PrevNtc;
-        inline static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
-        inline static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
+        static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
+        static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
         TemperatureController m_TemperatureController;
         HumidityController m_HumidityController;
         SensorsStatusData m_SensorsStatusData;

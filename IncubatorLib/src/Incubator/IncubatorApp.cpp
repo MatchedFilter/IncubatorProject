@@ -5,6 +5,9 @@
 namespace Incubator
 {
 
+    constexpr uint32_t IncubatorApp::SENSOR_READ_TIMEOUT_IN_MILLISECOND;
+    constexpr uint32_t IncubatorApp::SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND;
+
     bool IncubatorApp::ReadSht31(double &temperatureInCelcius, double &humidityInPercent)
     {
         bool bResult = false;
