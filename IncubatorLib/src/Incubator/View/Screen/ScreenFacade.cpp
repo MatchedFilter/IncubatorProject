@@ -19,7 +19,7 @@ namespace Incubator
         m_DataChangedEventHandlers.Reset();
         m_DataChangedEventHandlers.Copy(*eventHandlers);
 
-        m_MenuScreen.Initialize(tc2004Lcd);
+        m_MainScreen.Initialize(tc2004Lcd);
         m_SettingsScreen.Initialize(tc2004Lcd);
         m_IncubatorSettingsScreen.Initialize(tc2004Lcd);
         m_TimeSettingsScreen.Initialize(tc2004Lcd, &m_ChangedIncubatorInformationData.m_TimeInformationData);
@@ -36,8 +36,11 @@ namespace Incubator
         m_CurrentDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
         m_CurrentHourDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
         m_CurrentMinuteDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData,& m_ChangedIncubatorInformationData);
+        m_IncubatorTimeSettingsScreen.Initialize(tc2004Lcd);
+        m_TotalDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
+        m_LastDayDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
 
-        m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
+        m_ScreenList[SCREEN_TYPE_MAIN]                              = &m_MainScreen;
         m_ScreenList[SCREEN_TYPE_SETTINGS]                          = &m_SettingsScreen;
         m_ScreenList[SCREEN_TYPE_INCUBATOR_SETTINGS]                = &m_IncubatorSettingsScreen;
         m_ScreenList[SCREEN_TYPE_TIME_SETTINGS]                     = &m_TimeSettingsScreen;
@@ -54,8 +57,11 @@ namespace Incubator
         m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_DAY]              = &m_CurrentDayDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_HOUR]             = &m_CurrentHourDataSetScreen;
         m_ScreenList[SCREEN_TYPE_DATA_SET_CURRENT_MINUTE]           = &m_CurrentMinuteDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_INCUBATOR_TIME_SETTINGS]           = &m_IncubatorTimeSettingsScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_TOTAL_DAY_COUNT]          = &m_TotalDayDataSetScreen;
+        m_ScreenList[SCREEN_TYPE_DATA_SET_LAST_DAY_COUNT]           = &m_LastDayDataSetScreen;
 
-        m_CurrentScreen = &m_MenuScreen;
+        m_CurrentScreen = &m_MainScreen;
     }
 
     void ScreenFacade::UpdatePidData(const PidData &data)
@@ -66,40 +72,40 @@ namespace Incubator
     void ScreenFacade::UpdateSettingsData(const SettingsData &data)
     {
         m_CurrentIncubatorInformationData.m_SettingsData.Copy(data);
-        m_MenuScreen.UpdateSettingsData(data);
+        m_MainScreen.UpdateSettingsData(data);
     }
 
     void ScreenFacade::UpdateTimeInformationData(const TimeInformationData &data)
     {
         m_CurrentIncubatorInformationData.m_TimeInformationData.Copy(data);
-        m_MenuScreen.UpdateTimeInformationData(data);
+        m_MainScreen.UpdateTimeInformationData(data);
     }
 
     void ScreenFacade::UpdateTemperature(const double &temperatureInCelcius)
     {
-        m_MenuScreen.UpdateTemperature(temperatureInCelcius);
+        m_MainScreen.UpdateTemperature(temperatureInCelcius);
     }
 
     void ScreenFacade::OnTemperatureFailure()
     {
-        m_CurrentScreen = &m_MenuScreen;
-        m_MenuScreen.OnTemperatureFailure();
+        m_CurrentScreen = &m_MainScreen;
+        m_MainScreen.OnTemperatureFailure();
     }
 
     void ScreenFacade::UpdateHumidity(const uint8_t &humidityInPrecentage)
     {
-        m_MenuScreen.UpdateHumidity(humidityInPrecentage);
+        m_MainScreen.UpdateHumidity(humidityInPrecentage);
     }
 
     void ScreenFacade::OnHumidityFailure()
     {
-        m_MenuScreen.OnHumidityFailure();
+        m_MainScreen.OnHumidityFailure();
     }
 
     void ScreenFacade::OnModelFailure()
     {
-        m_CurrentScreen = &m_MenuScreen;
-        m_MenuScreen.OnModelFailure();
+        m_CurrentScreen = &m_MainScreen;
+        m_MainScreen.OnModelFailure();
     }
 
     void ScreenFacade::OnUserAction(const JoystickEvent &event)
@@ -109,7 +115,7 @@ namespace Incubator
         const EnumScreenType nextScreenType = m_CurrentScreen->GetNextScreen();
         if (screenType != nextScreenType)
         {
-            const EnumScreenType nextValidScreenType = (static_cast<uint32_t>(nextScreenType) < static_cast<uint32_t>(SCREEN_TYPE_SIZE)) ? nextScreenType : SCREEN_TYPE_MENU;
+            const EnumScreenType nextValidScreenType = (static_cast<uint32_t>(nextScreenType) < static_cast<uint32_t>(SCREEN_TYPE_SIZE)) ? nextScreenType : SCREEN_TYPE_MAIN;
             m_CurrentScreen = m_ScreenList[nextValidScreenType];
             m_CurrentScreen->SetPreviousScreen(screenType);
             m_CurrentScreen->OnInitial();

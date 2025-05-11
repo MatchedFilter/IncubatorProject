@@ -1,11 +1,11 @@
-#include "Incubator/View/Screen/MenuScreen.h"
+#include "Incubator/View/Screen/MainScreen.h"
 #include "Incubator/IncubatorDependencies.h"
 #include "Incubator/Time/TimeUtils.h"
 
 namespace Incubator
 {
 
-    TC2004::String80 MenuScreen::GetTemperature() const
+    TC2004::String80 MainScreen::GetTemperature() const
     {
         TC2004::String80 result;
         result.Clear();
@@ -15,7 +15,7 @@ namespace Incubator
         return result;
     }
 
-    TC2004::String80 MenuScreen::GetTargetTemperature() const
+    TC2004::String80 MainScreen::GetTargetTemperature() const
     {
         TC2004::String80 result;
         const uint8_t currentDay = static_cast<uint8_t>(m_TimeInformationData.m_CurrentTimestampInSecond / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
@@ -27,7 +27,7 @@ namespace Incubator
         return result;
     }
 
-    TC2004::String80 MenuScreen::GetTargetHumidity() const
+    TC2004::String80 MainScreen::GetTargetHumidity() const
     {
         TC2004::String80 result;
         const uint8_t currentDay = static_cast<uint8_t>(m_TimeInformationData.m_CurrentTimestampInSecond / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
@@ -37,7 +37,7 @@ namespace Incubator
         return result;
     }
 
-    void MenuScreen::DisplayTemperatureInformation()
+    void MainScreen::DisplayTemperatureInformation()
     {
         if (m_bIsTemperatureSet)
         {
@@ -57,13 +57,13 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::StartToDisplayTemperatureInformation()
+    void MainScreen::StartToDisplayTemperatureInformation()
     {
         m_Lcd->MoveCursor(0U, 0U);
         m_Lcd->Print(TC2004::String80("Sck: ---- / ----    "));
     }
 
-    void MenuScreen::DisplayHumidityInformation()
+    void MainScreen::DisplayHumidityInformation()
     {
         if (m_bIsHumiditySet)
         {
@@ -85,13 +85,13 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::StartToDisplayHumidityInformation()
+    void MainScreen::StartToDisplayHumidityInformation()
     {
         m_Lcd->MoveCursor(1U, 0U);
         m_Lcd->Print(TC2004::String80("Nem: -- / --        "));
     }
 
-    void MenuScreen::DisplayTimeInformation()
+    void MainScreen::DisplayTimeInformation()
     {
         if (m_bTimeInformationProvided)
         {
@@ -102,7 +102,7 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::DisplayDay()
+    void MainScreen::DisplayDay()
     {
         m_Lcd->MoveCursor(2U, 5U);
         TC2004::String80 dayString;
@@ -126,7 +126,7 @@ namespace Incubator
         m_Lcd->Print(dayString);
     }
 
-    void MenuScreen::DisplayHour()
+    void MainScreen::DisplayHour()
     {
         m_Lcd->MoveCursor(3U, 5U);
         const uint8_t currentHour = static_cast<uint8_t>(((Time::TimeUtils::GetIncubatorTimestampInSecond() / static_cast<uint32_t>(60UL)) / static_cast<uint32_t>(60UL)) % static_cast<uint32_t>(24UL));
@@ -140,7 +140,7 @@ namespace Incubator
         m_Lcd->Print(hourString);
     }
 
-    void MenuScreen::DisplayMinute()
+    void MainScreen::DisplayMinute()
     {
         m_Lcd->MoveCursor(3U, 11U);
         const uint8_t currentMinute = static_cast<uint8_t>((Time::TimeUtils::GetIncubatorTimestampInSecond()/ static_cast<uint32_t>(60UL)) % static_cast<uint32_t>(60UL));
@@ -154,7 +154,7 @@ namespace Incubator
         m_Lcd->Print(minuteString);
     }
 
-    void MenuScreen::DisplaySecond()
+    void MainScreen::DisplaySecond()
     {
         m_Lcd->MoveCursor(3U, 16U);
         const uint8_t currentSecond = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() % static_cast<uint32_t>(60UL));
@@ -168,8 +168,8 @@ namespace Incubator
         m_Lcd->Print(secondString);
     }
 
-    MenuScreen::MenuScreen() : 
-        AScreen { SCREEN_TYPE_MENU },
+    MainScreen::MainScreen() : 
+        AScreen { SCREEN_TYPE_MAIN },
         m_Lcd { nullptr },
         m_bIsTemperatureSet { false },
         m_TemperatureInCelcius { 0.0 },
@@ -184,11 +184,11 @@ namespace Incubator
     {
     }
 
-    MenuScreen::~MenuScreen()
+    MainScreen::~MainScreen()
     {
     }
 
-    void MenuScreen::Initialize(TC2004::Lcd *tc2004Lcd)
+    void MainScreen::Initialize(TC2004::Lcd *tc2004Lcd)
     {
         m_Lcd = tc2004Lcd;
         OnInitial();
@@ -196,7 +196,7 @@ namespace Incubator
         m_ScreenInformationUpdateTimerTask.Start();
     }
 
-    void MenuScreen::OnInitial()
+    void MainScreen::OnInitial()
     {
         Reset();
         m_Lcd->Clear();
@@ -212,7 +212,7 @@ namespace Incubator
         m_Lcd->Print(TC2004::String80("Saat:-- Dk:-- S:--"));
     }
 
-    void MenuScreen::UpdateSettingsData(const SettingsData &data)
+    void MainScreen::UpdateSettingsData(const SettingsData &data)
     {
         m_SettingsData.Copy(data);
         m_bIsSettingsProvided = true;
@@ -222,7 +222,7 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::UpdateTimeInformationData(const TimeInformationData &data)
+    void MainScreen::UpdateTimeInformationData(const TimeInformationData &data)
     {
         m_TimeInformationData.Copy(data);
         m_bTimeInformationProvided = true;
@@ -232,7 +232,7 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::UpdateTemperature(const double &temperatureInCelcius)
+    void MainScreen::UpdateTemperature(const double &temperatureInCelcius)
     {
         if (UPDATE_STATUS_INVALID == m_TemperatureUpdateStatus)
         {
@@ -242,7 +242,7 @@ namespace Incubator
         m_TemperatureInCelcius = temperatureInCelcius;
     }
 
-    void MenuScreen::UpdateHumidity(const uint8_t &humidityInPercent)
+    void MainScreen::UpdateHumidity(const uint8_t &humidityInPercent)
     {
         if (UPDATE_STATUS_INVALID == m_HumidityUpdateStatus)
         {
@@ -252,7 +252,7 @@ namespace Incubator
         m_HumidityInPercent = humidityInPercent;
     }
 
-    void MenuScreen::OnTemperatureFailure()
+    void MainScreen::OnTemperatureFailure()
     {
         if (m_bModelValid)
         {
@@ -268,7 +268,7 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::OnHumidityFailure()
+    void MainScreen::OnHumidityFailure()
     {
         if (m_bModelValid)
         {
@@ -283,7 +283,7 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::OnModelFailure()
+    void MainScreen::OnModelFailure()
     {
         if (m_bModelValid)
         {
@@ -294,7 +294,7 @@ namespace Incubator
     }
 
 
-    void MenuScreen::Run()
+    void MainScreen::Run()
     {
         if (m_bModelValid)
         {
@@ -334,7 +334,7 @@ namespace Incubator
         }
     }
 
-    void MenuScreen::OnUserAction(const JoystickEvent & event)
+    void MainScreen::OnUserAction(const JoystickEvent & event)
     {
         if (event.bIsButtonPressed)
         {

@@ -1,5 +1,5 @@
-#ifndef INCUBATOR_MENUSCREEN_H
-#define INCUBATOR_MENUSCREEN_H
+#ifndef INCUBATOR_MAINSCREEN_H
+#define INCUBATOR_MAINSCREEN_H
 #include "TC2004/Lcd.h"
 #include "AScreen.h"
 #include "Incubator/Time/TimerTask.h"
@@ -15,11 +15,11 @@ namespace Incubator
         UPDATE_STATUS_SCREEN_UPDATED
     };
 
-    class MenuScreen : public AScreen
+    class MainScreen : public AScreen
     {
     public:
-        MenuScreen();
-        ~MenuScreen();
+        MainScreen();
+        ~MainScreen();
         void Initialize(TC2004::Lcd *tc2004Lcd);
         void OnInitial() override;
 
@@ -67,4 +67,4 @@ namespace Incubator
     };
 } // namespace Incubator
 
-#endif // INCUBATOR_MENUSCREEN_H
+#endif // INCUBATOR_MAINSCREEN_H

@@ -7,7 +7,7 @@ namespace Incubator
     {
         if (event.bIsLeftPressed)
         {
-            SetNextScreen(SCREEN_TYPE_MENU);
+            SetNextScreen(SCREEN_TYPE_MAIN);
         }
         else if(event.bIsDownPressed)
         {
@@ -31,7 +31,7 @@ namespace Incubator
     {
         if (event.bIsLeftPressed)
         {
-            SetNextScreen(SCREEN_TYPE_MENU);
+            SetNextScreen(SCREEN_TYPE_MAIN);
         }
         else if(event.bIsUpPressed)
         {

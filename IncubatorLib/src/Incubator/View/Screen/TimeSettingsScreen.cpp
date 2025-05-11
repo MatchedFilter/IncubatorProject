@@ -77,7 +77,7 @@ namespace Incubator
         }
         else if (event.bIsRightPressed || event.bIsButtonPressed)
         {
-            // TODO: Add Incubator Time Settings Screen
+            SetNextScreen(SCREEN_TYPE_INCUBATOR_TIME_SETTINGS);
         }
         else
         {

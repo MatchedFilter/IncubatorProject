@@ -1,7 +1,7 @@
 #ifndef INCUBATOR_SCREENFACADE_H
 #define INCUBATOR_SCREENFACADE_H
 #include "TC2004/Lcd.h"
-#include "MenuScreen.h"
+#include "MainScreen.h"
 #include "SettingsScreen.h"
 #include "IncubatorSettingsScreen.h"
 #include "TimeSettingsScreen.h"
@@ -18,6 +18,9 @@
 #include "DataSetScreen/CurrentDayDataSetScreen.h"
 #include "DataSetScreen/CurrentHourDataSetScreen.h"
 #include "DataSetScreen/CurrentMinuteDataSetScreen.h"
+#include "IncubatorTimeSettingsScreen.h"
+#include "DataSetScreen/TotalDayDataSetScreen.h"
+#include "DataSetScreen/LastDayDataSetScreen.h"
 
 #include "Incubator/View/DataChangedEventHandler/DataChangedEventHandlers.h"
 #include "Incubator/IncubatorData/IncubatorInformationData.h"
@@ -48,7 +51,7 @@ namespace Incubator
         TC2004::Lcd *m_Lcd;
         AScreen *m_ScreenList[SCREEN_TYPE_SIZE];
         AScreen *m_CurrentScreen;
-        MenuScreen m_MenuScreen;
+        MainScreen m_MainScreen;
         SettingsScreen m_SettingsScreen;
         TimeSettingsScreen m_TimeSettingsScreen;
         IncubatorSettingsScreen m_IncubatorSettingsScreen;
@@ -65,6 +68,9 @@ namespace Incubator
         CurrentDayDataSetScreen m_CurrentDayDataSetScreen;
         CurrentHourDataSetScreen m_CurrentHourDataSetScreen;
         CurrentMinuteDataSetScreen m_CurrentMinuteDataSetScreen;
+        IncubatorTimeSettingsScreen m_IncubatorTimeSettingsScreen;
+        TotalDayDataSetScreen m_TotalDayDataSetScreen;
+        LastDayDataSetScreen m_LastDayDataSetScreen;
         
         DataChangedEventHandlers m_DataChangedEventHandlers;
 
