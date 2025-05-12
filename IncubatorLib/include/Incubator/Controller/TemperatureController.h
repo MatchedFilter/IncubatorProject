@@ -13,7 +13,7 @@ namespace Incubator
         ~TemperatureController();
         void SetDesiredTemperature(const double &desiredTemperatureInCelcius);
         void SetPid(const double &p, const double &i, const double &d);
-        uint16_t Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond);
+        uint16_t Control(const double &temperatureInCelcius, const uint64_t &timeDifferenceInMillisecond);
         void OnTemperatureFailure();
 
     private:

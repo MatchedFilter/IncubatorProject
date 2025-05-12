@@ -30,8 +30,11 @@ namespace Incubator
     }
 
 
-    uint16_t TemperatureController::Control(const double &temperatureInCelcius, const uint32_t &timeDifferenceInMillisecond)
+    uint16_t TemperatureController::Control(const double &temperatureInCelcius, const uint64_t &timeDifferenceInMillisecond)
     {
+        uint16_t result = static_cast<uint16_t>(0UL);
+
+        const double timeDifferenceInSeconds = static_cast<double>(timeDifferenceInMillisecond) / 1000.0;
         if (false == m_bIsTemperatureValid)
         {
             m_PreviousTemperatureInCelcius = temperatureInCelcius;
@@ -39,25 +42,39 @@ namespace Incubator
         }
 
         const double error = m_DesiredTemperatureInCelcius - temperatureInCelcius;
-        const double previousError = m_DesiredTemperatureInCelcius - m_PreviousTemperatureInCelcius;
-        const double result  = 
-            (m_PConstant * error) +
-            (m_IConstant * error * timeDifferenceInMillisecond) +
-            (m_DConstant * ((error - previousError) / timeDifferenceInMillisecond));
-
-        uint16_t output = static_cast<uint16_t>(0U);
-        if (result > 0.0)
+        constexpr double THRESHOLD_TEMPERATURE_LOW_DIFFERENCE_IN_MILLICELCIUS = 5.0;
+        constexpr double THRESHOLD_TEMPERATURE_HIGH_DIFFERENCE_IN_MILLICELCIUS = -1.0;
+        if (error > THRESHOLD_TEMPERATURE_LOW_DIFFERENCE_IN_MILLICELCIUS)
         {
-            if (result < static_cast<uint16_t>(MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE))
+            result = MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE;
+        }
+        else if (error > THRESHOLD_TEMPERATURE_HIGH_DIFFERENCE_IN_MILLICELCIUS)
+        {
+            const double previousError = m_DesiredTemperatureInCelcius - m_PreviousTemperatureInCelcius;
+            const double output  = 
+                (m_PConstant * error) +
+                (m_IConstant * error * timeDifferenceInSeconds) +
+                (m_DConstant * ((error - previousError) / timeDifferenceInSeconds));
+    
+            if (output > 0.0)
             {
-                output = static_cast<uint16_t>(result);
-            }
-            else
-            {
-                output = MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE;
+                if (output < static_cast<uint16_t>(MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE))
+                {
+                    result = static_cast<uint16_t>(output);
+                }
+                else
+                {
+                    result = MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE;
+                }
             }
         }
-        return output;
+        else
+        {
+            // intentionally left blank
+        }
+        
+
+        return result;
     }
 
     void TemperatureController::OnTemperatureFailure()

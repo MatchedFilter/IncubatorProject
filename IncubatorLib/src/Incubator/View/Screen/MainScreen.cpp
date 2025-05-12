@@ -46,6 +46,11 @@ namespace Incubator
             {
                 m_Lcd->Print(TC2004::String80(" "));
             }
+            else
+            {
+                m_Lcd->Print(TC2004::String80("    "));
+                m_Lcd->MoveCursor(0U, 4U);
+            }
             m_Lcd->Print(GetTemperature());
         }
         if (m_bIsIncubatorDataProvided)

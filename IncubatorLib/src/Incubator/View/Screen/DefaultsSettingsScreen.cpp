@@ -4,6 +4,8 @@
 namespace Incubator
 {
 
+    constexpr uint8_t DefaultsSettingsScreen::SCREEN_MAX_LINE_SIZE;
+
     void DefaultsSettingsScreen::HandleChickenLineEvent(const JoystickEvent &event)
     {
         if (event.bIsLeftPressed)
@@ -170,13 +172,61 @@ namespace Incubator
             m_ChangedSettingsData->m_LastDaysHumidityInPercentage = 75U;
             m_ChangedSettingsData->m_TotalIncubationDayCount = 18U;
             m_ChangedSettingsData->m_LastDaysCount = 3U;
-
         }
         else
         {
             // intentionally left blank
         }
     }
+
+    uint8_t DefaultsSettingsScreen::DetermineStartLine() const
+    {
+        uint8_t result = 0U;
+        if (static_cast<uint8_t>(m_SelectedLine) >= SCREEN_MAX_LINE_SIZE)
+        {
+            constexpr uint8_t SCREEN_LINE_OFFSET = SCREEN_MAX_LINE_SIZE - 1U;
+            result = static_cast<uint8_t>(m_SelectedLine) - SCREEN_LINE_OFFSET;
+        }
+        return result;
+    }
+
+    void DefaultsSettingsScreen::PrintLine(const uint8_t lineNumber)
+    {
+        switch (lineNumber)
+        {
+        case DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN:
+        {
+            m_Lcd->Print(TC2004::String80("Tavuk    "));
+            break;
+        }
+        case DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE:
+        {
+            m_Lcd->Print(TC2004::String80("Kaz    "));
+            break;
+        }
+        case DEFAULTS_SETTINGS_SCREEN_LINE_DUCK:
+        {
+            m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
+            m_Lcd->Print(TC2004::String80("rdek    "));
+            break;
+        }
+        case DEFAULTS_SETTINGS_SCREEN_LINE_QUAIL:
+        {
+            m_Lcd->Print(TC2004::String80("B"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("ld"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("rc"));
+            m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
+            m_Lcd->Print(TC2004::String80("n"));
+            break;
+        }
+        
+        default:
+            break;
+        }
+    }
+
 
 
     DefaultsSettingsScreen::DefaultsSettingsScreen() : 
@@ -206,40 +256,23 @@ namespace Incubator
         m_Lcd->Print(TC2004::String80("[Varsay"));
         m_Lcd->Print(TC2004::TC2004_CHAR_LOWER_I);
         m_Lcd->Print(TC2004::String80("lanlar]"));
-        m_Lcd->MoveCursor(1U, 0U);
-        if (DEFAULTS_SETTINGS_SCREEN_LINE_CHICKEN == m_SelectedLine)
+        const uint8_t startLine = DetermineStartLine();
+        for (uint8_t i = 0U; i < SCREEN_MAX_LINE_SIZE; i++)
         {
-            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            const uint8_t currentLine = startLine + i;
+            constexpr uint8_t lineOffset = 1U;
+            const uint8_t cursorLine = i + lineOffset;
+            m_Lcd->MoveCursor(cursorLine, 0U);
+            if (currentLine == m_SelectedLine)
+            {
+                m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
+            }
+            else
+            {
+                m_Lcd->Print(TC2004::String80(" "));
+            }
+            PrintLine(currentLine);
         }
-        else
-        {
-            m_Lcd->Print(TC2004::String80(" "));
-        }
-        m_Lcd->Print(TC2004::String80("Tavuk"));
-
-        m_Lcd->MoveCursor(2U, 0U);
-        if (DEFAULTS_SETTINGS_SCREEN_LINE_GOOSE == m_SelectedLine)
-        {
-            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-        }
-        else
-        {
-            m_Lcd->Print(TC2004::String80(" "));
-        }
-        m_Lcd->Print(TC2004::String80("Kaz"));
-
-        m_Lcd->MoveCursor(3U, 0U);
-        if (DEFAULTS_SETTINGS_SCREEN_LINE_DUCK == m_SelectedLine)
-        {
-            m_Lcd->Print(TC2004::TC2004_CHAR_ARROW_SYMBOL);
-        }
-        else
-        {
-            m_Lcd->Print(TC2004::String80(" "));
-        }
-        m_Lcd->Print(TC2004::TC2004_CHAR_UPPER_O);
-        m_Lcd->Print(TC2004::String80("rdek"));
-
     }
 
     void DefaultsSettingsScreen::Run()

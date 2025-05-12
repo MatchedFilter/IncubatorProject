@@ -37,7 +37,7 @@ namespace Incubator
             bool bResult = false;
             if (m_bIsRunning)
             {
-                const uint64_t passedTimeInMillisecond = TimeUtils::GetStartTimestampInMillisecond() - m_StartTimestampInMillisecond;
+                const uint64_t passedTimeInMillisecond = GetTimeDifferenceFromStartInMillisecond();
                 if (false == (passedTimeInMillisecond < m_DurationInMillisecond))
                 {
                     bResult = true;
@@ -45,6 +45,19 @@ namespace Incubator
             }
             return bResult;
         }
+
+        bool TimerTask::IsRunning() const
+        {
+            return m_bIsRunning;
+        }
+
+
+        uint64_t TimerTask::GetTimeDifferenceFromStartInMillisecond() const
+        {
+            const uint64_t result = TimeUtils::GetStartTimestampInMillisecond() -  m_StartTimestampInMillisecond;
+            return result;
+        }
+
         
     } // namespace Time
     

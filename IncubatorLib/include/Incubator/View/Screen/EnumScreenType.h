@@ -4,6 +4,7 @@ namespace Incubator
 {
     enum EnumScreenType
     {
+        SCREEN_TYPE_DISPLAY_OFF,
         SCREEN_TYPE_MAIN,
         SCREEN_TYPE_MENU,
         SCREEN_TYPE_SETTINGS,

@@ -62,7 +62,7 @@ namespace Incubator
         void UpdatePresenter(const bool &bTemperatureValid, const double &temperatureInCelcius, const bool &bHumidityValid, const double &humidityInPercent);
         bool GetDesiredTemperature(double &desiredTemperatureInCelcius);
         bool GetDesiredHumidity(uint8_t &desiredHumidityInPercent);
-        bool CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius);
+        bool CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius, const uint64_t &timeDifferenceInMillisecond);
         void ControlTemperature();
         void ControlHumidity(uint8_t &humidityInPercentage, bool bHumidityValid);
 

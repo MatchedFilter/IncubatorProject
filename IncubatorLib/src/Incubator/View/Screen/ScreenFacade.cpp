@@ -19,6 +19,7 @@ namespace Incubator
         m_DataChangedEventHandlers.Reset();
         m_DataChangedEventHandlers.Copy(*eventHandlers);
 
+        m_DisplayOffScreen.Initialize(tc2004Lcd);
         m_MainScreen.Initialize(tc2004Lcd);
         m_MenuScreen.Initialize(tc2004Lcd);
         m_SensorsStatusScreen.Initialize(tc2004Lcd);
@@ -51,6 +52,7 @@ namespace Incubator
         m_LowerHysterisisHumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
         m_AdministratorResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_AdminData);
 
+        m_ScreenList[SCREEN_TYPE_DISPLAY_OFF]                       = &m_DisplayOffScreen;
         m_ScreenList[SCREEN_TYPE_MAIN]                              = &m_MainScreen;
         m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
         m_ScreenList[SCREEN_TYPE_SENSORS_STATUS]                    = &m_SensorsStatusScreen;
@@ -84,6 +86,13 @@ namespace Incubator
         m_ScreenList[SCREEN_TYPE_QUESTION_ADMIN_RESET]              = &m_AdministratorResetQuestionScreen;
 
         m_CurrentScreen = &m_MainScreen;
+
+        constexpr uint32_t MAIN_SCREEN_DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND = static_cast<uint32_t>(30000UL);
+        m_MainScreenDisplayOffTimerTask.SetDurationInMillisecond(MAIN_SCREEN_DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND);
+        m_MainScreenDisplayOffTimerTask.Start();
+
+        constexpr uint32_t DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND = static_cast<uint32_t>(130000UL);
+        m_DisplayOffTimerTask.SetDurationInMillisecond(DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND);
     }
 
     void ScreenFacade::UpdateAdminData(const AdminData &data)
@@ -138,6 +147,14 @@ namespace Incubator
 
     void ScreenFacade::OnUserAction(const JoystickEvent &event)
     {
+        if (m_MainScreenDisplayOffTimerTask.IsRunning())
+        {
+            m_MainScreenDisplayOffTimerTask.Start();
+        }
+        if (m_DisplayOffTimerTask.IsRunning())
+        { 
+            m_DisplayOffTimerTask.Start();
+        }
         const EnumScreenType screenType =  m_CurrentScreen->GetScreenType();
         m_CurrentScreen->OnUserAction(event);
         const EnumScreenType nextScreenType = m_CurrentScreen->GetNextScreen();
@@ -152,7 +169,43 @@ namespace Incubator
 
     void ScreenFacade::Run()
     {
-        m_CurrentScreen->Run();
+        if (SCREEN_TYPE_MAIN == m_CurrentScreen->GetScreenType())
+        {
+            if (false == m_MainScreenDisplayOffTimerTask.IsRunning())
+            {
+                m_MainScreenDisplayOffTimerTask.Start();
+            }
+            else if (m_MainScreenDisplayOffTimerTask.IsFinished())
+            {
+                m_CurrentScreen = &m_DisplayOffScreen;
+                m_DisplayOffScreen.OnInitial();
+            }
+            else
+            {
+                m_CurrentScreen->Run();
+            }
+        }
+        else
+        {
+            if (m_MainScreenDisplayOffTimerTask.IsRunning())
+            {
+                m_MainScreenDisplayOffTimerTask.Stop();
+            }
+            if (false == m_DisplayOffTimerTask.IsRunning())
+            {
+                m_DisplayOffTimerTask.Start();
+            }
+            else if (m_DisplayOffTimerTask.IsFinished())
+            {
+                m_CurrentScreen->Reset();
+                m_CurrentScreen = &m_DisplayOffScreen;
+                m_DisplayOffScreen.OnInitial();
+            }
+            else
+            {
+                m_CurrentScreen->Run();
+            }
+        }
     }
 
 

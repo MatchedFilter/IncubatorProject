@@ -175,7 +175,7 @@ namespace Incubator
         }
     }
 
-    bool IncubatorApp::CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius)
+    bool IncubatorApp::CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius, const uint64_t &timeDifferenceInMillisecond)
     {
         bool bResult = false;
         double desiredTemperatureInCelcius;
@@ -183,30 +183,13 @@ namespace Incubator
         {
             if (GetDesiredTemperature(desiredTemperatureInCelcius))
             {
-                const double temperatureDifference = desiredTemperatureInCelcius - temperatureInCelcius;
-                constexpr double THRESHOLD_TEMPERATURE_LOW_DIFFERENCE_IN_MILLICELCIUS = 5.0;
-                constexpr double THRESHOLD_TEMPERATURE_HIGH_DIFFERENCE_IN_MILLICELCIUS = -1.0;
-
-                if (temperatureDifference > THRESHOLD_TEMPERATURE_LOW_DIFFERENCE_IN_MILLICELCIUS)
+                m_TemperatureController.SetDesiredTemperature(desiredTemperatureInCelcius);
+                double p,i,d;
+                if (m_Presenter.GetPidData(p,i,d))
                 {
                     bResult = true;
-                    m_TemperatureOutputValue = MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE;
-                }
-                else if (temperatureDifference < THRESHOLD_TEMPERATURE_HIGH_DIFFERENCE_IN_MILLICELCIUS)
-                {
-                    bResult = true;
-                    m_TemperatureOutputValue = static_cast<uint16_t>(0UL);
-                }
-                else
-                {
-                    m_TemperatureController.SetDesiredTemperature(desiredTemperatureInCelcius);
-                    double p,i,d;
-                    if (m_Presenter.GetPidData(p,i,d))
-                    {
-                        bResult = true;
-                        m_TemperatureController.SetPid(p,i,d);
-                        m_TemperatureOutputValue = m_TemperatureController.Control(temperatureInCelcius, SENSOR_READ_TIMEOUT_IN_MILLISECOND);
-                    }
+                    m_TemperatureController.SetPid(p,i,d);
+                    m_TemperatureOutputValue = m_TemperatureController.Control(temperatureInCelcius, timeDifferenceInMillisecond);
                 }
             }
         }
@@ -379,7 +362,7 @@ namespace Incubator
             bool bTemperatureIsValid, bHumidityIsValid;
             ReadSensors(bTemperatureIsValid, temperatureInCelcius, bHumidityIsValid, humidityInPercent);
             UpdatePresenter(bTemperatureIsValid, temperatureInCelcius, bHumidityIsValid, humidityInPercent);
-            if (CalculateTemperatureOutput(bTemperatureIsValid, temperatureInCelcius))
+            if (CalculateTemperatureOutput(bTemperatureIsValid, temperatureInCelcius, m_SensorReadTimerTask.GetTimeDifferenceFromStartInMillisecond()))
             {
                 m_TemperatureOutputTimeoutTask.Start();
             }

@@ -28,9 +28,9 @@ namespace Incubator
         virtual EnumScreenType GetNextScreenForNoSelection() const final override;
 
     private:
-        static constexpr int32_t MAX_ALLOWED_CONSTANT = static_cast<int32_t>(1000L);
-        static constexpr int32_t MIN_ALLOWED_CONSTANT = static_cast<int32_t>(-1000L);
-        static constexpr int32_t HIGH_INCREMENT_CONSTANT = static_cast<uint32_t>(10L);
+        static constexpr int32_t MAX_ALLOWED_CONSTANT = static_cast<int32_t>(5000L);
+        static constexpr int32_t MIN_ALLOWED_CONSTANT = static_cast<int32_t>(-5000L);
+        static constexpr int32_t HIGH_INCREMENT_CONSTANT = static_cast<uint32_t>(20L);
         static constexpr int32_t LOW_INCREMENT_CONSTANT = static_cast<uint32_t>(1L);
         static TC2004::String80 GetPidValueString(const int32_t value);
         

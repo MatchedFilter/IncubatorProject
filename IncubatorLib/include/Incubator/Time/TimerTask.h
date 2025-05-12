@@ -14,6 +14,8 @@ namespace Incubator
             void Start();
             void Stop();
             bool IsFinished() const;
+            bool IsRunning() const;
+            uint64_t GetTimeDifferenceFromStartInMillisecond() const;
             
         private:
             bool m_bIsRunning;
