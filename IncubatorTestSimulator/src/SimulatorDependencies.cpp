@@ -504,6 +504,15 @@ namespace Incubator
         IncubatorSim::g_IncubatorTestSimulator.UpdateHumidityGeneratorStatus(false);
     }
 
+    void EnableMotor()
+    {
+        IncubatorSim::g_IncubatorTestSimulator.UpdateMotorStatus(true);
+    }
+
+    void DisableMotor()
+    {
+        IncubatorSim::g_IncubatorTestSimulator.UpdateMotorStatus(false);
+    }
 
 } // namespace Incubator
 

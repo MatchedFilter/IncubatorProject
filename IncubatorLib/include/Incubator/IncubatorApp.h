@@ -46,13 +46,13 @@ namespace Incubator
         double m_PrevNtc;
         static constexpr uint32_t SENSOR_READ_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(25UL);
         static constexpr uint32_t SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(500UL);
+        static constexpr uint32_t TEMPERATURE_DRIVE_PERIOD_IN_MILLISECOND = static_cast<uint32_t>(5000UL);
         TemperatureController m_TemperatureController;
         HumidityController m_HumidityController;
         SensorsStatusData m_SensorsStatusData;
         uint16_t m_TemperatureOutputValue;
         Time::TimerTask m_TemperatureOutputTimeoutTask;
-        Time::TimerTask m_TemperatureOutputTimerTask;
-        uint16_t m_TemperatureOutputControlCounter;
+        uint32_t m_TemperatureOutputControlCounterInMillisecond;
 
     private:
         bool ReadSht31(double &temperatureInCelcius, double &humidityInPercent);
@@ -65,6 +65,7 @@ namespace Incubator
         bool CalculateTemperatureOutput(const bool &bTemperatureValid, const double &temperatureInCelcius, const uint64_t &timeDifferenceInMillisecond);
         void ControlTemperature();
         void ControlHumidity(uint8_t &humidityInPercentage, bool bHumidityValid);
+        void ControlMotor();
 
     };
 } // namespace Incubator

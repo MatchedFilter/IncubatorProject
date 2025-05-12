@@ -16,10 +16,16 @@ namespace Incubator
 
     TC2004::String80 APidDataSetScreen::GetPidValueString(const int32_t value)
     {
+        
         TC2004::String80 result;
-        result += value / static_cast<int32_t>(10L);
+        const int32_t positiveValue = (value < 0) ? -value: value;
+        if (value < 0)
+        {
+            result += "-";
+        }
+        result += positiveValue / static_cast<int32_t>(10L);
         result += ".";
-        result += value % static_cast<int32_t>(10L);
+        result += positiveValue % static_cast<int32_t>(10L);
         result += "    ";
         return result;
     }
@@ -62,13 +68,10 @@ namespace Incubator
     {
         const int32_t changedValue = GetChangedValue();
         int32_t resultValue = MIN_ALLOWED_CONSTANT;
-        if (changedValue > HIGH_INCREMENT_CONSTANT)
+        const int32_t nextValue = changedValue - HIGH_INCREMENT_CONSTANT;
+        if (nextValue > MIN_ALLOWED_CONSTANT)
         {
-            const int32_t nextValue = changedValue - HIGH_INCREMENT_CONSTANT;
-            if (nextValue > MIN_ALLOWED_CONSTANT)
-            {
-                resultValue = nextValue;
-            }
+            resultValue = nextValue;
         }
         SetChangedValue(resultValue);
     }
@@ -77,14 +80,12 @@ namespace Incubator
     {
         const int32_t changedValue = GetChangedValue();
         int32_t resultValue = MIN_ALLOWED_CONSTANT;
-        if (changedValue > LOW_INCREMENT_CONSTANT)
+        const int32_t nextValue = changedValue - LOW_INCREMENT_CONSTANT;
+        if (nextValue > MIN_ALLOWED_CONSTANT)
         {
-            const int32_t nextValue = changedValue - LOW_INCREMENT_CONSTANT;
-            if (nextValue > MIN_ALLOWED_CONSTANT)
-            {
-                resultValue = nextValue;
-            }
+            resultValue = nextValue;
         }
+        
         SetChangedValue(resultValue);
     }
 

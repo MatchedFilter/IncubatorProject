@@ -115,5 +115,14 @@ namespace Incubator
         HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
     }
 
+    void EnableMotor()
+    {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET);
+    }
+
+    void DisableMotor()
+    {
+        HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);
+    }
 
 } // namespace Incubator

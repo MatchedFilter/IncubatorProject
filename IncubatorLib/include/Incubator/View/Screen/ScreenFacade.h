@@ -1,7 +1,6 @@
 #ifndef INCUBATOR_SCREENFACADE_H
 #define INCUBATOR_SCREENFACADE_H
 #include "TC2004/Lcd.h"
-#include "DisplayOffScreen.h"
 #include "MainScreen.h"
 #include "MenuScreen.h"
 #include "SensorsStatusScreen.h"
@@ -65,7 +64,6 @@ namespace Incubator
         TC2004::Lcd *m_Lcd;
         AScreen *m_ScreenList[SCREEN_TYPE_SIZE];
         AScreen *m_CurrentScreen;
-        DisplayOffScreen m_DisplayOffScreen;
         MainScreen m_MainScreen;
         MenuScreen m_MenuScreen;
         SensorsStatusScreen m_SensorsStatusScreen;
@@ -102,11 +100,10 @@ namespace Incubator
 
         IncubatorInformationData m_CurrentIncubatorInformationData;
         IncubatorInformationData m_ChangedIncubatorInformationData;
-        Time::TimerTask m_MainScreenDisplayOffTimerTask;
-        Time::TimerTask m_DisplayOffTimerTask;
+        Time::TimerTask m_MainScreenReturnTimerTask;
 
     private:
-        EnumScreenType DetermineNextScreen(const JoystickEvent event);
+        void ControlMainScreenReturnTimeout();
 
     };
 } // namespace Incubator

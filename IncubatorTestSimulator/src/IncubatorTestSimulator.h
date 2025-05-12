@@ -23,6 +23,7 @@ namespace IncubatorSim
         void GetJoystickData(bool &upKeyPressed, bool &downKeyPressed, bool &rightKeyPressed, bool &leftKeyPressed, bool &bSwitchPressed);
         void UpdateHeaterStatus(bool bIsOn);
         void UpdateHumidityGeneratorStatus(bool bIsOn);
+        void UpdateMotorStatus(bool bIsOn);
         inline bool IsDHT11Failed() const { return m_DHT11Component.IsFailed(); }
         inline bool IsSHT31Failed() const { return m_SHT31Component.IsFailed(); }
 
@@ -40,6 +41,7 @@ namespace IncubatorSim
         JoystickButton m_JoystickButton;
         OutputComponent m_HumidityGeneratorComponent;
         OutputComponent m_HeaterCompoenent;
+        OutputComponent m_MotorComponent;
         int64_t m_SimulatorStartTimestampInMillisecond;
 
     private:

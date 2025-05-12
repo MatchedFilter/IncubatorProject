@@ -24,9 +24,9 @@ namespace Incubator
 
     void TemperatureController::SetPid(const double &p, const double &i, const double &d)
     {
-        m_PConstant = p;
-        m_IConstant = i;
-        m_DConstant = d;
+        m_PConstant = p * 10.0;
+        m_IConstant = i * 400.0;
+        m_DConstant = d / 25.0;
     }
 
 

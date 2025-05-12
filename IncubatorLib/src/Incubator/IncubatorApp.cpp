@@ -7,6 +7,8 @@ namespace Incubator
 
     constexpr uint32_t IncubatorApp::SENSOR_READ_TIMEOUT_IN_MILLISECOND;
     constexpr uint32_t IncubatorApp::SENSOR_FAIL_RETRY_TIMEOUT_IN_MILLISECOND;
+    constexpr uint32_t IncubatorApp::TEMPERATURE_DRIVE_PERIOD_IN_MILLISECOND;
+
 
     bool IncubatorApp::ReadSht31(double &temperatureInCelcius, double &humidityInPercent)
     {
@@ -202,23 +204,22 @@ namespace Incubator
         {
             m_TemperatureOutputValue = static_cast<uint16_t>(0UL);
         }
-        if (m_TemperatureOutputTimerTask.IsFinished())
-        {
-            m_TemperatureOutputTimerTask.Start();
-            m_TemperatureOutputControlCounter += static_cast<uint16_t>(2UL);
 
-            if (m_TemperatureOutputValue > m_TemperatureOutputControlCounter)
-            {
-                TurnOnHeater();
-            }
-            else
-            {
-                TurnOffHeater();
-            }
-            if (MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE <= m_TemperatureOutputControlCounter)
-            {
-                m_TemperatureOutputControlCounter = static_cast<uint16_t>(0UL);
-            }
+        m_TemperatureOutputControlCounterInMillisecond += static_cast<uint32_t>(m_SensorReadTimerTask.GetTimeDifferenceFromStartInMillisecond());
+
+        constexpr uint32_t TEMPERATURE_OUTPUT_TIME_MULTIPLIER =  TEMPERATURE_DRIVE_PERIOD_IN_MILLISECOND / static_cast<uint32_t>(MAX_TEMPERATURE_OUTPUT_CONTROL_VALUE);
+        const uint32_t heaterOnTimeDurationInMillisecond = static_cast<uint32_t>(m_TemperatureOutputValue) * TEMPERATURE_OUTPUT_TIME_MULTIPLIER;
+        if (m_TemperatureOutputControlCounterInMillisecond < heaterOnTimeDurationInMillisecond)
+        {
+            TurnOnHeater();
+        }
+        else
+        {
+            TurnOffHeater();
+        }
+        if (TEMPERATURE_DRIVE_PERIOD_IN_MILLISECOND <= m_TemperatureOutputControlCounterInMillisecond)
+        {
+            m_TemperatureOutputControlCounterInMillisecond = static_cast<uint32_t>(0UL);
         }
     }
 
@@ -256,6 +257,28 @@ namespace Incubator
             TurnOnHumidityGenerator();
         }
 
+    }
+
+    void IncubatorApp::ControlMotor()
+    {
+        EnumState motorState = STATE_OFF;
+        SettingsData settings;
+        if (m_Presenter.GetSettingsData(settings))
+        {
+            const uint8_t dayCount = static_cast<uint8_t>(Time::TimeUtils::GetIncubatorTimestampInSecond() / (static_cast<uint32_t>(60UL) * static_cast<uint32_t>(60UL) * static_cast<uint32_t>(24UL)));
+            if (dayCount < (settings.m_TotalIncubationDayCount - settings.m_LastDaysCount))
+            {
+                motorState = STATE_ON;
+            }
+        }
+        if (STATE_ON == motorState)
+        {
+            EnableMotor();
+        }
+        else
+        {
+            DisableMotor();
+        }
     }
 
 
@@ -316,7 +339,7 @@ namespace Incubator
         m_PrevNtc { 0.0 },
         m_SensorsStatusData { .m_Sht31Status = SENSOR_STATUS_ERROR, .m_NtcStatus = SENSOR_STATUS_ERROR, .m_Dht11Status = SENSOR_STATUS_ERROR },
         m_TemperatureOutputValue { static_cast<uint16_t>(0U)},
-        m_TemperatureOutputControlCounter { static_cast<uint16_t>(0U)}
+        m_TemperatureOutputControlCounterInMillisecond { static_cast<uint32_t>(0U)}
     {
     }
 
@@ -343,20 +366,16 @@ namespace Incubator
 
         constexpr uint32_t TEMPERATURE_OUTPUT_VALUE_SET_TIMEOUT_IN_MILLISECOND = static_cast<uint32_t>(5000UL);
         m_TemperatureOutputTimeoutTask.SetDurationInMillisecond(TEMPERATURE_OUTPUT_VALUE_SET_TIMEOUT_IN_MILLISECOND);
-        
-        constexpr uint32_t TEMPERATURE_OUTPUT_CONTROL_DURATION_IN_MILLISECOND = static_cast<uint32_t>(2UL);
-        m_TemperatureOutputTimerTask.SetDurationInMillisecond(TEMPERATURE_OUTPUT_CONTROL_DURATION_IN_MILLISECOND);
-        m_TemperatureOutputTimerTask.Start();
     }
 
     void IncubatorApp::Run(void)
     {
         m_Presenter.Run();
         m_Lcd2004View.Run();
+        ControlMotor();
         
         if (m_SensorReadTimerTask.IsFinished())
         {
-            m_SensorReadTimerTask.Start();
             double temperatureInCelcius;
             uint8_t humidityInPercent;
             bool bTemperatureIsValid, bHumidityIsValid;
@@ -367,8 +386,9 @@ namespace Incubator
                 m_TemperatureOutputTimeoutTask.Start();
             }
             ControlHumidity(humidityInPercent, bHumidityIsValid);
+            ControlTemperature();
+            m_SensorReadTimerTask.Start();
         }
-        ControlTemperature();
     }
 
 } // namespace Incubator

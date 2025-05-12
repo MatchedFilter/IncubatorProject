@@ -2,6 +2,32 @@
 
 namespace Incubator
 {
+    void ScreenFacade::ControlMainScreenReturnTimeout()
+    {
+        if (SCREEN_TYPE_MAIN == m_CurrentScreen->GetScreenType())
+        {
+            m_MainScreenReturnTimerTask.Stop();
+        }
+        else
+        {
+            if (false == m_MainScreenReturnTimerTask.IsRunning())
+            {
+                m_MainScreenReturnTimerTask.Start();
+            }
+            else if (m_MainScreenReturnTimerTask.IsFinished())
+            {
+                m_MainScreenReturnTimerTask.Stop();
+                m_CurrentScreen->Reset();
+                m_CurrentScreen = &m_MainScreen;
+                m_MainScreen.OnInitial();
+            }
+            else
+            {
+                // intentionally left blank
+            }
+        }
+    }
+
     ScreenFacade::ScreenFacade() :
         m_Lcd { nullptr },
         m_ScreenList { nullptr },
@@ -19,7 +45,6 @@ namespace Incubator
         m_DataChangedEventHandlers.Reset();
         m_DataChangedEventHandlers.Copy(*eventHandlers);
 
-        m_DisplayOffScreen.Initialize(tc2004Lcd);
         m_MainScreen.Initialize(tc2004Lcd);
         m_MenuScreen.Initialize(tc2004Lcd);
         m_SensorsStatusScreen.Initialize(tc2004Lcd);
@@ -52,7 +77,6 @@ namespace Incubator
         m_LowerHysterisisHumidityDataSetScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_CurrentIncubatorInformationData, &m_ChangedIncubatorInformationData);
         m_AdministratorResetQuestionScreen.Initialize(tc2004Lcd, &m_DataChangedEventHandlers, &m_ChangedIncubatorInformationData.m_AdminData);
 
-        m_ScreenList[SCREEN_TYPE_DISPLAY_OFF]                       = &m_DisplayOffScreen;
         m_ScreenList[SCREEN_TYPE_MAIN]                              = &m_MainScreen;
         m_ScreenList[SCREEN_TYPE_MENU]                              = &m_MenuScreen;
         m_ScreenList[SCREEN_TYPE_SENSORS_STATUS]                    = &m_SensorsStatusScreen;
@@ -87,12 +111,9 @@ namespace Incubator
 
         m_CurrentScreen = &m_MainScreen;
 
-        constexpr uint32_t MAIN_SCREEN_DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND = static_cast<uint32_t>(30000UL);
-        m_MainScreenDisplayOffTimerTask.SetDurationInMillisecond(MAIN_SCREEN_DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND);
-        m_MainScreenDisplayOffTimerTask.Start();
-
-        constexpr uint32_t DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND = static_cast<uint32_t>(130000UL);
-        m_DisplayOffTimerTask.SetDurationInMillisecond(DISPLAY_OFF_TIMER_TASK_DURATION_IN_MILLISECOND);
+        constexpr uint32_t MAIN_SCREEN_RETURN_DURATION_IN_MILLISECOND = static_cast<uint32_t>(180000UL);
+        m_MainScreenReturnTimerTask.SetDurationInMillisecond(MAIN_SCREEN_RETURN_DURATION_IN_MILLISECOND);
+        m_MainScreenReturnTimerTask.Start();
     }
 
     void ScreenFacade::UpdateAdminData(const AdminData &data)
@@ -147,13 +168,9 @@ namespace Incubator
 
     void ScreenFacade::OnUserAction(const JoystickEvent &event)
     {
-        if (m_MainScreenDisplayOffTimerTask.IsRunning())
+        if (m_MainScreenReturnTimerTask.IsRunning())
         {
-            m_MainScreenDisplayOffTimerTask.Start();
-        }
-        if (m_DisplayOffTimerTask.IsRunning())
-        { 
-            m_DisplayOffTimerTask.Start();
+            m_MainScreenReturnTimerTask.Start();
         }
         const EnumScreenType screenType =  m_CurrentScreen->GetScreenType();
         m_CurrentScreen->OnUserAction(event);
@@ -169,43 +186,8 @@ namespace Incubator
 
     void ScreenFacade::Run()
     {
-        if (SCREEN_TYPE_MAIN == m_CurrentScreen->GetScreenType())
-        {
-            if (false == m_MainScreenDisplayOffTimerTask.IsRunning())
-            {
-                m_MainScreenDisplayOffTimerTask.Start();
-            }
-            else if (m_MainScreenDisplayOffTimerTask.IsFinished())
-            {
-                m_CurrentScreen = &m_DisplayOffScreen;
-                m_DisplayOffScreen.OnInitial();
-            }
-            else
-            {
-                m_CurrentScreen->Run();
-            }
-        }
-        else
-        {
-            if (m_MainScreenDisplayOffTimerTask.IsRunning())
-            {
-                m_MainScreenDisplayOffTimerTask.Stop();
-            }
-            if (false == m_DisplayOffTimerTask.IsRunning())
-            {
-                m_DisplayOffTimerTask.Start();
-            }
-            else if (m_DisplayOffTimerTask.IsFinished())
-            {
-                m_CurrentScreen->Reset();
-                m_CurrentScreen = &m_DisplayOffScreen;
-                m_DisplayOffScreen.OnInitial();
-            }
-            else
-            {
-                m_CurrentScreen->Run();
-            }
-        }
+        ControlMainScreenReturnTimeout();
+        m_CurrentScreen->Run();
     }
 
 

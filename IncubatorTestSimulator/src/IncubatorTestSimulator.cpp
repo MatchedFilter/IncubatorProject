@@ -87,6 +87,19 @@ namespace IncubatorSim
         }
     }
 
+    void IncubatorTestSimulator::UpdateMotorStatus(bool bIsOn)
+    {
+        if (bIsOn)
+        {
+            m_MotorComponent.TurnOn();
+        }
+        else
+        {
+            m_MotorComponent.TurnOff();
+        }
+    }
+
+
     void IncubatorTestSimulator::Initialize()
     {
         InitializeTime();
@@ -159,6 +172,14 @@ namespace IncubatorSim
             std::cerr << "Unable to initialize CarbonFiberHeaterTestComponent" << std::endl;
             exit(127);
         }
+
+        if (!m_MotorComponent.Initialize(m_Renderer, 850, 550, 128, 128, "resources/images/Incubator_Motor.png"))
+        {
+            std::cerr << "Unable to initialize MotorComponent" << std::endl;
+            exit(127);
+        }
+
+        
         IncubatorTestSimulatorUtils::Initialize();
 
     }
@@ -181,6 +202,7 @@ namespace IncubatorSim
         m_NTCComponent.Run();
         m_HumidityGeneratorComponent.Run();
         m_HeaterCompoenent.Run();
+        m_MotorComponent.Run();
         SDL_SetRenderDrawColor(m_Renderer, 0x20, 0x20, 0x20, SDL_ALPHA_OPAQUE);
         SDL_RenderPresent(m_Renderer);
     }

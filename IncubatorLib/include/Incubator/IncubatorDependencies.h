@@ -13,6 +13,8 @@ namespace Incubator
     void TurnOffHeater();
     void TurnOnHumidityGenerator();
     void TurnOffHumidityGenerator();
+    void EnableMotor();
+    void DisableMotor();
 } // namespace Incubator
 
 #endif // INCUBATOR_INCUBATORDEPENDENCIES_H
